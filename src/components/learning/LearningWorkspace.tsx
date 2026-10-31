@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useLessonEngine } from "@/hooks/useLessonEngine";
 import { useLearningProgress } from "@/hooks/useLearningProgress";
@@ -22,8 +22,11 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
   const navigate = useNavigate();
   const { markVisited, saveRecord } = useLearningProgress();
   const saved = useRef(false);
-  const [resetKey, setResetKey] = [engine.state.stepIndex === 0 && engine.state.mistakes === 0 ? 0 : 1, null];
-  void setResetKey;
+  const [runId, setRunId] = useState(0);
+  const restart = () => {
+    engine.reset();
+    setRunId((n) => n + 1);
+  };
 
   useEffect(() => markVisited(module.id, mode), [module.id, mode, markVisited]);
 
@@ -55,9 +58,10 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
       engine,
       isTarget: (a) => engine.step.expected === a && (mode === "guide" || engine.state.hintVisible),
       goSummary: () => navigate({ to: "/results/$moduleId", params: { moduleId: module.id } }),
-      retry: engine.reset,
+      retry: restart,
       goHome: () => navigate({ to: "/" }),
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [module, mode, engine, navigate],
   );
 
@@ -71,11 +75,11 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
     <LessonProvider value={value}>
       <div className="grid items-start gap-6 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-10">
         <div className="lg:sticky lg:top-24 lg:order-2">
-          <GuidePanel onExit={onExit} />
+          <GuidePanel onExit={onExit} onRestart={restart} />
         </div>
         <div className="lg:order-1">
           {/* key resets simulator-local state (inputs, selections) when the lesson restarts */}
-          <Simulator key={`${module.id}-${resetKey === 0 ? "fresh" : "run"}`} />
+          <Simulator key={`${module.id}-${runId}`} />
         </div>
       </div>
     </LessonProvider>

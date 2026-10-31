@@ -2,7 +2,7 @@ import { AlertCircle, CheckCircle2, Lightbulb, LogOut, RotateCcw, Compass, Hand 
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useLesson } from "./LessonContext";
 
-export function GuidePanel({ onExit }: { onExit: () => void }) {
+export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestart: () => void }) {
   const { t, tr } = useLanguage();
   const { module, mode, engine } = useLesson();
   const { step, state, totalSteps, completed } = engine;
@@ -81,7 +81,7 @@ export function GuidePanel({ onExit }: { onExit: () => void }) {
       )}
 
       <div className="flex flex-wrap gap-2 border-t border-border pt-4">
-        <button type="button" className="btn btn-ghost" onClick={engine.reset}>
+        <button type="button" className="btn btn-ghost" onClick={onRestart}>
           <RotateCcw className="h-5 w-5" /> {t("restart")}
         </button>
         {!completed && (
