@@ -11,7 +11,7 @@ describe("PakID Proof-of-Life Feature", () => {
       expect(s.title.ur).toBeDefined();
       expect(s.instruction.en).toBeDefined();
       expect(s.instruction.ur).toBeDefined();
-      expect(s.imagePath).toMatch(/\.(jpeg|png)$/);
+      expect(s.imagePath).toMatch(/\.(jpeg|png|svg)$/);
     });
   });
 
@@ -47,11 +47,11 @@ describe("PakID Proof-of-Life Feature", () => {
   });
 
   it("provides bilingual translations for all core UI elements", () => {
-    expect(pakidText.moduleTitle.en).toContain("Proof-of-Life");
-    expect(pakidText.moduleTitle.ur).toContain("زندگی کا ثبوت");
-    expect(pakidText.disclaimerNotice.en).toContain("educational simulation");
-    expect(pakidText.cardPictureBtn.en).toBe("Start Picture Tutorial");
-    expect(pakidText.cardPracticeBtn.en).toBe("Start Practice");
+    expect(pakidText["moduleTitle"]!.en).toContain("Proof-of-Life");
+    expect(pakidText["moduleTitle"]!.ur).toContain("زندگی کا ثبوت");
+    expect(pakidText["disclaimerNotice"]!.en).toContain("educational simulation");
+    expect(pakidText["cardPictureBtn"]!.en).toBe("Start Picture Tutorial");
+    expect(pakidText["cardPracticeBtn"]!.en).toBe("Start Practice");
   });
 });
 

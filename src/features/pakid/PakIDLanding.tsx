@@ -16,6 +16,7 @@ import { PageContainer } from "@/components/layout/AppHeader";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { PakIDPictureTutorial } from "./PakIDPictureTutorial";
 import { PakIDPractice } from "./PakIDPractice";
+import { NadraLogo } from "@/components/icons/NadraLogo";
 
 interface PakIDLandingProps {
   initialView?: "landing" | "tutorial" | "practice-guide" | "practice-independent";
@@ -118,8 +119,8 @@ export function PakIDLanding({ initialView = "landing" }: PakIDLandingProps) {
 
       {/* Main Header */}
       <div className="max-w-4xl">
-        <div className="inline-flex items-center gap-2 rounded-2xl bg-emerald-100 px-4 py-1.5 text-xs font-extrabold text-emerald-900 shadow-sm">
-          <ShieldCheck className="h-4 w-4 text-emerald-700" />
+        <div className="inline-flex items-center gap-2.5 rounded-2xl bg-emerald-100 px-4 py-1.5 text-xs font-extrabold text-emerald-900 shadow-sm">
+          <NadraLogo className="h-5 w-5 shrink-0" />
           <span>NADRA PakID • Pension Verification (پنشنرز کے لیے)</span>
         </div>
 

@@ -10,8 +10,8 @@ export const tutorialSteps: TutorialStep[] = [
       ur: "مرحلہ ۱: پاک آئی ڈی کھولیں اور لاگ اِن کریں",
     },
     instruction: {
-      en: "Start by opening the official PakID application on your smartphone. Registered users sign in with their email/CNIC and password.",
-      ur: "اپنے اسمارٹ فون پر نادرا کی پاک آئی ڈی ایپ کھولیں۔ اگر آپ پہلے سے رجسٹرڈ ہیں تو اپنا ای میل یا شناختی کارڈ نمبر اور پاس ورڈ درج کر کے لاگ اِن کریں۔",
+      en: "Start by opening the official PakID application on your smartphone. Tap the green Login button to sign in.",
+      ur: "اپنے اسمارٹ فون پر نادرا کی پاک آئی ڈی ایپ کھولیں۔ داخل ہونے کے لیے سبز لاگ اِن بٹن دبائیں۔",
     },
     imagePath: "/images/pakid/1.jpeg",
     sourceType: "official screenshot",
@@ -19,7 +19,7 @@ export const tutorialSteps: TutorialStep[] = [
       en: "Login Button (لاگ اِن)",
       ur: "لاگ اِن کا سبز بٹن",
     },
-    highlightArea: { top: 60, left: 6, width: 68, height: 8 },
+    highlightArea: { top: 60.5, left: 6, width: 68, height: 8 },
     details: {
       en: "The Login button is located in the center. If you do not have an account yet, tap 'Register here' below the button to create one.",
       ur: "لاگ اِن کا بٹن درمیان میں ہے۔ اگر اکاؤنٹ نہ ہو تو نیچے 'Register here (یہاں رجسٹر کریں)' پر جا سکتے ہیں۔",
@@ -52,10 +52,10 @@ export const tutorialSteps: TutorialStep[] = [
     imagePath: "/images/pakid/2.jpeg",
     sourceType: "official screenshot",
     highlightLabel: {
-      en: "Main Services & Navigation",
-      ur: "مرکزی خدمات اور مینو",
+      en: "Applications & Services",
+      ur: "مرکزی خدمات اور درخواستیں",
     },
-    highlightArea: { top: 30, left: 5, width: 90, height: 40 },
+    highlightArea: { top: 28, left: 5, width: 90, height: 38 },
     details: {
       en: "The home screen displays tracking, digital ID view, and application categories. Scroll down past ID Documents to find Biometric Attestation.",
       ur: "ہوم اسکرین پر درخواستوں کا اسٹیٹس اور خدمات نظر آتی ہیں۔ نیچے اسکرول کرنے پر بائیو میٹرک سروسز سامنے آتی ہیں۔",
@@ -91,7 +91,7 @@ export const tutorialSteps: TutorialStep[] = [
       en: "Proof of Life Option",
       ur: "سرٹیفیکیٹ برائے حیات",
     },
-    highlightArea: { top: 38, left: 74, width: 22, height: 18 },
+    highlightArea: { top: 38.8, left: 74, width: 22.5, height: 16.5 },
     details: {
       en: "This service is specifically created for pensioners who need to submit verification that they are alive to pension authorities and banks.",
       ur: "یہ خدمت خاص طور پر پنشنرز کے لیے ہے تاکہ وہ بینک یا پنشن محکمے کو زندگی کا ثبوت پیش کر سکیں۔",
@@ -127,7 +127,7 @@ export const tutorialSteps: TutorialStep[] = [
       en: "Myself (میں خود)",
       ur: "میں خود (Myself) کا انتخاب",
     },
-    highlightArea: { top: 19, left: 4, width: 92, height: 12 },
+    highlightArea: { top: 18.5, left: 4, width: 92, height: 11.5 },
     details: {
       en: "Eligible family members (parents, spouse, children) can assist an older relative through their account, but the pensioner's own face and fingerprints must be verified.",
       ur: "خاندان کا کوئی فرد بھی بزرگ کی مدد کر سکتا ہے، تاہم بائیو میٹرک تصدیق خود بزرگ پنشنر کی ہی ہوگی۔",
@@ -163,7 +163,7 @@ export const tutorialSteps: TutorialStep[] = [
       en: "Payable Fee: PKR 0",
       ur: "قابلِ ادائیگی فیس: 0 روپے",
     },
-    highlightArea: { top: 45, left: 4, width: 92, height: 26 },
+    highlightArea: { top: 44, left: 4, width: 92, height: 26.5 },
     details: {
       en: "Beware of any agent or third party asking for payment. In the official PakID app, Proof-of-Life is completely free (PKR 0).",
       ur: "کسی ایجنٹ یا دکاندار کو پیسے نہ دیں۔ سرکاری ایپ پر یہ سروس بالکل مفت ہے۔",
@@ -198,10 +198,11 @@ export const tutorialSteps: TutorialStep[] = [
     imagePath: "/images/pakid/6.jpeg",
     sourceType: "official screenshot",
     highlightLabel: {
-      en: "Alert & Proceed Button",
-      ur: "الرٹ اور آگے بڑھنے کا بٹن",
+      en: "Proceed Button (آگے بڑھیں)",
+      ur: "آگے بڑھنے کا بٹن",
     },
-    highlightArea: { top: 83, left: 12, width: 76, height: 13 },
+    // In 6.jpeg (289x367), Proceed button is at y=316 to y=361 (86.1% to 98.4%)
+    highlightArea: { top: 86.0, left: 12.5, width: 73, height: 12.5 },
     details: {
       en: "Read the instructions calmly. Tap 'Proceed (آگے بڑھیں)' when you and the applicant are ready in a bright room.",
       ur: "اطمینان سے پڑھیں اور روشن کمرے میں بیٹھ کر 'Proceed' کا بٹن دبائیں۔",
@@ -234,10 +235,10 @@ export const tutorialSteps: TutorialStep[] = [
     imagePath: "/images/pakid/8.jpeg",
     sourceType: "official screenshot",
     highlightLabel: {
-      en: "Correct Sample Image & Camera Choice",
-      ur: "درست نمونہ اور کیمرے کا انتخاب",
+      en: "CORRECT Pose (صحیح نمونہ)",
+      ur: "درست نمونہ (CORRECT)",
     },
-    highlightArea: { top: 58, left: 6, width: 23, height: 16 },
+    highlightArea: { top: 57.5, left: 5.5, width: 23, height: 17 },
     details: {
       en: "The screen shows examples: looking straight with good light is CORRECT. Wearing glasses, masks, or turning sideways is INCORRECT. You can use Front or Back camera.",
       ur: "اسکرین پر مثالیں دکھائی گئی ہیں: سیدھا دیکھنا صحیح ہے؛ چشمہ، ماسک یا چہرہ موڑنا غلط ہے۔ آپ سامنے یا پیچھے کا کیمرہ چن سکتے ہیں۔",
@@ -270,10 +271,10 @@ export const tutorialSteps: TutorialStep[] = [
     imagePath: "/images/pakid/7.jpeg",
     sourceType: "official screenshot",
     highlightLabel: {
-      en: "Success Dialog & Continue Button",
+      en: "Success Dialog & Continue",
       ur: "کامیابی کا پیغام اور Continue بٹن",
     },
-    highlightArea: { top: 25, left: 6, width: 88, height: 35 },
+    highlightArea: { top: 24, left: 6, width: 88, height: 38 },
     details: {
       en: "Tap 'Continue' to move on to the second stage: fingerprint verification.",
       ur: "انگلیوں کے نشانات کی تصدیق کے دوسرے مرحلے پر جانے کے لیے 'Continue' دبائیں۔",
@@ -306,10 +307,10 @@ export const tutorialSteps: TutorialStep[] = [
     imagePath: "/images/pakid/9.jpeg",
     sourceType: "official screenshot",
     highlightLabel: {
-      en: "Hand Options & Distance Meter",
-      ur: "ہاتھ کے آپشنز اور فاصلے کا میٹر",
+      en: "Hand Options (ہاتھ کے آپشنز)",
+      ur: "ہاتھ کے آپشنز",
     },
-    highlightArea: { top: 82, left: 4, width: 92, height: 16 },
+    highlightArea: { top: 82, left: 4, width: 92, height: 16.5 },
     details: {
       en: "Watch the distance indicator on the left: move closer if it says 'TOO FAR' until the indicator turns green in the optimal zone.",
       ur: "بائیں جانب موجود فاصلے کا میٹر دیکھیں: اگر 'TOO FAR' ہو تو ہاتھ قریب لائیں جب تک سبز تیر درمیان میں نہ آ جائے۔",
@@ -339,13 +340,13 @@ export const tutorialSteps: TutorialStep[] = [
       en: "Review the application summary showing Service: Proof of Life, Applicant name, Fee: PKR 0, and confirmation that both biometrics are completed. Tap Submit.",
       ur: "درخواست کا حتمی خلاصہ دیکھیں جس میں سروس، نام، 0 روپے فیس اور بائیو میٹرک کی تکمیل دکھائی گئی ہے۔ پھر جمع کروانے کا بٹن دبائیں۔",
     },
-    imagePath: "/images/pakid/10.jpeg",
+    imagePath: "/images/pakid/review-submit.svg",
     sourceType: "educational reconstruction",
     highlightLabel: {
       en: "Submit Application",
-      ur: "درخواست جمع کروانا",
+      ur: "درخواست جمع کروائیں",
     },
-    highlightArea: { top: 75, left: 10, width: 80, height: 15 },
+    highlightArea: { top: 83.3, left: 6.2, width: 87.5, height: 8.5 },
     details: {
       en: "This intermediate review lets you verify all information before official submission to NADRA.",
       ur: "یہ اسکرین آپ کو نادرا کو حتمی طور پر درخواست بھیجنے سے پہلے تمام تفصیلات چیک کرنے کا موقع دیتی ہے۔",
@@ -381,7 +382,7 @@ export const tutorialSteps: TutorialStep[] = [
       en: "Go to ID Vault Button",
       ur: "آئی ڈی والٹ پر جائیں (سبز بٹن)",
     },
-    highlightArea: { top: 86, left: 6, width: 88, height: 8 },
+    highlightArea: { top: 86.7, left: 5.9, width: 87.3, height: 7.7 },
     details: {
       en: "Save or note your tracking reference for inquiries. Tap the green 'Go to ID Vault (آئی ڈی والٹ پر جائیں)' button to see where to find your certificate.",
       ur: "ٹریکنگ نمبر اپنے پاس نوٹ رکھیں۔ سرٹیفیکیٹ دیکھنے کے لیے نیچے سبز بٹن 'Go to ID Vault' دبائیں۔",
@@ -417,7 +418,8 @@ export const tutorialSteps: TutorialStep[] = [
       en: "My Documents (میرے دستاویزات)",
       ur: "میرے دستاویزات (My Documents)",
     },
-    highlightArea: { top: 64, left: 51, width: 44, height: 18 },
+    // In 11.jpeg (463x637), My Documents tile is at y=400 to y=525, x=222 to x=436
+    highlightArea: { top: 62.8, left: 48, width: 46.2, height: 19.5 },
     details: {
       en: "The ID Vault is your digital locker where NADRA places official certificates and identity documents.",
       ur: "آئی ڈی والٹ آپ کا محفوظ ڈیجیٹل لاؤکر ہے جہاں نادرا آپ کے سرکاری سرٹیفیکیٹ محفوظ کرتا ہے۔",
@@ -453,7 +455,8 @@ export const tutorialSteps: TutorialStep[] = [
       en: "POLC Card (Proof-of-Life Certificate)",
       ur: "پی او ایل سی (سرٹیفیکیٹ برائے حیات)",
     },
-    highlightArea: { top: 31, left: 4, width: 48, height: 32 },
+    // In 12.jpeg (437x629), POLC card is at y=195 to y=410, x=15 to x=225
+    highlightArea: { top: 31, left: 3.5, width: 48, height: 34 },
     details: {
       en: "POLC stands for Proof-of-Life Certificate. You can view, present, or download it to show your pension office or bank.",
       ur: "پی او ایل سی (POLC) کا مطلب Proof-of-Life Certificate ہے۔ آپ اسے بینک یا پنشن دفتر کو دکھانے کے لیے استعمال کر سکتے ہیں۔",
@@ -472,4 +475,3 @@ export const tutorialSteps: TutorialStep[] = [
     },
   },
 ];
-

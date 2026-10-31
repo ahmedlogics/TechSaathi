@@ -89,36 +89,38 @@ export function PakIDPictureTutorial({
         <div className="flex flex-col items-center">
           <div className="relative mx-auto flex h-[680px] w-full max-w-[340px] flex-col overflow-hidden rounded-[40px] border-[8px] border-slate-900 bg-black shadow-2xl">
             {/* Phone Speaker Notch */}
-            <div className="relative z-20 flex h-6 w-full items-center justify-center bg-slate-900">
+            <div className="relative z-20 flex h-6 w-full shrink-0 items-center justify-center bg-slate-900">
               <div className="h-3 w-20 rounded-full bg-slate-950"></div>
             </div>
 
-            {/* Screenshot Container with High-Res Image */}
-            <div className="relative flex-1 overflow-hidden bg-slate-950">
-              <img
-                src={step.imagePath}
-                alt={ur ? step.title.ur : step.title.en}
-                className="h-full w-full object-contain"
-              />
+            {/* Screenshot Container — tightly wrapping img so highlights map to image pixels */}
+            <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-slate-950 p-2">
+              <div className="relative inline-block max-h-full max-w-full">
+                <img
+                  src={step.imagePath}
+                  alt={ur ? step.title.ur : step.title.en}
+                  className="block max-h-[630px] w-auto max-w-full rounded-xl object-contain shadow"
+                />
 
-              {/* Dynamic Highlight Box */}
-              {step.highlightArea && (
-                <div
-                  className="pointer-events-none absolute rounded-xl border-4 border-amber-400 bg-amber-400/20 shadow-[0_0_15px_rgba(251,191,36,0.8)] animate-pulse"
-                  style={{
-                    top: `${step.highlightArea.top}%`,
-                    left: `${step.highlightArea.left}%`,
-                    width: `${step.highlightArea.width}%`,
-                    height: `${step.highlightArea.height}%`,
-                  }}
-                >
-                  {step.highlightLabel && (
-                    <span className="absolute -top-7 left-0 whitespace-nowrap rounded-lg bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-950 shadow">
-                      {ur ? step.highlightLabel.ur : step.highlightLabel.en}
-                    </span>
-                  )}
-                </div>
-              )}
+                {/* Dynamic Highlight Box placed directly over image coordinates */}
+                {step.highlightArea && (
+                  <div
+                    className="pointer-events-none absolute rounded-xl border-4 border-amber-400 bg-amber-400/25 shadow-[0_0_16px_rgba(251,191,36,0.9)] animate-pulse"
+                    style={{
+                      top: `${step.highlightArea.top}%`,
+                      left: `${step.highlightArea.left}%`,
+                      width: `${step.highlightArea.width}%`,
+                      height: `${step.highlightArea.height}%`,
+                    }}
+                  >
+                    {step.highlightLabel && (
+                      <span className="absolute -top-7 left-0 whitespace-nowrap rounded-lg bg-amber-400 px-2.5 py-0.5 text-[11px] font-black text-slate-950 shadow-md">
+                        {ur ? step.highlightLabel.ur : step.highlightLabel.en}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Enlarge Button in Phone Frame */}
@@ -130,26 +132,6 @@ export function PakIDPictureTutorial({
             >
               <Maximize2 className="h-5 w-5" />
             </button>
-          </div>
-
-          {/* Source Attribution Tag */}
-          <div className="mt-3 flex items-center gap-1.5 text-xs text-slate-500">
-            <span
-              className={`inline-block h-2 w-2 rounded-full ${
-                step.sourceType === "official screenshot"
-                  ? "bg-emerald-500"
-                  : "bg-amber-500"
-              }`}
-            ></span>
-            <span>
-              {step.sourceType === "official screenshot"
-                ? ur
-                  ? "پاک آئی ڈی کی اصل اسکرین شاٹ"
-                  : "Official PakID Application Screenshot"
-                : ur
-                ? "تعلیمی مشق کا ماڈل"
-                : "Educational Training Screen"}
-            </span>
           </div>
         </div>
 

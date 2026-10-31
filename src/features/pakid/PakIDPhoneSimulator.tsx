@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import type { FingerOption, PakIDApplicant, PakIDScreenId } from "./types";
 import { photoSamples } from "./pakidPracticeData";
+import { NadraLogo } from "@/components/icons/NadraLogo";
 
 interface PakIDPhoneSimulatorProps {
   screen: PakIDScreenId;
@@ -89,19 +90,17 @@ export function PakIDPhoneSimulator({
         {screen === "login" && (
           <div className="flex min-h-full flex-col justify-between p-5">
             <div className="pt-2 text-center">
-              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-700 text-white shadow-md">
-                <Shield className="h-9 w-9" />
-              </div>
-              <h1 className="mt-3 text-2xl font-black tracking-tight text-emerald-950">
+              <NadraLogo className="mx-auto h-20 w-20 drop-shadow-md" />
+              <h1 className="mt-2 text-2xl font-black tracking-tight text-emerald-950">
                 Pak<span className="text-emerald-700">ID</span>
               </h1>
-              <p className="text-xs font-semibold text-emerald-800">
-                Gateway to Digital Pakistan (خوش آمدید)
+              <p className="text-xs font-bold text-emerald-800">
+                {ur ? "حکومتِ پاکستان • نادرا کی سرکاری ایپ" : "Government of Pakistan • Official NADRA App"}
               </p>
-              <div className="mt-2 rounded-xl bg-emerald-100/70 p-2 text-[12px] text-emerald-900">
-                <p className="font-bold">NADRA Services (نادرا کی خدمات)</p>
+              <div className="mt-2 rounded-xl bg-emerald-50 border border-emerald-200 p-2 text-[12px] text-emerald-950 shadow-sm">
+                <p className="font-bold">{ur ? "شناختی خدمات اور سرٹیفیکیٹ برائے حیات" : "NADRA Identity & Life Attestation"}</p>
                 <p className="text-[11px] text-emerald-800">
-                  CNIC, NICOP, POC, FRC &amp; Other Govt Services
+                  {ur ? "CNIC, NICOP, POC, FRC اور پنشنرز تصدیق" : "CNIC, NICOP, POC, FRC & Pension Verification"}
                 </p>
               </div>
             </div>
@@ -112,8 +111,8 @@ export function PakIDPhoneSimulator({
                   {ur ? "ای میل یا شناختی کارڈ نمبر" : "Email or CNIC Number"}
                 </label>
                 <div className="mt-1 flex items-center rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm">
-                  <User className="mr-2 h-4 w-4 text-slate-400" />
-                  <span className="font-mono text-slate-700">pensioner@demo.pk</span>
+                  <User className="mr-2 h-4 w-4 text-emerald-700" />
+                  <span className="font-mono text-slate-800 font-semibold">35201-1234567-1 (Aamir Nazir)</span>
                 </div>
               </div>
 
@@ -123,7 +122,7 @@ export function PakIDPhoneSimulator({
                 </label>
                 <div className="mt-1 flex items-center rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm">
                   <Lock className="mr-2 h-4 w-4 text-slate-400" />
-                  <span className="font-mono text-slate-400">••••••••••••</span>
+                  <span className="font-mono text-slate-500">••••••••••••</span>
                 </div>
               </div>
 
@@ -133,24 +132,30 @@ export function PakIDPhoneSimulator({
                   onClick={() =>
                     handleWrong(ur ? "پاس ورڈ بھول گئے" : "Forgot Password", ur ? "لاگ اِن" : "Login")
                   }
-                  className="hover:underline"
+                  className="hover:underline font-semibold"
                 >
                   Forgot Password (پاس ورڈ یاد نہیں)
                 </button>
               </div>
 
-              <button
-                type="button"
-                onClick={() => onAction("login")}
-                className={`flex w-full min-h-[52px] items-center justify-center gap-2 rounded-2xl bg-emerald-700 text-base font-bold text-white shadow-lg transition-all hover:bg-emerald-800 active:scale-95 ${
-                  isGuided || hintVisible
-                    ? "ring-4 ring-emerald-400 ring-offset-2 animate-pulse"
-                    : ""
-                }`}
-              >
-                <span>Login (لاگ اِن)</span>
-                <ChevronRight className="h-5 w-5 rtl:rotate-180" />
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => onAction("login")}
+                  className={`flex flex-1 min-h-[52px] items-center justify-center gap-2 rounded-2xl bg-emerald-700 text-base font-bold text-white shadow-lg transition-all hover:bg-emerald-800 active:scale-95 ${
+                    isGuided || hintVisible
+                      ? "ring-4 ring-emerald-400 ring-offset-2 animate-pulse"
+                      : ""
+                  }`}
+                >
+                  <span>Login (لاگ اِن)</span>
+                  <ChevronRight className="h-5 w-5 rtl:rotate-180" />
+                </button>
+
+                <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-2xl border-2 border-emerald-700 bg-emerald-50 text-emerald-800 shadow-sm" title="Biometric Login">
+                  <Fingerprint className="h-6 w-6" />
+                </div>
+              </div>
 
               <div className="text-center text-xs text-slate-500">
                 <span>New to Pak ID? </span>
