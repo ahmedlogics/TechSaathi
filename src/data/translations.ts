@@ -58,6 +58,7 @@ export const ui = {
   hintsUsed: { en: "Hints used", ur: "استعمال شدہ اشارے" },
   learningMode: { en: "Learning mode", ur: "سیکھنے کا طریقہ" },
   independentDone: { en: "Completed on your own", ur: "خود سے مکمل کیا" },
+  tapHere: { en: "Tap here", ur: "یہاں دبائیں" },
   yes: { en: "Yes", ur: "ہاں" },
   no: { en: "No", ur: "نہیں" },
   notPracticedAlone: { en: "Not yet — try without help", ur: "ابھی نہیں — بغیر مدد کے کوشش کریں" },

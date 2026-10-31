@@ -55,7 +55,7 @@ export function SimButton({ action, onPress, highlightFor, className, children, 
           aria-hidden
           className="pointer-events-none absolute -top-3 end-2 z-10 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-xs font-bold text-primary-foreground shadow"
         >
-          <Pointer className="h-3.5 w-3.5" /> {t("practice") === "Practice" ? "Tap here" : "یہاں دبائیں"}
+          <Pointer className="h-3.5 w-3.5" /> {t("tapHere")}
         </span>
       )}
     </span>
