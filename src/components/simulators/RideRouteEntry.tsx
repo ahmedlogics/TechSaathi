@@ -145,43 +145,43 @@ export function RideRouteEntry({
   return (
     <div className="relative flex flex-col min-h-full bg-[#1C1C1C] text-white">
       {/* Sticky Header Bar */}
-      <div className="sticky top-0 z-30 shrink-0 flex items-center justify-between px-3 py-2.5 bg-[#18181b] border-b border-zinc-800">
+      <div className="sticky top-0 z-30 shrink-0 flex items-center justify-between px-2.5 py-1.5 bg-[#18181b] border-b border-zinc-800">
         <button
           type="button"
           onClick={onBack}
           aria-label={ur ? "واپس" : "Back"}
-          className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+          className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors cursor-pointer"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4" />
         </button>
-        <h2 className="text-xs sm:text-sm font-bold text-white text-center flex-1 whitespace-nowrap truncate px-1">
+        <h2 className="text-[11px] sm:text-xs font-bold text-white text-center flex-1 whitespace-nowrap px-1">
           {ur ? "اپنا راستہ درج کریں" : "Enter your route"}
         </h2>
-        <span className="w-8" />
+        <span className="w-7" />
       </div>
 
-      <div className="flex-1 flex flex-col p-2.5 sm:p-3 space-y-2.5">
+      <div className="flex-1 flex flex-col p-2 space-y-2">
         {/* FROM Field Card */}
         <div className="relative">
           <div
             onClick={() => setShowFromMenu((v) => !v)}
             className={cn(
-              "flex items-center justify-between rounded-2xl bg-[#252525] hover:bg-[#2a2a2a] border border-white/5 p-2.5 transition-colors cursor-pointer select-none",
+              "flex items-center justify-between rounded-xl bg-[#252525] hover:bg-[#2a2a2a] border border-white/5 p-2 transition-colors cursor-pointer select-none",
               isPickupTarget && "sim-target",
             )}
           >
-            <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <span className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400">
-                <User className="h-4 w-4" />
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400">
+                <User className="h-3.5 w-3.5" />
               </span>
               <div className="flex-1 min-w-0">
-                <span className="block text-[10px] sm:text-[11px] font-medium text-zinc-400 leading-tight">
+                <span className="block text-[8.5px] font-medium text-zinc-400 leading-tight">
                   {ur ? "کہاں سے" : "From"}
                 </span>
-                <p className="text-xs sm:text-[13px] font-bold text-white leading-tight mt-0.5 break-words line-clamp-1">
+                <p className="text-[11px] font-bold text-white leading-tight mt-0.5 truncate">
                   {pickup.name}
                 </p>
-                <p className="text-[10px] text-zinc-400 leading-tight mt-0.5 break-words line-clamp-1">{pickup.address}</p>
+                <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">{pickup.address}</p>
               </div>
             </div>
 
@@ -194,16 +194,16 @@ export function RideRouteEntry({
               }}
               disabled={locating}
               aria-label={ur ? "میرا مقام" : "Use my location"}
-              className="flex flex-col items-center gap-1 shrink-0 ml-1.5 cursor-pointer group"
+              className="flex flex-col items-center gap-0.5 shrink-0 ml-1 cursor-pointer group"
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25 group-hover:border-emerald-500/50 transition-colors">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors">
                 {locating ? (
-                  <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
+                  <Loader2 className="h-3 w-3 animate-spin text-emerald-400" />
                 ) : (
-                  <Crosshair className="h-4 w-4 text-emerald-400" />
+                  <Crosshair className="h-3 w-3 text-emerald-400" />
                 )}
               </span>
-              <span className="text-[8px] sm:text-[8.5px] font-medium text-emerald-400 whitespace-nowrap leading-none">
+              <span className="text-[7.5px] font-semibold text-emerald-400 whitespace-nowrap leading-none">
                 {ur ? "میرا مقام" : "Use my location"}
               </span>
             </button>
@@ -288,16 +288,16 @@ export function RideRouteEntry({
         <div ref={searchBoxRef} className="relative">
           <div
             className={cn(
-              "flex items-center justify-between rounded-2xl bg-[#252525] border border-white/5 p-2.5 transition-colors",
+              "flex items-center justify-between rounded-xl bg-[#252525] border border-white/5 p-2 transition-colors",
               isDestTarget && "sim-target",
             )}
           >
-            <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <span className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400">
-                <Search className="h-4 w-4" />
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400">
+                <Search className="h-3.5 w-3.5" />
               </span>
               <div className="flex-1 min-w-0">
-                <span className="block text-[10px] sm:text-[11px] font-medium text-zinc-400 leading-tight">
+                <span className="block text-[8.5px] font-medium text-zinc-400 leading-tight">
                   {ur ? "کہاں جانا ہے" : "To"}
                 </span>
                 <input
@@ -307,7 +307,7 @@ export function RideRouteEntry({
                     setToInput(e.target.value);
                   }}
                   placeholder={ur ? "آپ کہاں جا رہے ہیں؟" : "Where are you going?"}
-                  className="w-full bg-transparent text-xs sm:text-sm font-bold text-white placeholder-zinc-500 focus:outline-none truncate mt-0.5"
+                  className="w-full bg-transparent text-[11px] font-bold text-white placeholder-zinc-500 focus:outline-none truncate mt-0.5"
                 />
               </div>
             </div>
@@ -317,17 +317,17 @@ export function RideRouteEntry({
               type="button"
               onClick={() => onOpenMapPicker("destination")}
               aria-label={ur ? "نقشے پر منتخب کریں" : "Select destination on map"}
-              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-[#2a303c] border border-blue-500/25 hover:bg-[#323946] text-blue-400 transition-colors shrink-0 ml-1.5 shadow-xs cursor-pointer"
+              className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#2a303c] border border-blue-500/25 hover:bg-[#323946] text-blue-400 transition-colors shrink-0 ml-1 shadow-xs cursor-pointer"
             >
-              <MapPin className="h-4 w-4 fill-blue-400 text-blue-400" />
+              <MapPin className="h-3.5 w-3.5 fill-blue-400 text-blue-400" />
             </button>
           </div>
 
           {/* Autocomplete Results for TO field */}
           {showResults && searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-1.5 z-40 max-h-48 overflow-y-auto rounded-2xl bg-[#18181b] border border-zinc-700 shadow-2xl divide-y divide-zinc-800">
+            <div className="absolute top-full left-0 right-0 mt-1 z-40 max-h-40 overflow-y-auto rounded-xl bg-[#18181b] border border-zinc-700 shadow-2xl divide-y divide-zinc-800">
               {!hasLiveGeoapifyKey() && (
-                <div className="px-3 py-1 bg-zinc-900/90 text-[9px] font-semibold text-emerald-400 border-b border-zinc-800 flex items-center justify-between">
+                <div className="px-2.5 py-1 bg-zinc-900/90 text-[8.5px] font-semibold text-emerald-400 border-b border-zinc-800 flex items-center justify-between">
                   <span>{ur ? "مشق مقامات (ڈیمو موڈ)" : "Practice locations (Demo mode)"}</span>
                 </div>
               )}
@@ -336,12 +336,12 @@ export function RideRouteEntry({
                   key={loc.id}
                   type="button"
                   onClick={() => handleSelectRecent(loc)}
-                  className="w-full flex items-start gap-2.5 p-2.5 text-start hover:bg-zinc-800 transition-colors"
+                  className="w-full flex items-start gap-2 p-2 text-start hover:bg-zinc-800 transition-colors"
                 >
-                  <MapPin className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                  <MapPin className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-white leading-tight break-words">{loc.name}</p>
-                    <p className="text-[10px] text-zinc-400 leading-tight mt-0.5 break-words">{loc.address}</p>
+                    <p className="text-[11px] font-bold text-white leading-tight truncate">{loc.name}</p>
+                    <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">{loc.address}</p>
                   </div>
                 </button>
               ))}
@@ -351,11 +351,11 @@ export function RideRouteEntry({
 
         {/* Recent Destinations List (Exact from reference) */}
         <div className="space-y-1 pt-0.5 flex-1">
-          <p className="text-xs font-semibold text-zinc-400 px-1 mb-1">
+          <p className="text-[10px] font-semibold text-zinc-400 px-0.5 mb-1">
             {ur ? "حالیہ منزلیں" : "Recent destinations"}
           </p>
 
-          <div className="divide-y divide-zinc-800/80 rounded-2xl bg-[#242424]/50 border border-white/5">
+          <div className="divide-y divide-zinc-800/80 rounded-xl bg-[#242424]/50 border border-white/5">
             {/* 1. NED Visitor Gate */}
             {CURATED_LOCATIONS.slice(0, 3).map((item) => (
               <button
@@ -363,32 +363,32 @@ export function RideRouteEntry({
                 type="button"
                 onClick={() => handleSelectRecent(item)}
                 className={cn(
-                  "w-full flex items-center justify-between p-2.5 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group",
+                  "w-full flex items-center justify-between p-2 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group",
                   dest?.id === item.id && "bg-emerald-500/10",
                 )}
               >
-                <div className="flex items-start gap-2.5 flex-1 min-w-0 pr-1.5">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors mt-0.5">
-                    <Clock className="h-3.5 w-3.5" />
+                <div className="flex items-center gap-2 flex-1 min-w-0 pr-1">
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors">
+                    <Clock className="h-3 w-3" />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-[13px] font-bold text-white leading-snug break-words">
+                    <p className="text-[10.5px] font-bold text-white leading-tight truncate">
                       {item.name}
                     </p>
-                    <p className="text-[10px] sm:text-[11px] text-zinc-400 leading-tight mt-0.5 break-words line-clamp-2">
+                    <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">
                       {item.address}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0 pt-0.5">
+                <div className="flex items-center gap-1 shrink-0 ml-1">
                   {item.distance && (
-                    <span className="text-[10.5px] font-semibold text-zinc-400 whitespace-nowrap">
+                    <span className="text-[9px] font-medium text-zinc-400 whitespace-nowrap">
                       {item.distance}
                     </span>
                   )}
                   {dest?.id === item.id && (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-400 ml-1" />
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
                   )}
                 </div>
               </button>
@@ -397,12 +397,12 @@ export function RideRouteEntry({
         </div>
 
         {/* Continue Button (active when both FROM and TO are set) */}
-        <div className="pt-1.5 pb-1">
+        <div className="pt-1 pb-0.5">
           {dest ? (
             <button
               type="button"
               onClick={onContinue}
-              className="w-full flex items-center justify-center rounded-xl sm:rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs sm:text-sm py-2.5 sm:py-3 shadow-lg active:scale-98 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer"
             >
               {ur ? "آگے بڑھیں" : "Continue"}
             </button>
@@ -410,7 +410,7 @@ export function RideRouteEntry({
             <button
               type="button"
               disabled
-              className="w-full flex items-center justify-center rounded-xl sm:rounded-2xl bg-zinc-800 text-zinc-500 font-semibold text-xs sm:text-sm py-2.5 sm:py-3 cursor-not-allowed"
+              className="w-full flex items-center justify-center rounded-xl bg-zinc-800 text-zinc-500 font-semibold text-xs py-2 cursor-not-allowed"
             >
               {ur ? "منزل منتخب کریں" : "Select a destination to continue"}
             </button>

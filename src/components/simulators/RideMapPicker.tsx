@@ -230,31 +230,31 @@ export function RideMapPicker({
       `}</style>
 
       {/* Top Header Bar */}
-      <div className="shrink-0 flex items-center justify-between px-3 py-2.5 bg-[#18181b] border-b border-zinc-800 z-40">
+      <div className="shrink-0 flex items-center justify-between px-2.5 py-1.5 bg-[#18181b] border-b border-zinc-800 z-40">
         <button
           type="button"
           onClick={onBack}
           aria-label={ur ? "واپس" : "Back"}
-          className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+          className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors cursor-pointer"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4" />
         </button>
-        <h2 className="text-xs sm:text-sm font-bold text-white text-center flex-1">
+        <h2 className="text-[11px] sm:text-xs font-bold text-white text-center flex-1 whitespace-nowrap px-1">
           {ur ? "نقشے پر مقام منتخب کریں" : "Choose location on map"}
         </h2>
-        <span className="w-8" />
+        <span className="w-7" />
       </div>
 
       {/* Floating Search Bar */}
-      <div className="absolute top-13 inset-x-3 z-40 space-y-1">
-        <div className="relative flex items-center rounded-xl bg-[#18181b]/95 backdrop-blur-md border border-zinc-700/80 shadow-xl px-3 py-1.5">
-          <Search className="h-4 w-4 text-zinc-400 shrink-0" />
+      <div className="absolute top-11 inset-x-2.5 z-40 space-y-1">
+        <div className="relative flex items-center rounded-xl bg-[#18181b]/95 backdrop-blur-md border border-zinc-700/80 shadow-xl px-2.5 py-1">
+          <Search className="h-3.5 w-3.5 text-zinc-400 shrink-0" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={ur ? "علاقہ یا جگہ تلاش کریں…" : "Search an area or place"}
-            className="flex-1 bg-transparent px-2.5 py-1 text-xs text-white placeholder-zinc-500 focus:outline-none"
+            className="flex-1 bg-transparent px-2 py-0.5 text-[11px] text-white placeholder-zinc-500 focus:outline-none"
           />
           {isSearching ? (
             <Loader2 className="h-4 w-4 text-emerald-400 animate-spin shrink-0" />
@@ -351,13 +351,13 @@ export function RideMapPicker({
       </div>
 
       {/* Bottom Sheet: Location Confirmation */}
-      <div className="shrink-0 bg-[#18181b] border-t border-zinc-800 rounded-t-3xl px-3.5 pt-3 pb-3.5 shadow-2xl z-40 space-y-2.5">
-        <div className="flex items-start gap-2.5">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 mt-0.5">
-            <MapPin className="h-4 w-4" />
+      <div className="shrink-0 bg-[#18181b] border-t border-zinc-800 rounded-t-2xl px-3 pt-2.5 pb-2.5 shadow-2xl z-40 space-y-2">
+        <div className="flex items-start gap-2">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 mt-0.5">
+            <MapPin className="h-3.5 w-3.5" />
           </span>
           <div className="flex-1 min-w-0">
-            <p className="text-[9.5px] font-semibold text-zinc-400 uppercase tracking-wider">
+            <p className="text-[8.5px] font-semibold text-zinc-400 uppercase tracking-wider">
               {mode === "pickup"
                 ? ur
                   ? "منتخب سواری کی جگہ"
@@ -366,8 +366,8 @@ export function RideMapPicker({
                   ? "منتخب منزل"
                   : "Selected destination"}
             </p>
-            <p className="text-xs sm:text-sm font-bold text-white break-words line-clamp-1">{selectedLoc.name}</p>
-            <p className="text-[10px] text-zinc-400 break-words line-clamp-1">{selectedLoc.address}</p>
+            <p className="text-xs sm:text-[13px] font-bold text-white truncate">{selectedLoc.name}</p>
+            <p className="text-[8.5px] text-zinc-400 truncate">{selectedLoc.address}</p>
           </div>
         </div>
 
@@ -375,7 +375,7 @@ export function RideMapPicker({
         <button
           type="button"
           onClick={() => onConfirm(selectedLoc)}
-          className="w-full flex items-center justify-center rounded-xl sm:rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs sm:text-sm py-2.5 sm:py-3 shadow-lg active:scale-98 transition-all cursor-pointer"
+          className="w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer"
         >
           {ur ? "مقام کی تصدیق کریں" : "Confirm location"}
         </button>

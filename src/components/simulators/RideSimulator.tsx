@@ -7,7 +7,9 @@ import {
   CheckCircle2,
   UserRound,
   ShieldAlert,
+  ShieldCheck,
   Check,
+  ChevronLeft,
   ChevronRight,
   Info,
   Banknote,
@@ -157,22 +159,54 @@ function StartScreenDarkMap({ ur }: { ur: boolean }) {
   );
 }
 
+function CompactSimulatorHeader({
+  title,
+  ur,
+  onBack,
+}: {
+  title: string;
+  ur: boolean;
+  onBack?: () => void;
+}) {
+  return (
+    <div className="shrink-0 flex items-center justify-between px-2.5 py-1.5 bg-primary text-primary-foreground min-h-[32px] border-b border-primary-strong z-30">
+      <div className="flex items-center gap-1 min-w-0">
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label={ur ? "واپس" : "Back"}
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-primary-strong transition-colors cursor-pointer"
+          >
+            <ChevronLeft className="h-3.5 w-3.5" />
+          </button>
+        )}
+        <span className="text-[11px] sm:text-xs font-bold whitespace-nowrap">{title}</span>
+      </div>
+      <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-1.5 py-0.5 text-[8px] sm:text-[8.5px] font-bold text-warning shrink-0 leading-none">
+        <ShieldCheck className="h-2.5 w-2.5" />
+        <span>{ur ? "صرف مشق" : "Practice"}</span>
+      </span>
+    </div>
+  );
+}
+
 /** 4 Service Cards in 2x2 grid */
 function ServiceCardsGrid({ ur, onSelect }: { ur: boolean; onSelect?: () => void }) {
   return (
-    <div className="grid grid-cols-2 gap-2 px-3 pt-3">
+    <div className="grid grid-cols-2 gap-1.5 px-2.5 pt-2">
       {/* CARD 1: City Rides */}
       <button
         type="button"
         onClick={onSelect}
-        className="group relative flex flex-col justify-between rounded-2xl bg-gradient-to-br from-[#1b3d33] via-[#122c24] to-[#0c1f19] border border-emerald-500/25 p-2.5 h-[88px] sm:h-[94px] overflow-hidden text-start shadow-sm hover:border-emerald-400/50 transition-all cursor-pointer select-none"
+        className="group relative flex flex-col justify-between rounded-xl bg-gradient-to-br from-[#1b3d33] via-[#122c24] to-[#0c1f19] border border-emerald-500/25 p-2 h-[72px] sm:h-[78px] overflow-hidden text-start shadow-sm hover:border-emerald-400/50 transition-all cursor-pointer select-none"
       >
-        <span className="text-xs sm:text-[13px] font-bold text-white z-10 leading-none">
+        <span className="text-[11px] sm:text-xs font-bold text-white z-10 leading-none">
           {ur ? "شہری سفر" : "City Rides"}
         </span>
 
         {/* City Rides Illustration */}
-        <svg viewBox="0 0 100 45" className="w-full h-11 self-end object-contain" preserveAspectRatio="xMidYMax meet">
+        <svg viewBox="0 0 100 45" className="w-full h-9 self-end object-contain" preserveAspectRatio="xMidYMax meet">
           {/* Skyline silhouette */}
           <path d="M5 25 H20 V12 H5 Z M25 25 H40 V6 H25 Z M45 25 H60 V16 H45 Z" fill="#164337" opacity="0.75" />
           {/* White Sedan */}
@@ -197,14 +231,14 @@ function ServiceCardsGrid({ ur, onSelect }: { ur: boolean; onSelect?: () => void
       <button
         type="button"
         onClick={onSelect}
-        className="group relative flex flex-col justify-between rounded-2xl bg-[#242424] hover:bg-[#2a2a2a] border border-white/5 p-2.5 h-[88px] sm:h-[94px] overflow-hidden text-start shadow-sm transition-all cursor-pointer select-none"
+        className="group relative flex flex-col justify-between rounded-xl bg-[#242424] hover:bg-[#2a2a2a] border border-white/5 p-2 h-[72px] sm:h-[78px] overflow-hidden text-start shadow-sm transition-all cursor-pointer select-none"
       >
-        <span className="text-xs sm:text-[13px] font-bold text-white z-10 leading-none">
+        <span className="text-[11px] sm:text-xs font-bold text-white z-10 leading-none">
           {ur ? "شہر بہ شہر" : "City to City"}
         </span>
 
         {/* City to City Illustration */}
-        <svg viewBox="0 0 100 45" className="w-full h-11 self-end object-contain" preserveAspectRatio="xMidYMax meet">
+        <svg viewBox="0 0 100 45" className="w-full h-9 self-end object-contain" preserveAspectRatio="xMidYMax meet">
           {/* Green winding road / landscape */}
           <path d="M0 38 Q 30 25, 60 30 T 100 20 L 100 45 L 0 45 Z" fill="#10b981" opacity="0.85" />
           <path d="M30 35 Q 55 25, 80 23" stroke="#ffffff" strokeWidth="1.5" strokeDasharray="3 2" fill="none" />
@@ -227,14 +261,14 @@ function ServiceCardsGrid({ ur, onSelect }: { ur: boolean; onSelect?: () => void
       <button
         type="button"
         onClick={onSelect}
-        className="group relative flex flex-col justify-between rounded-2xl bg-[#242424] hover:bg-[#2a2a2a] border border-white/5 p-2.5 h-[88px] sm:h-[94px] overflow-hidden text-start shadow-sm transition-all cursor-pointer select-none"
+        className="group relative flex flex-col justify-between rounded-xl bg-[#242424] hover:bg-[#2a2a2a] border border-white/5 p-2 h-[72px] sm:h-[78px] overflow-hidden text-start shadow-sm transition-all cursor-pointer select-none"
       >
-        <span className="text-xs sm:text-[13px] font-bold text-white z-10 leading-none">
+        <span className="text-[11px] sm:text-xs font-bold text-white z-10 leading-none">
           {ur ? "کورئیر" : "Couriers"}
         </span>
 
         {/* Couriers Illustration */}
-        <svg viewBox="0 0 100 45" className="w-full h-11 self-end object-contain" preserveAspectRatio="xMidYMax meet">
+        <svg viewBox="0 0 100 45" className="w-full h-9 self-end object-contain" preserveAspectRatio="xMidYMax meet">
           {/* Cardboard box */}
           <g transform="translate(14, 12)">
             <polygon points="0,10 16,3 32,10 16,17" fill="#d97706" opacity="0.95" />
@@ -257,14 +291,14 @@ function ServiceCardsGrid({ ur, onSelect }: { ur: boolean; onSelect?: () => void
       <button
         type="button"
         onClick={onSelect}
-        className="group relative flex flex-col justify-between rounded-2xl bg-[#242424] hover:bg-[#2a2a2a] border border-white/5 p-2.5 h-[88px] sm:h-[94px] overflow-hidden text-start shadow-sm transition-all cursor-pointer select-none"
+        className="group relative flex flex-col justify-between rounded-xl bg-[#242424] hover:bg-[#2a2a2a] border border-white/5 p-2 h-[72px] sm:h-[78px] overflow-hidden text-start shadow-sm transition-all cursor-pointer select-none"
       >
-        <span className="text-xs sm:text-[13px] font-bold text-white z-10 leading-none">
+        <span className="text-[11px] sm:text-xs font-bold text-white z-10 leading-none">
           {ur ? "گروسری" : "Groceries"}
         </span>
 
         {/* Groceries Illustration */}
-        <svg viewBox="0 0 100 45" className="w-full h-11 self-end object-contain" preserveAspectRatio="xMidYMax meet">
+        <svg viewBox="0 0 100 45" className="w-full h-9 self-end object-contain" preserveAspectRatio="xMidYMax meet">
           <g transform="translate(30, 6)">
             {/* Milk/Drink Bottle */}
             <rect x="22" y="2" width="8" height="18" rx="2" fill="#ffffff" />
@@ -370,7 +404,7 @@ function RouteMap({
 }
 
 export function RideSimulator() {
-  const { engine } = useLesson();
+  const { engine, goSummary, retry } = useLesson();
   const { tr, lang } = useLanguage();
   const ur = lang === "ur";
 
@@ -397,17 +431,11 @@ export function RideSimulator() {
     ? practiceFare(pickupLoc.id, destLoc?.id || "hospital", rideType)
     : 0;
 
-  const option = (selected: boolean) =>
-    cn(
-      "flex w-full items-center gap-2.5 rounded-xl border-2 bg-card p-2 sm:p-2.5 text-start text-xs sm:text-sm font-semibold text-heading transition-colors shrink-0",
-      selected ? "border-primary bg-mint" : "border-border hover:border-primary",
-    );
-
   return (
     <PhoneFrame
       appName={ur ? "سواری" : "Ride"}
-      hideHeader={isDarkAppScreen}
-      noPadding={isDarkAppScreen}
+      hideHeader={true}
+      noPadding={true}
       darkTheme={isDarkAppScreen}
     >
       {/* SCREEN 3: FULL-SCREEN INTERACTIVE MAP PICKER (LEAFLET) */}
@@ -451,34 +479,34 @@ export function RideSimulator() {
               <ServiceCardsGrid ur={ur} onSelect={() => engine.act("where-to")} />
 
               {/* Bottom Section: Destination Search & Recent Locations */}
-              <div className="space-y-2.5 px-3 pt-2.5 pb-2">
+              <div className="space-y-2 px-2.5 pt-2 pb-1.5">
                 {/* Main Destination Search Bar (Interactive Target for Step 1) */}
                 <SimButton
                   action="where-to"
-                  className="flex w-full items-center gap-3 rounded-2xl bg-white px-3.5 py-3 text-start shadow-md hover:bg-zinc-100 transition-all cursor-pointer group"
+                  className="flex w-full items-center gap-2.5 rounded-xl bg-white px-3 py-2 text-start shadow-sm hover:bg-zinc-100 transition-all cursor-pointer group"
                 >
-                  <Search className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <span className="flex-1 text-sm sm:text-[15px] font-bold text-zinc-900 truncate">
+                  <Search className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <span className="flex-1 text-xs sm:text-[13px] font-bold text-zinc-900 truncate">
                     {ur ? "آپ کہاں جا رہے ہیں؟" : "Where are you going?"}
                   </span>
                 </SimButton>
 
                 {/* Recent Places Section */}
-                <div className="space-y-1.5 pt-0.5">
-                  <div className="flex items-center justify-between px-1">
-                    <span className="text-xs font-semibold text-zinc-400">
+                <div className="space-y-1 pt-0.5">
+                  <div className="flex items-center justify-between px-0.5">
+                    <span className="text-[9.5px] font-semibold text-zinc-400">
                       {ur ? "حالیہ مقامات" : "Recent places"}
                     </span>
                     <button
                       type="button"
                       onClick={() => engine.act("where-to")}
-                      className="text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+                      className="text-[9.5px] font-semibold text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
                     >
                       {ur ? "سب دیکھیں" : "See all"}
                     </button>
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-0.5">
                     {/* Location 1: NED Visitor Gate */}
                     <button
                       type="button"
@@ -487,20 +515,20 @@ export function RideSimulator() {
                         setDestLoc(loc);
                         engine.act("where-to");
                       }}
-                      className="flex w-full items-center gap-2.5 rounded-xl p-2 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group"
+                      className="flex w-full items-center gap-2 rounded-lg p-1.5 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group"
                     >
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors">
-                        <Clock className="h-3.5 w-3.5" />
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors">
+                        <Clock className="h-3 w-3" />
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-[13px] font-bold text-white truncate">
+                        <p className="text-[11px] font-bold text-white truncate">
                           {ur ? "این ای ڈی وزیٹر گیٹ" : "NED Visitor Gate"}
                         </p>
-                        <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate">
+                        <p className="text-[8.5px] text-zinc-400 truncate">
                           {ur ? "مین یونیورسٹی روڈ، کراچی" : "Main University Road, Karachi"}
                         </p>
                       </div>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-zinc-500 group-hover:text-zinc-300 transition-colors" />
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-zinc-500 group-hover:text-zinc-300 transition-colors" />
                     </button>
 
                     {/* Location 2: NED University Of Engineering & Technology */}
@@ -511,28 +539,28 @@ export function RideSimulator() {
                         setDestLoc(loc);
                         engine.act("where-to");
                       }}
-                      className="flex w-full items-center gap-2.5 rounded-xl p-2 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group"
+                      className="flex w-full items-center gap-2 rounded-lg p-1.5 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group"
                     >
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors">
                         <Clock className="h-3.5 w-3.5" />
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs sm:text-[13px] font-bold text-white truncate">
+                        <p className="text-[11px] font-bold text-white truncate">
                           {ur ? "این ای ڈی یونیورسٹی آف انجینئرنگ اینڈ ٹیکنالوجی" : "NED University Of Engineering & Technology"}
                         </p>
-                        <p className="text-[10px] sm:text-[11px] text-zinc-400 truncate">
+                        <p className="text-[8.5px] text-zinc-400 truncate">
                           {ur ? "کراچی" : "Karachi"}
                         </p>
                       </div>
-                      <ChevronRight className="h-4 w-4 shrink-0 text-zinc-500 group-hover:text-zinc-300 transition-colors" />
+                      <ChevronRight className="h-3.5 w-3.5 shrink-0 text-zinc-500 group-hover:text-zinc-300 transition-colors" />
                     </button>
                   </div>
                 </div>
 
                 {/* Bottom Reassurance Note */}
-                <p className="shrink-0 text-center text-[10px] text-zinc-500 flex items-center justify-center gap-1 pt-1 pb-1.5">
+                <p className="shrink-0 text-center text-[8.5px] text-zinc-500 flex items-center justify-center gap-1 pt-0.5 pb-1">
                   <span>{ur ? "کوئی اصل مقام استعمال نہیں ہوتا" : "No live location is used"}</span>
-                  <Info className="h-3 w-3" />
+                  <Info className="h-2.5 w-2.5" />
                 </p>
               </div>
             </div>
@@ -573,212 +601,259 @@ export function RideSimulator() {
 
       {/* SCREEN 4: RIDE SELECTION */}
       {screen === "ride" && (
-        <div className="flex flex-1 flex-col justify-between min-h-full gap-2">
-          <RouteMap pickup={pickupLoc.id} dest={destLoc?.id} className="min-h-[100px]" />
-          <div className="shrink-0 space-y-2">
-            <h3 className="text-xs sm:text-sm font-bold text-heading">{ur ? "گاڑی کا انتخاب کریں" : "Choose Ride Type"}</h3>
-            <div className="space-y-1.5" role="radiogroup">
-              {rideTypes.map((r) => {
-                const itemFare = practiceFare(pickupLoc.id, destLoc?.id || "hospital", r.id);
-                const isSelected = rideType === r.id;
-                return (
-                  <button
-                    key={r.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={isSelected}
-                    onClick={() => setRideType(r.id)}
-                    className={cn(
-                      "flex w-full items-center justify-between rounded-xl border-2 bg-card px-2.5 py-1.5 sm:p-2.5 text-start transition-colors shrink-0 cursor-pointer",
-                      isSelected ? "border-primary bg-mint" : "border-border hover:border-primary"
-                    )}
-                  >
-                    <div className="flex items-center gap-2 min-w-0 flex-1 mr-1.5">
-                      <div className="flex h-7.5 w-7.5 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
-                        <Car className="h-4 w-4 sm:h-5 sm:w-5" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="text-xs sm:text-sm font-bold text-heading leading-tight whitespace-nowrap">
-                          {tr(r.label)}
+        <div className="flex flex-1 flex-col min-h-full">
+          <CompactSimulatorHeader
+            title={ur ? "گاڑی کا انتخاب" : "Choose Ride Type"}
+            ur={ur}
+            onBack={engine.back}
+          />
+          <div className="p-2 flex-1 flex flex-col justify-between gap-1.5 min-h-0">
+            <RouteMap pickup={pickupLoc.id} dest={destLoc?.id} className="h-[75px] shrink-0" />
+            <div className="shrink-0 space-y-1.5">
+              <h3 className="text-[11px] font-bold text-heading">{ur ? "گاڑی کا انتخاب کریں" : "Choose Ride Type"}</h3>
+              <div className="space-y-1" role="radiogroup">
+                {rideTypes.map((r) => {
+                  const itemFare = practiceFare(pickupLoc.id, destLoc?.id || "hospital", r.id);
+                  const isSelected = rideType === r.id;
+                  return (
+                    <button
+                      key={r.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      onClick={() => setRideType(r.id)}
+                      className={cn(
+                        "flex w-full items-center justify-between rounded-xl border-2 bg-card px-2 py-1 text-start transition-colors shrink-0 cursor-pointer",
+                        isSelected ? "border-primary bg-mint" : "border-border hover:border-primary"
+                      )}
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-1">
+                        <div className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
+                          <Car className="h-3.5 w-3.5" />
                         </div>
-                        <div className="text-[9.5px] sm:text-[10px] text-muted-foreground leading-tight truncate">
-                          {r.id === "rickshaw"
-                            ? ur
-                              ? "کم کرایہ · 2 منٹ"
-                              : "Economical · 2 min"
-                            : ur
-                              ? "آرام دہ · 3 منٹ"
-                              : "Comfortable · 3 min"}
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[11px] font-bold text-heading leading-tight whitespace-nowrap">
+                            {tr(r.label)}
+                          </div>
+                          <div className="text-[8.5px] text-muted-foreground leading-tight truncate">
+                            {r.id === "rickshaw"
+                              ? ur
+                                ? "کم کرایہ · 2 منٹ"
+                                : "Economical · 2 min"
+                              : ur
+                                ? "آرام دہ · 3 منٹ"
+                                : "Comfortable · 3 min"}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-center gap-1.5 shrink-0 text-end">
-                      <span className="font-bold text-xs sm:text-sm text-heading whitespace-nowrap" dir="ltr">
-                        {formatRs(itemFare)}
-                      </span>
-                      {isSelected && <Check className="h-4 w-4 shrink-0 text-primary" />}
-                    </div>
-                  </button>
-                );
-              })}
+                      <div className="flex items-center gap-1 shrink-0 text-end">
+                        <span className="font-bold text-[11px] text-heading whitespace-nowrap" dir="ltr">
+                          {formatRs(itemFare)}
+                        </span>
+                        {isSelected && <Check className="h-3.5 w-3.5 shrink-0 text-primary" />}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Payment Method pill */}
+              <div className="flex items-center justify-between rounded-lg border border-border bg-card px-2 py-1 text-[9.5px]">
+                <span className="flex items-center gap-1 font-semibold text-muted-foreground shrink-0">
+                  <Banknote className="h-3 w-3 text-primary" /> {ur ? "ادائیگی" : "Payment"}
+                </span>
+                <span className="font-bold text-heading text-end truncate ml-1">{ur ? "نقد (Cash)" : "Cash on arrival"}</span>
+              </div>
             </div>
 
-            {/* Payment Method pill */}
-            <div className="flex items-center justify-between rounded-xl border border-border bg-card px-2.5 py-1.5 text-xs">
-              <span className="flex items-center gap-1.5 font-semibold text-muted-foreground shrink-0">
-                <Banknote className="h-3.5 w-3.5 text-primary" /> {ur ? "ادائیگی" : "Payment"}
-              </span>
-              <span className="font-bold text-heading text-end truncate">{ur ? "نقد (Cash)" : "Cash on arrival"}</span>
+            <div className="shrink-0 pt-0.5">
+              <SimButton
+                action="ride-continue"
+                onPress={() =>
+                  rideType
+                    ? engine.act("ride-continue")
+                    : engine.mistake({
+                        en: "Please tap Car or Rickshaw first.",
+                        ur: "پہلے گاڑی یا رکشہ دبائیں۔",
+                      })
+                }
+                className="btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer"
+              >
+                {ur ? "آگے بڑھیں" : "Continue"}
+              </SimButton>
             </div>
-          </div>
-
-          <div className="shrink-0 pt-1">
-            <SimButton
-              action="ride-continue"
-              onPress={() =>
-                rideType
-                  ? engine.act("ride-continue")
-                  : engine.mistake({
-                      en: "Please tap Car or Rickshaw first.",
-                      ur: "پہلے گاڑی یا رکشہ دبائیں۔",
-                    })
-              }
-              className="btn btn-primary w-full min-h-[38px] sm:min-h-[42px] py-1.5 text-xs sm:text-sm cursor-pointer"
-            >
-              {ur ? "آگے بڑھیں" : "Continue"}
-            </SimButton>
           </div>
         </div>
       )}
 
       {/* SCREEN 5: REVIEW */}
       {screen === "review" && (
-        <div className="flex flex-1 flex-col justify-between min-h-full gap-2">
-          <RouteMap className="min-h-[90px]" pickup={pickupLoc.id} dest={destLoc?.id} />
-          <div className="shrink-0 space-y-1.5">
-            <h3 className="text-xs sm:text-sm font-bold text-heading">{ur ? "بکنگ کا جائزہ" : "Review booking"}</h3>
-            <dl className="divide-y divide-border rounded-xl border border-border bg-card text-xs">
-              {[
-                [ur ? "سوار ہونا" : "Pickup", pickupLoc.name],
-                [ur ? "منزل" : "Destination", destLoc?.name || "NED Visitor Gate"],
-                [ur ? "سواری" : "Ride", tr(rideTypes.find((r) => r.id === (rideType || "car"))?.label)],
-                [ur ? "اندازاً کرایہ" : "Est. fare", formatRs(fare || practiceFare(pickupLoc.id, destLoc?.id || "hospital", "car"))],
-              ].map(([k, v]) => (
-                <div key={k} className="flex justify-between items-start gap-2 p-2">
-                  <dt className="text-muted-foreground font-medium shrink-0">{k}</dt>
-                  <dd className="text-end font-bold text-heading leading-tight break-words max-w-[65%]">{v}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <div className="shrink-0 pt-1">
-            <SimButton action="confirm-booking" className="btn btn-primary w-full min-h-[38px] sm:min-h-[42px] py-1.5 text-xs sm:text-sm cursor-pointer">
-              {ur ? "مشق بکنگ کی تصدیق" : "Confirm Practice Booking"}
-            </SimButton>
+        <div className="flex flex-1 flex-col min-h-full">
+          <CompactSimulatorHeader
+            title={ur ? "بکنگ کا جائزہ" : "Review booking"}
+            ur={ur}
+            onBack={engine.back}
+          />
+          <div className="p-2 flex-1 flex flex-col justify-between gap-1.5 min-h-0">
+            <RouteMap className="h-[75px] shrink-0" pickup={pickupLoc.id} dest={destLoc?.id} />
+            <div className="shrink-0 space-y-1">
+              <h3 className="text-[11px] font-bold text-heading">{ur ? "بکنگ کا جائزہ" : "Review booking"}</h3>
+              <dl className="divide-y divide-border rounded-xl border border-border bg-card text-[9.5px]">
+                {[
+                  [ur ? "سوار ہونا" : "Pickup", pickupLoc.name],
+                  [ur ? "منزل" : "Destination", destLoc?.name || "NED Visitor Gate"],
+                  [ur ? "سواری" : "Ride", tr(rideTypes.find((r) => r.id === (rideType || "car"))?.label)],
+                  [ur ? "اندازاً کرایہ" : "Est. fare", formatRs(fare || practiceFare(pickupLoc.id, destLoc?.id || "hospital", "car"))],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex justify-between items-center gap-1.5 px-2 py-1">
+                    <dt className="text-muted-foreground font-medium shrink-0">{k}</dt>
+                    <dd className="text-end font-bold text-heading leading-tight truncate max-w-[62%]">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+            <div className="shrink-0 pt-0.5">
+              <SimButton action="confirm-booking" className="btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer">
+                {ur ? "مشق بکنگ کی تصدیق" : "Confirm Practice Booking"}
+              </SimButton>
+            </div>
           </div>
         </div>
       )}
 
       {/* SCREEN 6: ASSIGNED DRIVER */}
       {screen === "assigned" && (
-        <div className="flex flex-1 flex-col justify-between min-h-full gap-2">
-          <RouteMap pickup={pickupLoc.id} dest={destLoc?.id} className="min-h-[100px]" />
-          <div className="shrink-0 space-y-2">
-            <p className="rounded-xl bg-success-soft p-2 text-center text-xs font-bold text-success">
-              {ur ? "مشق ڈرائیور مل گیا — 3 منٹ میں پہنچ رہا ہے" : "Practice driver found — arriving in 3 min"}
-            </p>
-            <div className="rounded-2xl border border-border bg-card p-3 shadow-xs">
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mint">
-                  <UserRound className="h-6 w-6 text-primary-strong" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-bold text-heading truncate">{rideDriver.name}</p>
-                  <p className="text-[10px] text-muted-foreground truncate">⭐ 4.9 · {ur ? "سفید سوزوکی آلٹو" : "White Suzuki Alto"}</p>
+        <div className="flex flex-1 flex-col min-h-full">
+          <CompactSimulatorHeader
+            title={ur ? "ڈرائیور مل گیا" : "Driver Assigned"}
+            ur={ur}
+            onBack={engine.back}
+          />
+          <div className="p-2 flex-1 flex flex-col justify-between gap-1.5 min-h-0">
+            <RouteMap pickup={pickupLoc.id} dest={destLoc?.id} className="h-[75px] shrink-0" />
+            <div className="shrink-0 space-y-1.5">
+              <p className="rounded-lg bg-success-soft p-1 text-center text-[9.5px] font-bold text-success">
+                {ur ? "مشق ڈرائیور مل گیا — 3 منٹ میں پہنچ رہا ہے" : "Practice driver found — arriving in 3 min"}
+              </p>
+              <div className="rounded-xl border border-border bg-card p-2 shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mint">
+                    <UserRound className="h-4 w-4 text-primary-strong" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-bold text-heading truncate">{rideDriver.name}</p>
+                    <p className="text-[9px] text-muted-foreground truncate">⭐ 4.9 · {ur ? "سفید سوزوکی آلٹو" : "White Suzuki Alto"}</p>
+                  </div>
+                </div>
+                <div className="mt-1.5 border-t border-border pt-1 text-center">
+                  <p className="text-[8px] font-semibold uppercase tracking-wider text-muted-foreground">
+                    {ur ? "نمبر پلیٹ (یاد رکھیں)" : "Number Plate (Remember this)"}
+                  </p>
+                  <p
+                    className="mt-0.5 inline-block rounded-lg border-2 border-heading bg-card px-2.5 py-0.5 font-mono text-sm sm:text-base font-black tracking-widest text-heading shadow-xs"
+                    dir="ltr"
+                  >
+                    {rideDriver.bookedPlate}
+                  </p>
                 </div>
               </div>
-              <div className="mt-2.5 border-t border-border pt-2 text-center">
-                <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {ur ? "نمبر پلیٹ (یاد رکھیں)" : "Number Plate (Remember this)"}
-                </p>
-                <p
-                  className="mt-1 inline-block rounded-lg border-2 border-heading bg-card px-3 py-1 font-mono text-xl sm:text-2xl font-black tracking-widest text-heading shadow-xs"
-                  dir="ltr"
-                >
-                  {rideDriver.bookedPlate}
-                </p>
-              </div>
             </div>
-          </div>
-          <div className="shrink-0 pt-1">
-            <SimButton action="see-vehicle" className="btn btn-primary w-full min-h-[42px] py-1.5 text-xs sm:text-sm cursor-pointer">
-              {ur ? "گاڑی پہنچ گئی" : "Vehicle has arrived"}
-            </SimButton>
+            <div className="shrink-0 pt-0.5">
+              <SimButton action="see-vehicle" className="btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer">
+                {ur ? "گاڑی پہنچ گئی" : "Vehicle has arrived"}
+              </SimButton>
+            </div>
           </div>
         </div>
       )}
 
       {/* SCREEN 7: VERIFY PLATE */}
       {screen === "verify" && (
-        <div className="flex flex-1 flex-col justify-between min-h-full gap-2">
-          <div className="flex-1 flex flex-col items-center justify-center rounded-2xl border border-border bg-sky p-3 text-center min-h-[100px]">
-            <Car className="h-14 w-14 text-heading" />
-            <p
-              className="mt-1.5 inline-block rounded-lg border-2 border-heading bg-card px-3 py-1 font-mono text-xl sm:text-2xl font-black tracking-widest text-heading shadow-xs"
-              dir="ltr"
-            >
-              {rideDriver.arrivedPlate}
-            </p>
-            <p className="mt-1 text-[10px] font-semibold text-muted-foreground">
-              {ur ? "آنے والی گاڑی کی نمبر پلیٹ" : "Arriving vehicle number plate"}
-            </p>
-          </div>
+        <div className="flex flex-1 flex-col min-h-full">
+          <CompactSimulatorHeader
+            title={ur ? "پلیٹ چیک کریں" : "Verify Plate"}
+            ur={ur}
+            onBack={engine.back}
+          />
+          <div className="p-2 flex-1 flex flex-col justify-between gap-1.5 min-h-0">
+            <div className="flex-1 flex flex-col items-center justify-center rounded-xl border border-border bg-sky p-2 text-center min-h-[75px]">
+              <Car className="h-8 w-8 text-heading" />
+              <p
+                className="mt-1 inline-block rounded-lg border-2 border-heading bg-card px-2 py-0.5 font-mono text-sm sm:text-base font-black tracking-widest text-heading shadow-xs"
+                dir="ltr"
+              >
+                {rideDriver.arrivedPlate}
+              </p>
+              <p className="mt-0.5 text-[8.5px] font-semibold text-muted-foreground">
+                {ur ? "آنے والی گاڑی کی نمبر پلیٹ" : "Arriving vehicle number plate"}
+              </p>
+            </div>
 
-          <div className="shrink-0 rounded-xl border border-border bg-card p-2 text-center">
-            <p className="text-xs sm:text-sm font-bold text-heading">
-              {ur ? "کیا یہ نمبر پلیٹ آپ کی بکنگ والی سے ملتی ہے؟" : "Does this vehicle number plate match your booking?"}
-            </p>
-            <p className="mt-1 text-[10px] text-muted-foreground">
-              {ur ? "بکنگ والی پلیٹ:" : "Booked plate:"}{" "}
-              <span className="font-mono font-bold text-heading" dir="ltr">
-                {rideDriver.bookedPlate}
-              </span>
-            </p>
-          </div>
+            <div className="shrink-0 rounded-lg border border-border bg-card p-1.5 text-center">
+              <p className="text-[10px] font-bold text-heading leading-tight">
+                {ur ? "کیا یہ نمبر پلیٹ آپ کی بکنگ والی سے ملتی ہے؟" : "Does this vehicle number plate match your booking?"}
+              </p>
+              <p className="mt-0.5 text-[8.5px] text-muted-foreground">
+                {ur ? "بکنگ والی پلیٹ:" : "Booked plate:"}{" "}
+                <span className="font-mono font-bold text-heading" dir="ltr">
+                  {rideDriver.bookedPlate}
+                </span>
+              </p>
+            </div>
 
-          <div className="shrink-0 space-y-1.5 pt-1">
-            <SimButton action="plate-match" highlightFor="__never" className="btn btn-outline w-full min-h-[40px] py-1 text-xs cursor-pointer">
-              {ur ? "ہاں، ملتی ہے" : "Yes, it matches"}
-            </SimButton>
-            <SimButton action="plate-different" className="btn btn-primary w-full min-h-[40px] py-1 text-xs cursor-pointer">
-              {ur ? "نہیں، مختلف ہے" : "No, it is different"}
-            </SimButton>
+            <div className="shrink-0 space-y-1 pt-0.5">
+              <SimButton action="plate-match" highlightFor="__never" className="btn btn-outline w-full min-h-[32px] py-1 text-[11px] font-bold rounded-xl cursor-pointer">
+                {ur ? "ہاں، ملتی ہے" : "Yes, it matches"}
+              </SimButton>
+              <SimButton action="plate-different" className="btn btn-primary w-full min-h-[32px] py-1 text-[11px] font-bold rounded-xl cursor-pointer">
+                {ur ? "نہیں، مختلف ہے" : "No, it is different"}
+              </SimButton>
+            </div>
           </div>
         </div>
       )}
 
       {/* SCREEN 8: DONE */}
       {screen === "done" && (
-        <div className="flex flex-1 flex-col justify-between min-h-full gap-2.5 text-center">
-          <div className="flex-1 flex flex-col items-center justify-center space-y-3 pt-2">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success-soft">
-              <CheckCircle2 className="h-9 w-9 text-success" />
+        <div className="flex flex-1 flex-col min-h-full">
+          <CompactSimulatorHeader
+            title={ur ? "مکمل" : "Complete"}
+            ur={ur}
+          />
+          <div className="p-2 flex-1 flex flex-col justify-between gap-1.5 min-h-0 text-center">
+            <div className="flex-1 flex flex-col items-center justify-center space-y-1.5 pt-1">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-success-soft">
+                <CheckCircle2 className="h-6 w-6 text-success" />
+              </div>
+              <p className="flex items-start gap-1.5 rounded-xl bg-warning-soft p-1.5 text-start text-[9.5px] leading-snug text-heading shadow-xs">
+                <ShieldAlert className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warning" />
+                <span>
+                  {ur
+                    ? "درست! پلیٹ مختلف تھی، اس لیے گاڑی میں نہ بیٹھیں۔ ایپ میں ڈرائیور کو چیک کریں یا سواری منسوخ کریں۔"
+                    : "Correct! The plate was different, so do not get in. Check the driver in the app or cancel the ride."}
+                </span>
+              </p>
+              <p className="text-xs font-bold text-heading leading-snug px-1">
+                {ur ? "زبردست! آپ نے سواری بک کرنے اور تفصیل چیک کرنے کی مشق کی۔" : "Great! You practised booking a ride safely."}
+              </p>
             </div>
-            <p className="flex items-start gap-2 rounded-2xl bg-warning-soft p-3 text-start text-xs text-heading shadow-xs">
-              <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
-              <span>
-                {ur
-                  ? "درست! پلیٹ مختلف تھی، اس لیے گاڑی میں نہ بیٹھیں۔ ایپ میں ڈرائیور کو چیک کریں یا سواری منسوخ کریں۔"
-                  : "Correct! The plate was different, so do not get in. Check the driver in the app or cancel the ride."}
-              </span>
-            </p>
-            <p className="text-sm sm:text-base font-bold text-heading">
-              {ur ? "زبردست! آپ نے سواری بک کرنے اور تفصیل چیک کرنے کی مشق کی۔" : "Great! You practised booking a ride safely."}
-            </p>
-          </div>
-          <div className="shrink-0 pt-2">
-            <CompletionActions />
+            <div className="shrink-0 space-y-1 pt-1">
+              <button
+                type="button"
+                onClick={goSummary}
+                className="btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl whitespace-nowrap cursor-pointer"
+              >
+                {ur ? "خلاصہ دیکھیں" : "View Learning Summary"}
+              </button>
+              <button
+                type="button"
+                onClick={retry}
+                className="btn btn-outline w-full min-h-[30px] py-1 text-xs font-semibold rounded-xl cursor-pointer"
+              >
+                {ur ? "دوبارہ کوشش کریں" : "Try Again"}
+              </button>
+            </div>
           </div>
         </div>
       )}
