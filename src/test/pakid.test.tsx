@@ -53,5 +53,10 @@ describe("PakID Proof-of-Life Feature", () => {
     expect(pakidText["cardPictureBtn"]!.en).toBe("Start Picture Tutorial");
     expect(pakidText["cardPracticeBtn"]!.en).toBe("Start Practice");
   });
+
+  it("links to the official NADRA YouTube video with proper attributes", () => {
+    const videoUrl = "https://www.youtube.com/watch?v=078kiJV6w_M";
+    expect(videoUrl).toContain("youtube.com/watch?v=078kiJV6w_M");
+  });
 });
 

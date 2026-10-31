@@ -100,3 +100,4 @@ export function PakIDBadgeIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+

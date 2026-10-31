@@ -6,8 +6,10 @@ import {
   BookOpen,
   Check,
   Compass,
+  ExternalLink,
   Hand,
   Info,
+  Play,
   ShieldAlert,
   ShieldCheck,
   Smartphone,
@@ -240,6 +242,42 @@ export function PakIDLanding({ initialView = "landing" }: PakIDLandingProps) {
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Secondary Option: Watch Official Video Tutorial */}
+      <div className="mt-6">
+        <a
+          href="https://www.youtube.com/watch?v=078kiJV6w_M"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-3xl border-2 border-slate-200 bg-white p-5 shadow-sm transition-all hover:border-red-500 hover:shadow-md"
+        >
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-red-600 text-white shadow-sm transition group-hover:scale-105">
+              <Play className="h-6 w-6 fill-current" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-base sm:text-lg font-black text-slate-900 group-hover:text-red-600 transition">
+                  {ur ? "نادرا کی باضابطہ ویڈیو دیکھیں" : "Watch Official NADRA Video"}
+                </span>
+                <span className="rounded-md bg-red-100 px-2 py-0.5 text-[10px] font-black uppercase tracking-wider text-red-700">
+                  YouTube
+                </span>
+              </div>
+              <p className="mt-0.5 text-sm text-slate-600">
+                {ur
+                  ? "مزید رہنمائی کے لیے نادرا کی سرکاری ویڈیو دیکھیں۔"
+                  : "Watch the official video for additional guidance."}
+              </p>
+            </div>
+          </div>
+
+          <span className="flex min-h-[48px] items-center gap-2 rounded-2xl border-2 border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-bold text-slate-800 transition group-hover:bg-red-50 group-hover:border-red-300 group-hover:text-red-700 shrink-0">
+            <span>{ur ? "ویڈیو کھولیں" : "Open Video"}</span>
+            <ExternalLink className="h-4 w-4" />
+          </span>
+        </a>
       </div>
 
       {/* You Will Learn Section */}
