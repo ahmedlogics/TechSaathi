@@ -197,117 +197,107 @@ export function CallSimulator() {
         </span>
       </div>
 
-      {/* Screen 1: Start Screen - Choose Video or Voice Call */}
-      {screen === "start" && (
-        <div className="flex flex-col gap-3.5 pt-2">
-          {/* WhatsApp Brand Banner */}
-          <div className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#075e54] to-[#128c7e] p-4 text-center text-white shadow-sm">
-            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-xs">
-              <Phone className="h-7 w-7" />
-            </span>
-            <h3 className="mt-2.5 text-lg font-bold">
-              {ur ? "واٹس ایپ کال کی قسم منتخب کریں" : "Choose WhatsApp Call Type"}
-            </h3>
-            <p className="mt-0.5 text-xs text-emerald-100">
-              {ur ? "مشق شروع کرنے کے لیے ویڈیو یا آڈیو کال منتخب کریں" : "Select video or voice call to start practicing"}
-            </p>
-          </div>
-
-          <div className="space-y-2.5">
-            <SimButton
-              action="choose-video"
-              onPress={() => {
-                setCallType("video");
-                callSounds.playTap();
-                engine.act("choose-video");
-              }}
-              className="btn flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#25d366] hover:bg-[#20ba59] py-3 text-base font-bold text-slate-950 shadow-md transition-all active:scale-98"
-            >
-              <Video className="h-5 w-5 shrink-0" />
-              <span>{ur ? "واٹس ایپ ویڈیو کال کی مشق" : "Practise WhatsApp Video Call"}</span>
-            </SimButton>
-
-            <button
-              type="button"
-              onClick={() => {
-                setCallType("audio");
-                callSounds.playTap();
-                engine.act("choose-video");
-              }}
-              className="btn btn-outline flex w-full items-center justify-center gap-2.5 rounded-xl border-emerald-600/30 bg-card py-2.5 text-sm font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
-            >
-              <Phone className="h-4 w-4 shrink-0 text-[#25d366]" />
-              <span>{ur ? "واٹس ایپ آڈیو (وائس) کال" : "Practise WhatsApp Voice Call"}</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Screen 2: WhatsApp Contacts Picker */}
-      {screen === "contacts" && (
-        <div className="space-y-2.5">
+      {/* WhatsApp Contacts Screen (Opens directly without 2-button screen) */}
+      {(screen === "start" || screen === "contacts") && (
+        <div className="space-y-3">
           {/* WhatsApp Style Top Bar */}
-          <div className="flex items-center justify-between rounded-xl bg-[#008069] px-3.5 py-2.5 text-white shadow-sm">
+          <div className="flex items-center justify-between rounded-2xl bg-[#008069] px-4 py-3 text-white shadow-sm">
             <div>
-              <p className="text-sm font-bold">
+              <p className="text-base font-bold">
                 {ur ? "رابطہ منتخب کریں" : "Select contact"}
               </p>
-              <p className="text-[11px] text-emerald-100">
-                {callType === "video"
-                  ? ur ? "ویڈیو کال — سارہ کو کال کریں" : "Video Call — Call Sara"
-                  : ur ? "وائس کال — سارہ کو کال کریں" : "Voice Call — Call Sara"}
+              <p className="text-xs text-emerald-100">
+                {ur
+                  ? "سارہ کو کال کرنے کے لیے دائیں طرف کیمرہ یا فون کا بٹن دبائیں"
+                  : "Tap the video or phone icon on the right to call Sara"}
               </p>
             </div>
-            <Search className="h-4 w-4 text-emerald-100" />
+            <Search className="h-5 w-5 text-emerald-100" />
           </div>
 
-          <ul className="space-y-2">
+          {/* Contacts List Header */}
+          <div className="flex items-center justify-between px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <span>{ur ? "تمام رابطے" : "All Contacts"}</span>
+            <span className="text-[11px] text-emerald-600 font-semibold">{callContacts.length} {ur ? "رابطے" : "contacts"}</span>
+          </div>
+
+          {/* Generic Contacts List */}
+          <ul className="space-y-2.5">
             {callContacts.map((c, i) => (
               <li
                 key={c.id}
-                className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-xs transition-all hover:bg-muted/40"
+                className={cn(
+                  "flex items-center justify-between gap-3 rounded-2xl border bg-card p-3 shadow-xs transition-all",
+                  i === 0
+                    ? "border-emerald-500/40 bg-emerald-50/40 dark:bg-emerald-950/20"
+                    : "border-border hover:bg-muted/40",
+                )}
               >
-                {/* WhatsApp Profile Avatar */}
-                <div className="relative">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-lg font-bold text-white shadow-xs">
-                    {c.initials}
-                  </span>
-                  <span className="absolute bottom-0 end-0 h-3 w-3 rounded-full bg-[#25d366] ring-2 ring-card" />
+                {/* Contact Avatar & Info */}
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="relative shrink-0">
+                    <span
+                      className={cn(
+                        "flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold text-white shadow-xs",
+                        (c as { color?: string }).color || "bg-emerald-600",
+                      )}
+                    >
+                      {c.initials}
+                    </span>
+                    <span className="absolute bottom-0 end-0 h-3.5 w-3.5 rounded-full bg-[#25d366] ring-2 ring-card" />
+                  </div>
+
+                  <div className="min-w-0">
+                    <span className="block truncate text-base font-bold text-heading">
+                      {ur && (c as { urName?: string }).urName ? (c as { urName?: string }).urName : c.name}
+                    </span>
+                    <span className="block text-xs font-medium text-muted-foreground truncate">
+                      {(c as { phone?: string }).phone || "0300 1234567"} •{" "}
+                      {ur && (c as { urRole?: string }).urRole
+                        ? (c as { urRole?: string }).urRole
+                        : (c as { role?: string }).role || (i === 0 ? "Daughter — Online" : "Available")}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <span className="block truncate text-base font-bold text-heading">{c.name}</span>
-                  <span className="block text-xs font-medium text-muted-foreground truncate">
-                    {i === 0
-                      ? ur
-                        ? "بیٹی — آن لائن"
-                        : "Daughter — Online"
-                      : ur
-                        ? "بیٹا — دستیاب ہے"
-                        : "Son — Available"}
-                  </span>
-                </div>
-
-                {/* WhatsApp Call Buttons */}
-                <div className="flex items-center gap-2">
+                {/* Direct Call Action Icons on the Right */}
+                <div className="flex items-center gap-2 shrink-0">
+                  {/* 1. Video Call Icon Button (Primary Target for Sara with animated arrow) */}
                   <SimButton
                     action={i === 0 ? "call-sara" : "call-other"}
+                    highlightFor="call-sara"
                     onPress={() => {
+                      setCallType("video");
                       callSounds.playTap();
                       engine.act(i === 0 ? "call-sara" : "call-other");
                     }}
-                    aria-label={`${callType === "video" ? "Video" : "Voice"} call ${c.name}`}
+                    aria-label={`${ur ? "ویڈیو کال" : "Video call"} ${c.name}`}
+                    title={ur ? "ویڈیو کال کریں" : "Video Call"}
                     className={cn(
                       waRoundBtn,
-                      "h-10 w-10 sm:h-11 sm:w-11 bg-[#25d366] text-slate-950 hover:bg-[#20ba59] shadow-xs",
+                      "h-11 w-11 bg-[#25d366] text-slate-950 hover:bg-[#20ba59] shadow-xs active:scale-95",
                     )}
                   >
-                    {callType === "video" ? (
-                      <Video className="h-5 w-5" />
-                    ) : (
-                      <Phone className="h-5 w-5" />
-                    )}
+                    <Video className="h-5 w-5" />
                   </SimButton>
+
+                  {/* 2. Voice Call Icon Button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCallType("audio");
+                      callSounds.playTap();
+                      engine.act(i === 0 ? "call-sara" : "call-other");
+                    }}
+                    aria-label={`${ur ? "آڈیو کال" : "Voice call"} ${c.name}`}
+                    title={ur ? "وائس کال کریں" : "Voice Call"}
+                    className={cn(
+                      waRoundBtn,
+                      "h-11 w-11 border-2 border-emerald-600/40 bg-card text-[#25d366] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 shadow-xs active:scale-95",
+                    )}
+                  >
+                    <Phone className="h-5 w-5" />
+                  </button>
                 </div>
               </li>
             ))}

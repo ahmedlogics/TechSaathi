@@ -32,9 +32,10 @@ export const rideDriver = { name: "Imran Saeed", bookedPlate: "KHI-4821", arrive
 
 /* ---------- Video call ---------- */
 export const callContacts = [
-  { id: "sara", name: "Sara (Daughter)", initials: "S" },
-  { id: "usman", name: "Usman (Son)", initials: "U" },
-  { id: "nasreen", name: "Nasreen (Sister)", initials: "N" },
+  { id: "sara", name: "Sara (Daughter)", urName: "سارہ (بیٹی)", phone: "0334 2562283", initials: "S", role: "Daughter — Online", urRole: "بیٹی — آن لائن", color: "bg-emerald-600" },
+  { id: "daniyal", name: "Daniyal (Son)", urName: "دانیال (بیٹا)", phone: "0300 8765432", initials: "D", role: "Son — Available", urRole: "بیٹا — دستیاب ہے", color: "bg-sky-600" },
+  { id: "nasreen", name: "Nasreen (Sister)", urName: "نسرین (بہن)", phone: "0321 4567890", initials: "N", role: "Sister — Today", urRole: "بہن — آج دستیاب", color: "bg-purple-600" },
+  { id: "tariq", name: "Uncle Tariq", urName: "طارق چچا", phone: "0345 9876543", initials: "T", role: "Brother — Available", urRole: "بھائی — دستیاب", color: "bg-amber-600" },
 ];
 
 /* ---------- PakID orientation: practice decisions ---------- */
