@@ -27,8 +27,8 @@ function PracticePage() {
   const { mode } = Route.useSearch();
   const m = getModule(moduleId)!;
   return (
-    <PageContainer>
+    <div className="h-full w-full overflow-hidden flex flex-col">
       <LearningWorkspace key={`${moduleId}-${mode}`} module={m} mode={mode} />
-    </PageContainer>
+    </div>
   );
 }

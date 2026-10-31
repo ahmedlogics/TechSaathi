@@ -85,12 +85,20 @@
   }
   html {
     font-size: 18px;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
   }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     line-height: 1.6;
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
   }
   [dir="rtl"] body,
   [lang="ur"] body {
@@ -168,12 +176,18 @@
 }
 
 @utility phone-shell {
-  width: 400px;
-  border: 12px solid var(--color-phone);
-  border-radius: 3rem;
+  aspect-ratio: 9 / 19.5;
+  height: 96%;
+  width: auto;
+  max-height: 100%;
+  border: 9px solid var(--color-phone);
+  border-radius: 2.8rem;
   box-shadow: var(--shadow-phone);
   overflow: hidden;
   background: var(--color-card);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 }
 
 @utility sim-target {

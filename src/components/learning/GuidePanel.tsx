@@ -28,14 +28,14 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
 
   return (
     <aside
-      className="card-surface flex flex-col gap-4 p-5 sm:p-7 transition-all duration-200"
+      className="card-surface rounded-3xl border border-border bg-card p-5 sm:p-6 lg:p-7 shadow-xs flex flex-col gap-4 sm:gap-5 transition-all duration-200"
       aria-label={tr(module.title)}
     >
       {/* Header: Module title and Mode badge */}
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm sm:text-base font-semibold text-muted-foreground">{tr(module.title)}</p>
+        <p className="text-base sm:text-lg font-bold text-heading">{tr(module.title)}</p>
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs sm:text-sm font-bold shadow-sm ${
+          className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs sm:text-sm font-bold shadow-xs ${
             guide ? "bg-mint text-primary-strong border border-primary/20" : "bg-sky text-heading border border-sky/30"
           }`}
         >
@@ -46,14 +46,14 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
 
       {/* Progress Bar: Real action-based progress */}
       <div>
-        <div className="mb-2 flex justify-between text-sm font-semibold text-foreground">
+        <div className="mb-2 flex justify-between text-xs sm:text-sm font-semibold text-foreground">
           <span>
             {completed ? t("completed") : `${t("step")} ${current} ${t("of")} ${totalSteps}`}
           </span>
           <span className="font-extrabold text-primary">{pct}%</span>
         </div>
         <div
-          className="h-3 overflow-hidden rounded-full bg-muted"
+          className="h-2.5 overflow-hidden rounded-full bg-muted"
           role="progressbar"
           aria-valuenow={pct}
           aria-valuemin={0}
@@ -68,26 +68,31 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
 
       {/* Let Me Try objective banner */}
       {!guide && !completed && (
-        <div className="rounded-xl border border-sky/50 bg-sky/70 p-4">
+        <div className="rounded-2xl border border-sky/50 bg-sky/70 p-4">
           <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">{t("yourTask")}</p>
-          <p className="mt-1 text-lg sm:text-xl font-bold text-heading">{tr(module.objective)}</p>
+          <p className="mt-1 text-base sm:text-lg font-bold text-heading">{tr(module.objective)}</p>
         </div>
       )}
 
       {/* SECTION A: Current Task Card */}
       {(guide || completed) && (
-        <div className="rounded-xl border-s-4 border-s-primary border border-border bg-card p-4 sm:p-5 shadow-sm transition-all duration-200">
+        <div className="rounded-2xl border-s-4 border-s-primary border border-border bg-card p-4 sm:p-5 shadow-xs transition-all duration-200 space-y-2">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-primary-strong">
             <span className="inline-block h-2 w-2 rounded-full bg-primary" />
             <span>
               {completed ? t("completed") : `${t("step")} ${current} — ${t("yourTask")}`}
             </span>
           </div>
-          <h2 className="mt-2 flex items-start gap-2 text-xl font-extrabold text-heading sm:text-2xl">
+          <h2 className="flex items-start gap-2 text-xl sm:text-2xl font-black text-heading">
             {completed && <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-success" />}
             {tr(step.title)}
           </h2>
-          <p className="mt-2 text-base sm:text-lg text-foreground/90 leading-relaxed">{tr(step.body)}</p>
+          <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">{tr(step.body)}</p>
+          {step.tip && !step.whyItMatters && (
+            <p className="mt-2.5 rounded-xl border-s-4 border-warning bg-warning-soft p-3 text-xs sm:text-sm">
+              <strong>{t("tip")}:</strong> {tr(step.tip)}
+            </p>
+          )}
         </div>
       )}
 
@@ -98,7 +103,7 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
             <Info className="h-4 w-4 text-primary shrink-0" />
             <span>{t("whyItMatters")}</span>
           </p>
-          <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">{tr(step.whyItMatters)}</p>
+          <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed">{tr(step.whyItMatters)}</p>
         </div>
       )}
 
@@ -109,10 +114,10 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
             <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
             <span>{t("checklistTitle")}</span>
           </p>
-          <ul className="space-y-1.5 text-sm sm:text-base">
+          <ul className="space-y-1.5 text-xs sm:text-sm">
             {step.checklist.map((item, idx) => (
               <li key={idx} className="flex items-start gap-2 text-heading">
-                <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-mint text-primary-strong">
+                <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-mint text-primary-strong">
                   <Check className="h-3 w-3 stroke-[3]" />
                 </span>
                 <span className="leading-snug">{tr(item)}</span>
@@ -129,27 +134,20 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
             <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
             <span>{t("commonMistakeTitle")}</span>
           </p>
-          <p className="text-sm sm:text-base text-heading leading-relaxed">{tr(step.commonMistake)}</p>
+          <p className="text-xs sm:text-sm text-heading leading-relaxed">{tr(step.commonMistake)}</p>
         </div>
-      )}
-
-      {/* Optional Step Tip fallback if no specific educational sections */}
-      {!completed && step.tip && !step.whyItMatters && (
-        <p className="rounded-xl border-s-4 border-warning bg-warning-soft p-3 text-sm sm:text-base">
-          <strong>{t("tip")}:</strong> {tr(step.tip)}
-        </p>
       )}
 
       {/* Mistake feedback alert */}
       {state.feedback && !completed && (
         <div
           role="alert"
-          className="flex gap-3 rounded-xl border-2 border-destructive bg-destructive-soft p-4 animate-in fade-in duration-200"
+          className="flex gap-2.5 rounded-xl border-2 border-destructive bg-destructive-soft p-3.5 animate-in fade-in duration-200"
         >
-          <AlertCircle className="mt-0.5 h-6 w-6 shrink-0 text-destructive" />
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
           <div>
-            <p className="font-bold text-destructive">{t("notQuite")}</p>
-            <p className="text-sm sm:text-base text-heading leading-relaxed mt-0.5">{tr(state.feedback)}</p>
+            <p className="font-bold text-xs sm:text-sm text-destructive">{t("notQuite")}</p>
+            <p className="text-xs sm:text-sm text-heading leading-relaxed mt-0.5">{tr(state.feedback)}</p>
           </div>
         </div>
       )}
@@ -157,13 +155,13 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
       {/* Contextual Hint Card */}
       {state.hintVisible && !completed && (
         <div
-          className="flex gap-3 rounded-xl border-2 border-primary bg-mint p-4 animate-in fade-in duration-200"
+          className="flex gap-2.5 rounded-xl border-2 border-primary bg-mint p-3.5 animate-in fade-in duration-200"
           role="status"
         >
-          <Lightbulb className="mt-0.5 h-6 w-6 shrink-0 text-primary-strong" />
+          <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-primary-strong" />
           <div>
-            {!guide && <p className="font-bold text-heading">{tr(step.title)}</p>}
-            <p className="text-sm sm:text-base text-heading leading-relaxed">{tr(step.hint)}</p>
+            {!guide && <p className="font-bold text-xs sm:text-sm text-heading">{tr(step.title)}</p>}
+            <p className="text-xs sm:text-sm text-heading leading-relaxed">{tr(step.hint)}</p>
           </div>
         </div>
       )}
@@ -172,22 +170,30 @@ export function GuidePanel({ onExit, onRestart }: { onExit: () => void; onRestar
       {!completed && (
         <button
           type="button"
-          className="btn btn-outline w-full shadow-sm text-base"
+          className="btn btn-outline w-full min-h-[46px] py-2 text-sm sm:text-base font-semibold shadow-xs"
           onClick={engine.showHint}
           disabled={state.hintVisible}
         >
-          <Lightbulb className="h-5 w-5" /> {guide ? t("showHint") : t("needHelp")}
+          <Lightbulb className="h-4.5 w-4.5" /> {guide ? t("showHint") : t("needHelp")}
         </button>
       )}
 
       {/* Bottom controls: Restart and Exit */}
-      <div className="flex flex-wrap gap-2 border-t border-border pt-4 mt-auto">
-        <button type="button" className="btn btn-ghost" onClick={onRestart}>
-          <RotateCcw className="h-5 w-5" /> {t("restart")}
+      <div className="flex flex-wrap items-center gap-3 border-t border-border pt-3 mt-auto">
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+          onClick={onRestart}
+        >
+          <RotateCcw className="h-4 w-4" /> {t("restart")}
         </button>
         {!completed && (
-          <button type="button" className="btn btn-ghost" onClick={onExit}>
-            <LogOut className="h-5 w-5" /> {t("exitLesson")}
+          <button
+            type="button"
+            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors ms-auto"
+            onClick={onExit}
+          >
+            <LogOut className="h-4 w-4" /> {t("exitLesson")}
           </button>
         )}
       </div>

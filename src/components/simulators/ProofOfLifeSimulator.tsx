@@ -14,7 +14,7 @@ export function ProofOfLifeSimulator() {
   const q = pakIdQuestions[step.id];
 
   return (
-    <PhoneFrame appName={ur ? "رہنمائی (غیر سرکاری)" : "Learning Walkthrough"}>
+    <PhoneFrame appName={ur ? "پاک آئی ڈی مشق" : "Practice PakID"}>
       <p className="mb-4 rounded-lg bg-warning-soft p-2 text-center text-sm font-bold text-warning">
         {ur ? "نادرا سے منسلک نہیں • کوئی شناخت کی تصدیق نہیں" : "Not affiliated with NADRA • No identity verification"}
       </p>

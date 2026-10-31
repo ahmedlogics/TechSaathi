@@ -1,0 +1,499 @@
+import { useState, useEffect, useRef } from "react";
+import {
+  ArrowLeft,
+  User,
+  Search,
+  MapPin,
+  Clock,
+  Crosshair,
+  Map,
+  X,
+  Loader2,
+  CheckCircle2,
+  Navigation,
+  Pointer,
+} from "lucide-react";
+import {
+  type LocationResult,
+  CURATED_LOCATIONS,
+  searchPlaces,
+  getBrowserCurrentLocation,
+  reverseGeocode,
+  hasLiveGeoapifyKey,
+} from "@/lib/rideGeocoding";
+import { SimButton, useLesson } from "@/components/learning/LessonContext";
+import { cn } from "@/lib/utils";
+
+interface RideRouteEntryProps {
+  ur: boolean;
+  pickup: LocationResult;
+  dest: LocationResult | null;
+  onSelectPickup: (loc: LocationResult) => void;
+  onSelectDest: (loc: LocationResult) => void;
+  onOpenMapPicker: (mode: "pickup" | "destination") => void;
+  onBack: () => void;
+  onContinue: () => void;
+}
+
+export function RideRouteEntry({
+  ur,
+  pickup,
+  dest,
+  onSelectPickup,
+  onSelectDest,
+  onOpenMapPicker,
+  onBack,
+  onContinue,
+}: RideRouteEntryProps) {
+  const { engine, isTarget } = useLesson();
+  const screen = engine.step.screen;
+
+  const [toInput, setToInput] = useState(dest ? dest.name : "");
+  const [searchResults, setSearchResults] = useState<LocationResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [showFromMenu, setShowFromMenu] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const [geoError, setGeoError] = useState<string | null>(null);
+
+  const searchBoxRef = useRef<HTMLDivElement>(null);
+
+  // Sync toInput if dest changes externally (e.g. from map picker)
+  useEffect(() => {
+    if (dest) {
+      setToInput(dest.name);
+    }
+  }, [dest]);
+
+  // Debounced destination autocomplete
+  useEffect(() => {
+    if (toInput.trim().length < 3 || (dest && toInput === dest.name)) {
+      setSearchResults([]);
+      setShowResults(false);
+      return;
+    }
+
+    const abortController = new AbortController();
+    setIsSearching(true);
+
+    const timer = setTimeout(async () => {
+      try {
+        const results = await searchPlaces(
+          toInput,
+          { lat: pickup.lat, lng: pickup.lng },
+          abortController.signal,
+        );
+        setSearchResults(results);
+        setShowResults(results.length > 0);
+      } catch (err: any) {
+        if (err.name !== "AbortError") {
+          console.error(err);
+        }
+      } finally {
+        setIsSearching(false);
+      }
+    }, 350);
+
+    return () => {
+      clearTimeout(timer);
+      abortController.abort();
+    };
+  }, [toInput, dest, pickup.lat, pickup.lng]);
+
+  // Handle "Use my current location" via real browser geolocation
+  const handleUseCurrentLocation = async () => {
+    setShowFromMenu(false);
+    setGeoError(null);
+    setLocating(true);
+
+    try {
+      const pos = await getBrowserCurrentLocation();
+      const geo = await reverseGeocode(pos.lat, pos.lng);
+      const userLoc: LocationResult = {
+        id: "current-user-location",
+        name: geo.name,
+        address: geo.address,
+        lat: pos.lat,
+        lng: pos.lng,
+      };
+      onSelectPickup(userLoc);
+
+      // Advance lesson if waiting for pickup
+      if (screen === "pickup") {
+        engine.act("pickup-continue");
+      }
+    } catch (err: any) {
+      setGeoError(err.message || "Failed to get current location.");
+    } finally {
+      setLocating(false);
+    }
+  };
+
+  const handleSelectRecent = (loc: LocationResult) => {
+    onSelectDest(loc);
+    setToInput(loc.name);
+    setShowResults(false);
+
+    // If lesson is at destination step, advance or validate
+    if (screen === "destination") {
+      engine.act("dest-continue");
+    }
+  };
+
+  const isPickupTarget = screen === "pickup" && isTarget("pickup-continue");
+  const isDestTarget = screen === "destination" && isTarget("dest-continue");
+
+  return (
+    <div className="relative flex flex-col min-h-full bg-[#1C1C1C] text-white">
+      {/* Sticky Header Bar */}
+      <div className="sticky top-0 z-30 shrink-0 flex items-center justify-between px-2.5 py-1.5 bg-[#18181b] border-b border-zinc-800">
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label={ur ? "واپس" : "Back"}
+          className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-zinc-800 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+        <h2 className="text-[11px] sm:text-xs font-bold text-white text-center flex-1 whitespace-nowrap px-1">
+          {ur ? "اپنا راستہ درج کریں" : "Enter your route"}
+        </h2>
+        <span className="w-7" />
+      </div>
+
+      <div className="flex-1 flex flex-col p-2 space-y-2">
+        {/* FROM Field Card */}
+        <div className="relative">
+          <div
+            onClick={() => setShowFromMenu((v) => !v)}
+            className={cn(
+              "flex items-center justify-between rounded-xl bg-[#252525] hover:bg-[#2a2a2a] border border-white/5 p-2 transition-all cursor-pointer select-none",
+              isPickupTarget &&
+                "sim-target ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_16px_rgba(52,211,153,0.4)] border-emerald-500/60",
+            )}
+          >
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400">
+                <User className="h-3.5 w-3.5" />
+              </span>
+              <div className="flex-1 min-w-0">
+                <span className="block text-[8.5px] font-medium text-zinc-400 leading-tight">
+                  {ur ? "کہاں سے" : "From"}
+                </span>
+                <p className="text-[11px] font-bold text-white leading-tight mt-0.5 truncate">
+                  {pickup.name}
+                </p>
+                <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">{pickup.address}</p>
+              </div>
+            </div>
+
+            {/* Quick "My location" button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleUseCurrentLocation();
+              }}
+              disabled={locating}
+              aria-label={ur ? "میرا مقام" : "Use my location"}
+              className="flex flex-col items-center gap-0.5 shrink-0 ml-1 cursor-pointer group"
+            >
+              <span
+                className={cn(
+                  "flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors",
+                  isPickupTarget && "ring-1 ring-emerald-400/70 bg-emerald-500/25 text-emerald-300 animate-pulse",
+                )}
+              >
+                {locating ? (
+                  <Loader2 className="h-3 w-3 animate-spin text-emerald-400" />
+                ) : (
+                  <Crosshair className="h-3 w-3 text-emerald-400" />
+                )}
+              </span>
+              <span className="text-[7.5px] font-semibold text-emerald-400 whitespace-nowrap leading-none">
+                {ur ? "میرا مقام" : "Use my location"}
+              </span>
+            </button>
+          </div>
+
+          {/* Floating Tap here Badge for Step 2 */}
+          {isPickupTarget && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-2.5 end-3 z-30 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[8.5px] font-bold text-zinc-950 shadow-md animate-pulse"
+            >
+              <Pointer className="h-2.5 w-2.5" /> {ur ? "یہاں دبائیں" : "Tap here"}
+            </span>
+          )}
+
+          {/* Popup Menu when FROM is tapped */}
+          {showFromMenu && (
+            <div className="absolute top-full left-0 right-0 mt-1.5 z-40 rounded-2xl bg-[#18181b] border border-zinc-700 shadow-2xl p-1.5 divide-y divide-zinc-800 animate-in fade-in zoom-in-95">
+              {/* Option 1: Use my current location */}
+              <button
+                type="button"
+                onClick={handleUseCurrentLocation}
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-zinc-800 text-start transition-colors"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 shrink-0">
+                  <Navigation className="h-4 w-4 -rotate-45" />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-white">
+                    {ur ? "میرا موجودہ مقام استعمال کریں" : "Use my current location"}
+                  </p>
+                  <p className="text-[10px] text-zinc-400">
+                    {ur ? "براؤزر سے GPS کوارڈینیٹس حاصل کریں" : "Real browser geolocation GPS"}
+                  </p>
+                </div>
+              </button>
+
+              {/* Option 2: Choose on map */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowFromMenu(false);
+                  onOpenMapPicker("pickup");
+                }}
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-zinc-800 text-start transition-colors"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/20 text-blue-400 shrink-0">
+                  <Map className="h-4 w-4" />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-white">
+                    {ur ? "نقشے پر منتخب کریں" : "Choose on map"}
+                  </p>
+                  <p className="text-[10px] text-zinc-400">
+                    {ur ? "انٹرایکٹو نقشے پر پن رکھیں" : "Pin your pickup on Leaflet map"}
+                  </p>
+                </div>
+              </button>
+
+              {/* Option 3: Keep Street 22 / preset */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowFromMenu(false);
+                  onSelectPickup(CURATED_LOCATIONS.find((l) => l.id === "street-22")!);
+                }}
+                className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-zinc-800 text-start transition-colors"
+              >
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 shrink-0">
+                  <MapPin className="h-4 w-4" />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-white">Street 22, Karachi</p>
+                  <p className="text-[10px] text-zinc-400">Practice preset address</p>
+                </div>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Location Error alert if geolocation fails */}
+        {geoError && (
+          <div className="rounded-xl bg-destructive/80 p-2.5 text-xs text-white flex items-center justify-between">
+            <span className="flex-1 pr-2">{geoError}</span>
+            <button type="button" onClick={() => setGeoError(null)}>
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
+
+        {/* TO Field Card with Search and Map Icon */}
+        <div ref={searchBoxRef} className="relative">
+          <div
+            className={cn(
+              "flex items-center justify-between rounded-xl bg-[#252525] border border-white/5 p-2 transition-all relative",
+              isDestTarget &&
+                !dest &&
+                "sim-target ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_16px_rgba(52,211,153,0.4)] border-emerald-500/60",
+            )}
+          >
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400">
+                <Search className="h-3.5 w-3.5" />
+              </span>
+              <div className="flex-1 min-w-0">
+                <span className="block text-[8.5px] font-medium text-zinc-400 leading-tight">
+                  {ur ? "کہاں جانا ہے" : "To"}
+                </span>
+                <input
+                  type="text"
+                  value={toInput}
+                  onChange={(e) => {
+                    setToInput(e.target.value);
+                  }}
+                  placeholder={ur ? "آپ کہاں جا رہے ہیں؟" : "Where are you going?"}
+                  className="w-full bg-transparent text-[11px] font-bold text-white placeholder-zinc-500 focus:outline-none truncate mt-0.5"
+                />
+              </div>
+            </div>
+
+            {/* Map-pin Icon Button (Opens Choose Location on Map) */}
+            <button
+              type="button"
+              onClick={() => onOpenMapPicker("destination")}
+              aria-label={ur ? "نقشے پر منتخب کریں" : "Select destination on map"}
+              className={cn(
+                "flex h-7 w-7 items-center justify-center rounded-lg bg-[#2a303c] border border-blue-500/25 hover:bg-[#323946] text-blue-400 transition-all shrink-0 ml-1 shadow-xs cursor-pointer",
+                isDestTarget && !dest && "border-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.35)]",
+              )}
+            >
+              <MapPin className="h-3.5 w-3.5 fill-blue-400 text-blue-400" />
+            </button>
+          </div>
+
+          {/* Floating Tap here Badge for Destination step */}
+          {isDestTarget && !dest && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-2.5 end-3 z-30 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[8.5px] font-bold text-zinc-950 shadow-md animate-pulse"
+            >
+              <Pointer className="h-2.5 w-2.5" /> {ur ? "یہاں دبائیں" : "Tap here"}
+            </span>
+          )}
+
+          {/* Autocomplete Results for TO field */}
+          {showResults && searchResults.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 z-40 max-h-40 overflow-y-auto rounded-xl bg-[#18181b] border border-zinc-700 shadow-2xl divide-y divide-zinc-800">
+              {!hasLiveGeoapifyKey() && (
+                <div className="px-2.5 py-1 bg-zinc-900/90 text-[8.5px] font-semibold text-emerald-400 border-b border-zinc-800 flex items-center justify-between">
+                  <span>{ur ? "مشق مقامات (ڈیمو موڈ)" : "Practice locations (Demo mode)"}</span>
+                </div>
+              )}
+              {searchResults.map((loc) => (
+                <button
+                  key={loc.id}
+                  type="button"
+                  onClick={() => handleSelectRecent(loc)}
+                  className="w-full flex items-start gap-2 p-2 text-start hover:bg-zinc-800 transition-colors"
+                >
+                  <MapPin className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-bold text-white leading-tight truncate">{loc.name}</p>
+                    <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">{loc.address}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Recent Destinations List (Exact from reference) */}
+        <div className="space-y-1 pt-0.5 flex-1">
+          <p className="text-[10px] font-semibold text-zinc-400 px-0.5 mb-1">
+            {ur ? "حالیہ منزلیں" : "Recent destinations"}
+          </p>
+
+          <div className="divide-y divide-zinc-800/80 rounded-xl bg-[#242424]/50 border border-white/5">
+            {/* 1. NED Visitor Gate */}
+            {CURATED_LOCATIONS.slice(0, 3).map((item, index) => {
+              const isSuggested = isDestTarget && !dest && index === 0;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleSelectRecent(item)}
+                  className={cn(
+                    "w-full flex items-center justify-between p-2 text-start hover:bg-zinc-800/60 transition-all cursor-pointer group relative rounded-lg",
+                    dest?.id === item.id && "bg-emerald-500/10",
+                    isSuggested &&
+                      "ring-1.5 ring-emerald-400/90 bg-emerald-500/15 shadow-[0_0_12px_rgba(52,211,153,0.3)]",
+                  )}
+                >
+                  <div className="flex items-center gap-2 flex-1 min-w-0 pr-1">
+                    <span
+                      className={cn(
+                        "flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors",
+                        isSuggested && "bg-emerald-500/25 text-emerald-400",
+                      )}
+                    >
+                      <Clock className="h-3 w-3" />
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-[10.5px] font-bold text-white leading-tight truncate">
+                          {item.name}
+                        </p>
+                        {isSuggested && (
+                          <span className="text-[7.5px] font-bold text-emerald-300 bg-emerald-500/25 px-1 py-0.2 rounded shrink-0">
+                            {ur ? "تجویز کردہ" : "Suggested"}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">
+                        {item.address}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1 shrink-0 ml-1">
+                    {item.distance && (
+                      <span className="text-[9px] font-medium text-zinc-400 whitespace-nowrap">
+                        {item.distance}
+                      </span>
+                    )}
+                    {dest?.id === item.id && (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Continue Button (active for pickup step or when destination is set) */}
+        <div className="pt-1 pb-0.5">
+          {screen === "pickup" ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => engine.act("pickup-continue")}
+                className={cn(
+                  "w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer",
+                  isPickupTarget &&
+                    "ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_15px_rgba(52,211,153,0.4)]",
+                )}
+              >
+                {ur ? "سواری کا مقام تصدیق کریں" : "Confirm Pickup & Continue"}
+              </button>
+            </div>
+          ) : dest ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={onContinue}
+                className={cn(
+                  "w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer",
+                  isDestTarget &&
+                    "ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-pulse",
+                )}
+              >
+                {ur ? "آگے بڑھیں" : "Continue"}
+              </button>
+              {isDestTarget && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -top-2.5 end-3 z-30 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[8.5px] font-bold text-zinc-950 shadow-md animate-pulse"
+                >
+                  <Pointer className="h-2.5 w-2.5" /> {ur ? "یہاں دبائیں" : "Tap here"}
+                </span>
+              )}
+            </div>
+          ) : (
+            <button
+              type="button"
+              disabled
+              className="w-full flex items-center justify-center rounded-xl bg-zinc-800 text-zinc-500 font-semibold text-xs py-2 cursor-not-allowed"
+            >
+              {ur ? "منزل منتخب کریں" : "Select a destination to continue"}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
