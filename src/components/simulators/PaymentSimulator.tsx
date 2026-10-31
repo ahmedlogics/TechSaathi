@@ -12,6 +12,7 @@ import {
   Check,
   Search,
   AlertTriangle,
+  AlertCircle,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CompletionActions, SimButton, SimInputWrapper, useLesson } from "@/components/learning/LessonContext";
@@ -47,9 +48,12 @@ export function PaymentSimulator() {
   const [bankSearch, setBankSearch] = useState("");
   const [accountInput, setAccountInput] = useState<string>("");
   const [amount, setAmount] = useState("");
+  const [amountError, setAmountError] = useState("");
   const [showHistory, setShowHistory] = useState(false);
   const [isDeducted, setIsDeducted] = useState(false);
   const [reviewedCheckbox, setReviewedCheckbox] = useState(false);
+
+  const isExcessBalance = Boolean(amount && Number(amount) > WALLET_BALANCE);
 
   // Beneficiary resolution
   const walletRecipient = paymentContacts.find((c) => digitsOnly(c.phone) === digitsOnly(phone));
@@ -147,23 +151,33 @@ export function PaymentSimulator() {
   const continueAmount = () => {
     const n = Number(amount);
     if (!amount || !Number.isFinite(n) || n <= 0) {
-      return engine.mistake({
+      const msg = {
         en: "Please enter a valid amount greater than zero, for example 1000.",
         ur: "براہ کرم صفر سے زیادہ رقم لکھیں، مثلاً 1000۔",
-      });
+      };
+      setAmountError(tr(msg));
+      return engine.mistake(msg);
     }
     if (n > WALLET_BALANCE) {
+      const msg = {
+        en: `Insufficient balance! You entered ${formatRs(n)}, which exceeds your practice balance of ${formatRs(WALLET_BALANCE)}.`,
+        ur: `ناکافی بیلنس! آپ نے ${formatRs(n)} درج کیا جو کہ آپ کے مشق بیلنس (${formatRs(WALLET_BALANCE)}) سے زیادہ ہے۔`,
+      };
+      setAmountError(tr(msg));
       return engine.mistake({
         en: `You entered ${formatRs(n)}. Your task is to send ${formatRs(TARGET_AMOUNT)}, and your practice balance is ${formatRs(WALLET_BALANCE)}. Check the amount and try again.`,
         ur: `آپ نے ${formatRs(n)} درج کیا۔ آپ کا کام ${formatRs(TARGET_AMOUNT)} بھیجنا ہے، اور آپ کا مشق بیلنس ${formatRs(WALLET_BALANCE)} ہے۔ رقم چیک کر کے دوبارہ کوشش کریں۔`,
       });
     }
     if (n !== TARGET_AMOUNT) {
-      return engine.mistake({
+      const msg = {
         en: `Your task is to send ${formatRs(TARGET_AMOUNT)}. You typed ${formatRs(n)}. Please change the amount to ${formatRs(TARGET_AMOUNT)}.`,
         ur: `آپ کا کام ${formatRs(TARGET_AMOUNT)} بھیجنا ہے۔ آپ نے ${formatRs(n)} لکھا۔ رقم تبدیل کر کے ${formatRs(TARGET_AMOUNT)} کریں۔`,
-      });
+      };
+      setAmountError(tr(msg));
+      return engine.mistake(msg);
     }
+    setAmountError("");
     engine.act("amount-continue");
   };
 
@@ -650,16 +664,37 @@ export function PaymentSimulator() {
                   inputMode="numeric"
                   dir="ltr"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value.replace(/[^\d]/g, ""))}
+                  onChange={(e) => {
+                    setAmount(e.target.value.replace(/[^\d]/g, ""));
+                    setAmountError("");
+                  }}
                   placeholder="0"
-                  className="mt-1 h-15 w-full rounded-xl border-2 border-input bg-card px-4 text-2xl sm:text-3xl font-bold text-heading focus:outline-none focus:border-primary"
+                  className={cn(
+                    "mt-1 h-15 w-full rounded-xl border-2 bg-card px-4 text-2xl sm:text-3xl font-bold text-heading focus:outline-none transition-colors",
+                    isExcessBalance || amountError
+                      ? "border-destructive focus:border-destructive ring-2 ring-destructive/20 bg-rose-50/20 dark:bg-rose-950/20"
+                      : "border-input focus:border-primary",
+                  )}
                 />
               </SimInputWrapper>
             </label>
 
+            {/* Mobile screen prominent error response */}
+            {(isExcessBalance || amountError) && (
+              <div className="rounded-xl border border-destructive/40 bg-destructive/10 p-3 text-xs sm:text-sm font-semibold text-destructive flex items-start gap-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                <AlertCircle className="h-4.5 w-4.5 shrink-0 text-destructive mt-0.5" />
+                <span className="leading-snug">
+                  {amountError ||
+                    (ur
+                      ? `ناکافی بیلنس! آپ نے ${formatRs(Number(amount))} درج کیا جو کہ آپ کے مشق بیلنس (${formatRs(WALLET_BALANCE)}) سے زیادہ ہے۔`
+                      : `Insufficient balance! You entered ${formatRs(Number(amount))}, which exceeds your practice balance (${formatRs(WALLET_BALANCE)}).`)}
+                </span>
+              </div>
+            )}
+
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>{ur ? "مشق بیلنس:" : "Practice Balance:"}</span>
-              <span className="font-bold text-heading" dir="ltr">
+              <span className={cn("font-bold text-heading", isExcessBalance && "text-destructive font-extrabold")} dir="ltr">
                 {formatRs(WALLET_BALANCE)}
               </span>
             </div>
