@@ -14,6 +14,8 @@ import {
   SwitchCamera,
   RotateCcw,
   X,
+  Lock,
+  Search,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CompletionActions, SimButton, useLesson } from "@/components/learning/LessonContext";
@@ -23,8 +25,9 @@ import { cn } from "@/lib/utils";
 import { callSounds } from "@/lib/callSounds";
 import { saveProgress, saveAttempt } from "@/lib/progressService";
 
-const round =
-  "flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-full transition-transform active:scale-95 shadow-sm";
+// WhatsApp round calling button styling
+const waRoundBtn =
+  "flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-full transition-transform active:scale-95 shadow-md";
 
 type CallType = "video" | "audio";
 
@@ -111,7 +114,7 @@ export function CallSimulator() {
     };
   }, [screen, engine.act]);
 
-  // Audio calls do not use camera: auto-advance past camera step to end call
+  // Audio calls do not use camera: auto-advance past camera step directly to end call
   useEffect(() => {
     if (callType === "audio" && engine.step.id === "camera") {
       engine.act("camera-off");
@@ -183,28 +186,30 @@ export function CallSimulator() {
   const sara = callContacts[0]!;
 
   return (
-    <PhoneFrame appName={ur ? "کال مشق — ٹیک ساتھی" : "Practice Call — TechSaathi"}>
+    <PhoneFrame appName={ur ? "واٹس ایپ (WhatsApp)" : "WhatsApp"}>
       {/* Persistent Senior Safety Reassurance Banner */}
-      <div className="mb-3 flex items-center gap-2 rounded-xl border border-primary/20 bg-mint/70 px-3 py-2 text-xs font-semibold text-primary-strong sm:text-sm">
-        <ShieldCheck className="h-5 w-5 shrink-0 text-success" />
+      <div className="mb-2.5 flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-2 text-xs font-semibold text-emerald-800 dark:text-emerald-200">
+        <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
         <span className="leading-tight">
           {ur
-            ? "محفوظ مشق: یہ اصلی فون کال نہیں ہے۔ آپ کا کیمرہ اور پیسے بالکل محفوظ ہیں۔"
-            : "Safe Practice: This is not a real call. Your camera and balance are completely safe."}
+            ? "محفوظ مشق: یہ اصلی واٹس ایپ کال نہیں ہے۔ کیمرہ اور موبائل بیلنس محفوظ ہے۔"
+            : "Safe Practice: This is a safe simulator. No real WhatsApp call or phone balance is used."}
         </span>
       </div>
 
+      {/* Screen 1: Start Screen - Choose Video or Voice Call */}
       {screen === "start" && (
-        <div className="flex flex-col gap-4 pt-4">
-          <div className="rounded-2xl border-2 border-border bg-card p-4 text-center shadow-sm">
-            <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-              <Phone className="h-8 w-8" />
+        <div className="flex flex-col gap-3.5 pt-2">
+          {/* WhatsApp Brand Banner */}
+          <div className="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-[#075e54] to-[#128c7e] p-4 text-center text-white shadow-sm">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-xs">
+              <Phone className="h-7 w-7" />
             </span>
-            <h3 className="mt-3 text-xl font-bold text-heading">
-              {ur ? "کال کی قسم منتخب کریں" : "Choose Call Type"}
+            <h3 className="mt-2.5 text-lg font-bold">
+              {ur ? "واٹس ایپ کال کی قسم منتخب کریں" : "Choose WhatsApp Call Type"}
             </h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {ur ? "مشق شروع کرنے کے لیے نیچے دیے گئے بٹن پر کلک کریں" : "Tap a button below to begin practice"}
+            <p className="mt-0.5 text-xs text-emerald-100">
+              {ur ? "مشق شروع کرنے کے لیے ویڈیو یا آڈیو کال منتخب کریں" : "Select video or voice call to start practicing"}
             </p>
           </div>
 
@@ -216,10 +221,10 @@ export function CallSimulator() {
                 callSounds.playTap();
                 engine.act("choose-video");
               }}
-              className="btn btn-primary flex w-full items-center justify-center gap-2.5 py-3 text-base font-bold shadow-md"
+              className="btn flex w-full items-center justify-center gap-2.5 rounded-xl bg-[#25d366] hover:bg-[#20ba59] py-3 text-base font-bold text-slate-950 shadow-md transition-all active:scale-98"
             >
               <Video className="h-5 w-5 shrink-0" />
-              <span>{ur ? "ویڈیو کال کی مشق شروع کریں" : "Practise Video Call"}</span>
+              <span>{ur ? "واٹس ایپ ویڈیو کال کی مشق" : "Practise WhatsApp Video Call"}</span>
             </SimButton>
 
             <button
@@ -227,71 +232,82 @@ export function CallSimulator() {
               onClick={() => {
                 setCallType("audio");
                 callSounds.playTap();
-                // Advance to contact selection for Audio Call
                 engine.act("choose-video");
               }}
-              className="btn btn-outline flex w-full items-center justify-center gap-2.5 py-2.5 text-sm font-semibold"
+              className="btn btn-outline flex w-full items-center justify-center gap-2.5 rounded-xl border-emerald-600/30 bg-card py-2.5 text-sm font-semibold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
             >
-              <Phone className="h-4 w-4 shrink-0 text-primary" />
-              <span>{ur ? "آڈیو کال کی مشق (وائس کال)" : "Practise Audio Call (Voice Call)"}</span>
+              <Phone className="h-4 w-4 shrink-0 text-[#25d366]" />
+              <span>{ur ? "واٹس ایپ آڈیو (وائس) کال" : "Practise WhatsApp Voice Call"}</span>
             </button>
           </div>
         </div>
       )}
 
+      {/* Screen 2: WhatsApp Contacts Picker */}
       {screen === "contacts" && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between rounded-xl bg-card p-3 shadow-xs">
-            <p className="text-sm font-semibold text-muted-foreground">
-              {ur ? "رابطہ منتخب کریں جس کو کال کرنی ہے:" : "Select a contact to call:"}
-            </p>
-            <span className="rounded-full bg-mint px-2.5 py-0.5 text-xs font-bold text-primary-strong">
-              {callType === "video" ? (ur ? "ویڈیو کال" : "Video Call") : ur ? "آڈیو کال" : "Audio Call"}
-            </span>
+        <div className="space-y-2.5">
+          {/* WhatsApp Style Top Bar */}
+          <div className="flex items-center justify-between rounded-xl bg-[#008069] px-3.5 py-2.5 text-white shadow-sm">
+            <div>
+              <p className="text-sm font-bold">
+                {ur ? "رابطہ منتخب کریں" : "Select contact"}
+              </p>
+              <p className="text-[11px] text-emerald-100">
+                {callType === "video"
+                  ? ur ? "ویڈیو کال — سارہ کو کال کریں" : "Video Call — Call Sara"
+                  : ur ? "وائس کال — سارہ کو کال کریں" : "Voice Call — Call Sara"}
+              </p>
+            </div>
+            <Search className="h-4 w-4 text-emerald-100" />
           </div>
 
-          <ul className="space-y-3">
+          <ul className="space-y-2">
             {callContacts.map((c, i) => (
               <li
                 key={c.id}
-                className="flex items-center gap-3 rounded-2xl border-2 border-border bg-card p-3.5 shadow-sm transition-all hover:border-primary/40"
+                className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3 shadow-xs transition-all hover:bg-muted/40"
               >
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-mint text-xl font-extrabold text-primary-strong ring-2 ring-primary/20">
-                  {c.initials}
-                </span>
+                {/* WhatsApp Profile Avatar */}
+                <div className="relative">
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-lg font-bold text-white shadow-xs">
+                    {c.initials}
+                  </span>
+                  <span className="absolute bottom-0 end-0 h-3 w-3 rounded-full bg-[#25d366] ring-2 ring-card" />
+                </div>
 
                 <div className="flex-1 min-w-0">
-                  <span className="block truncate text-lg font-bold text-heading">{c.name}</span>
-                  <span className="block text-xs font-medium text-muted-foreground">
+                  <span className="block truncate text-base font-bold text-heading">{c.name}</span>
+                  <span className="block text-xs font-medium text-muted-foreground truncate">
                     {i === 0
                       ? ur
                         ? "بیٹی — آن لائن"
                         : "Daughter — Online"
                       : ur
-                        ? "بیٹا — آن لائن"
-                        : "Son — Online"}
+                        ? "بیٹا — دستیاب ہے"
+                        : "Son — Available"}
                   </span>
                 </div>
 
-                <div className="flex flex-col items-center gap-1">
+                {/* WhatsApp Call Buttons */}
+                <div className="flex items-center gap-2">
                   <SimButton
                     action={i === 0 ? "call-sara" : "call-other"}
                     onPress={() => {
                       callSounds.playTap();
                       engine.act(i === 0 ? "call-sara" : "call-other");
                     }}
-                    aria-label={`${callType === "video" ? "Video" : "Audio"} call ${c.name}`}
-                    className={cn(round, "bg-success text-success-foreground hover:bg-success/90")}
+                    aria-label={`${callType === "video" ? "Video" : "Voice"} call ${c.name}`}
+                    className={cn(
+                      waRoundBtn,
+                      "h-10 w-10 sm:h-11 sm:w-11 bg-[#25d366] text-slate-950 hover:bg-[#20ba59] shadow-xs",
+                    )}
                   >
                     {callType === "video" ? (
-                      <Video className="h-5 w-5 sm:h-6 sm:w-6" />
+                      <Video className="h-5 w-5" />
                     ) : (
-                      <Phone className="h-5 w-5 sm:h-6 sm:w-6" />
+                      <Phone className="h-5 w-5" />
                     )}
                   </SimButton>
-                  <span className="text-[11px] font-bold text-heading">
-                    {ur ? "کال ملائیں" : "Call"}
-                  </span>
                 </div>
               </li>
             ))}
@@ -299,43 +315,30 @@ export function CallSimulator() {
         </div>
       )}
 
+      {/* Screen 3 & 4: In-Call / Calling Screen (WhatsApp Calling Theme) */}
       {(screen === "calling" || screen === "incall") && (
-        <div className="relative flex min-h-[510px] flex-col items-center justify-between rounded-3xl bg-gradient-to-b from-slate-900 via-slate-800 to-slate-950 p-6 text-white shadow-xl overflow-hidden">
-          {/* Top Status Header */}
-          <div className="z-10 flex w-full items-center justify-between text-xs font-semibold text-slate-300">
-            <span className="flex items-center gap-1.5 rounded-full bg-slate-800/80 px-3 py-1 border border-slate-700">
-              <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
+        <div className="relative flex min-h-[510px] flex-col items-center justify-between rounded-3xl bg-[#0b141a] p-5 text-white shadow-2xl overflow-hidden border border-[#1f2c34]">
+          {/* WhatsApp Top Header: End-to-End Encryption Banner */}
+          <div className="z-10 flex w-full flex-col items-center gap-1 text-center">
+            <span className="inline-flex items-center gap-1 text-[11px] text-slate-400 font-medium tracking-tight">
+              <Lock className="h-3 w-3 text-slate-400" />
+              <span>{ur ? "اینڈ ٹو اینڈ اینکرپٹڈ" : "End-to-end encrypted"}</span>
+            </span>
+
+            <span className="rounded-full bg-[#1f2c34]/80 px-3 py-0.5 text-xs font-semibold text-emerald-400 border border-[#2a3942]">
               {screen === "calling"
                 ? ur
                   ? "گھنٹی بج رہی ہے…"
                   : "Ringing…"
                 : ur
-                  ? `منسلک (${formatDuration(callDuration)})`
-                  : `Connected (${formatDuration(callDuration)})`}
+                  ? `منسلک • ${formatDuration(callDuration)}`
+                  : `WhatsApp Call • ${formatDuration(callDuration)}`}
             </span>
-            <div className="flex items-center gap-2">
-              {callType === "audio" && screen === "incall" && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    callSounds.playTap();
-                    setShowKeypad(true);
-                  }}
-                  className="flex items-center gap-1.5 rounded-full bg-slate-800/90 px-2.5 py-1 text-xs font-semibold text-slate-200 border border-slate-700 hover:bg-slate-700 active:scale-95 transition-transform"
-                >
-                  <Grid3X3 className="h-3.5 w-3.5" />
-                  <span>{ur ? "کی پیڈ" : "Keypad"}</span>
-                </button>
-              )}
-              <span className="rounded-full bg-slate-800/80 px-2.5 py-1 text-slate-300 border border-slate-700">
-                {callType === "video" ? "HD Video" : "HD Voice"}
-              </span>
-            </div>
           </div>
 
-          {/* Picture-in-Picture Local Camera View for Video Call */}
+          {/* WhatsApp Picture-in-Picture Self Video (Video Calls) */}
           {callType === "video" && screen === "incall" && (
-            <div className="absolute top-14 end-4 z-20 h-28 w-20 sm:h-32 sm:w-24 overflow-hidden rounded-2xl border-2 border-white/30 bg-slate-800 shadow-2xl">
+            <div className="absolute top-14 end-4 z-20 h-28 w-20 sm:h-32 sm:w-24 overflow-hidden rounded-2xl border-2 border-white/20 bg-[#1f2c34] shadow-2xl">
               {cameraOn ? (
                 webcamActive ? (
                   <video
@@ -346,13 +349,13 @@ export function CallSimulator() {
                     className="h-full w-full object-cover -scale-x-100"
                   />
                 ) : (
-                  <div className="flex h-full w-full flex-col items-center justify-center bg-slate-700 text-[10px] text-center p-1 text-slate-200">
-                    <Video className="h-5 w-5 mb-1 text-primary" />
+                  <div className="flex h-full w-full flex-col items-center justify-center bg-[#1f2c34] text-[10px] text-center p-1 text-slate-200">
+                    <Video className="h-5 w-5 mb-1 text-[#25d366]" />
                     <span>{ur ? "آپ کی ویڈیو" : "You"}</span>
                   </div>
                 )
               ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center bg-slate-900 text-slate-400 text-[10px] text-center p-1">
+                <div className="flex h-full w-full flex-col items-center justify-center bg-[#0b141a] text-slate-400 text-[10px] text-center p-1">
                   <VideoOff className="h-5 w-5 mb-1 text-amber-400" />
                   <span>{ur ? "بند ہے" : "Off"}</span>
                 </div>
@@ -375,41 +378,41 @@ export function CallSimulator() {
             </div>
           )}
 
-          {/* Center Contact Section with Animated Calling Rings */}
+          {/* Center Contact Section with WhatsApp Pulsing Rings */}
           <div className="my-auto text-center z-10">
             <div className="relative mx-auto flex items-center justify-center">
               {screen === "calling" && (
                 <>
-                  <div className="absolute h-28 w-28 animate-ping rounded-full bg-primary/25" />
-                  <div className="absolute h-36 w-36 animate-pulse rounded-full bg-primary/15" />
+                  <div className="absolute h-28 w-28 animate-ping rounded-full bg-[#25d366]/20" />
+                  <div className="absolute h-36 w-36 animate-pulse rounded-full bg-[#25d366]/10" />
                 </>
               )}
-              <span className="relative flex h-20 w-20 sm:h-22 sm:w-22 items-center justify-center rounded-full bg-primary text-3xl sm:text-4xl font-black text-primary-foreground shadow-2xl ring-4 ring-white/20">
+              <span className="relative flex h-20 w-20 sm:h-22 sm:w-22 items-center justify-center rounded-full bg-[#008069] text-3xl sm:text-4xl font-extrabold text-white shadow-2xl ring-4 ring-[#25d366]/30">
                 {sara.initials}
               </span>
             </div>
 
-            <p className="mt-4 text-2xl font-extrabold tracking-tight text-white">{sara.name}</p>
-            <p className="text-sm font-medium text-slate-300" aria-live="polite">
+            <p className="mt-3.5 text-2xl font-bold tracking-tight text-white">{sara.name}</p>
+            <p className="text-xs font-medium text-slate-300" aria-live="polite">
               {screen === "calling"
                 ? ur
-                  ? "سارہ کے فون پر گھنٹی جا رہی ہے..."
-                  : "Calling Sara... Please wait for her to answer"
+                  ? "سارہ کو واٹس ایپ کال ملائی جا رہی ہے..."
+                  : "Calling Sara on WhatsApp..."
                 : ur
-                  ? "سارہ بات کر رہی ہیں (فرضی کال)"
-                  : "Talking with Sara (Simulated Call)"}
+                  ? "سارہ سے بات ہو رہی ہے (فرضی کال)"
+                  : "Sara is on the line (Simulated Call)"}
             </p>
 
             {/* Dynamic Sound Wave Effect when connected */}
             {screen === "incall" && (
-              <div className="mt-3 flex items-center justify-center gap-1.5 text-success">
+              <div className="mt-2.5 flex items-center justify-center gap-1.5 text-[#25d366]">
                 <Volume2 className="h-4 w-4 animate-bounce" />
-                <div className="flex items-end gap-1 h-5">
-                  <span className="w-1 bg-success rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
-                  <span className="w-1 bg-success rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-4" />
-                  <span className="w-1 bg-success rounded-full animate-[pulse_0.9s_ease-in-out_infinite] h-5" />
-                  <span className="w-1 bg-success rounded-full animate-[pulse_0.7s_ease-in-out_infinite] h-3" />
-                  <span className="w-1 bg-success rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
+                <div className="flex items-end gap-1 h-4">
+                  <span className="w-1 bg-[#25d366] rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
+                  <span className="w-1 bg-[#25d366] rounded-full animate-[pulse_0.6s_ease-in-out_infinite] h-3.5" />
+                  <span className="w-1 bg-[#25d366] rounded-full animate-[pulse_0.9s_ease-in-out_infinite] h-4" />
+                  <span className="w-1 bg-[#25d366] rounded-full animate-[pulse_0.7s_ease-in-out_infinite] h-2.5" />
+                  <span className="w-1 bg-[#25d366] rounded-full animate-[pulse_0.8s_ease-in-out_infinite] h-2" />
                 </div>
               </div>
             )}
@@ -417,32 +420,32 @@ export function CallSimulator() {
 
           {/* Interactive Dial Pad Modal */}
           {showKeypad && screen === "incall" && (
-            <div className="absolute inset-0 z-30 flex flex-col justify-between bg-slate-950/95 p-5 backdrop-blur-md">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-2">
-                <span className="text-lg font-bold">{ur ? "ڈائل پیڈ (کی پیڈ)" : "Keypad"}</span>
+            <div className="absolute inset-0 z-30 flex flex-col justify-between bg-[#0b141a]/95 p-5 backdrop-blur-md">
+              <div className="flex items-center justify-between border-b border-[#1f2c34] pb-2">
+                <span className="text-base font-bold text-white">{ur ? "ڈائل پیڈ (کی پیڈ)" : "Keypad"}</span>
                 <button
                   type="button"
                   onClick={() => setShowKeypad(false)}
-                  className="rounded-full bg-slate-800 p-1.5 text-slate-300 hover:text-white"
+                  className="rounded-full bg-[#1f2c34] p-1.5 text-slate-300 hover:text-white"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <div className="text-center py-2 min-h-[44px]">
-                <span className="text-2xl font-mono tracking-widest text-emerald-400">
+              <div className="text-center py-2 min-h-[40px]">
+                <span className="text-2xl font-mono tracking-widest text-[#25d366]">
                   {dialedDigits || (ur ? "نمبر دبائیں" : "Press numbers")}
                 </span>
               </div>
 
               {/* Grid 3x4 */}
-              <div className="grid grid-cols-3 gap-3 max-w-xs mx-auto w-full">
+              <div className="grid grid-cols-3 gap-2.5 max-w-xs mx-auto w-full">
                 {["1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"].map((k) => (
                   <button
                     key={k}
                     type="button"
                     onClick={() => handleDialKey(k)}
-                    className="flex h-14 w-14 items-center justify-center rounded-full bg-slate-800 text-xl font-bold text-white hover:bg-slate-700 active:scale-95"
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1f2c34] text-lg font-bold text-white hover:bg-[#2a3942] active:scale-95"
                   >
                     {k}
                   </button>
@@ -452,42 +455,42 @@ export function CallSimulator() {
               <button
                 type="button"
                 onClick={() => setShowKeypad(false)}
-                className="btn btn-outline mt-3 w-full border-slate-700 bg-slate-900 text-slate-200"
+                className="btn btn-outline mt-3 w-full border-[#2a3942] bg-[#1f2c34] text-slate-200"
               >
-                {ur ? "کال اسکرین پر واپس جائیں" : "Back to Call Screen"}
+                {ur ? "واٹس ایپ کال پر واپس جائیں" : "Back to Call Screen"}
               </button>
             </div>
           )}
 
-          {/* Status Badges for Mute & Camera */}
+          {/* Status Alert Badges for Mute & Camera */}
           {screen === "incall" && (
-            <div className="mb-4 flex flex-col gap-2 w-full max-w-xs text-center z-10">
+            <div className="mb-3 flex flex-col gap-1.5 w-full max-w-xs text-center z-10">
               {muted ? (
-                <div className="flex items-center justify-center gap-2 rounded-xl bg-warning/20 border border-warning/40 px-3 py-1.5 text-xs font-bold text-amber-300">
-                  <MicOff className="h-4 w-4" />
-                  <span>{ur ? "آپ کا مائیک بند ہے — کوئی نہیں سن سکتا" : "Your mic is muted — No one can hear you"}</span>
+                <div className="flex items-center justify-center gap-1.5 rounded-lg bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 text-xs font-bold text-amber-300">
+                  <MicOff className="h-3.5 w-3.5" />
+                  <span>{ur ? "مائیک بند ہے — کوئی نہیں سن سکتا" : "Mic is muted — No one can hear you"}</span>
                 </div>
               ) : (
-                <div className="flex items-center justify-center gap-2 rounded-xl bg-success/20 border border-success/40 px-3 py-1.5 text-xs font-bold text-emerald-300">
-                  <Mic className="h-4 w-4" />
-                  <span>{ur ? "مائیک آن ہے — آپ کی آواز جا رہی ہے" : "Microphone is live — Sara can hear you"}</span>
+                <div className="flex items-center justify-center gap-1.5 rounded-lg bg-emerald-500/20 border border-emerald-500/30 px-2.5 py-1 text-xs font-bold text-emerald-300">
+                  <Mic className="h-3.5 w-3.5" />
+                  <span>{ur ? "مائیک آن ہے — سارہ سن سکتی ہیں" : "Mic is live — Sara can hear you"}</span>
                 </div>
               )}
 
-              {!cameraOn && (
-                <div className="flex items-center justify-center gap-2 rounded-xl bg-warning/20 border border-warning/40 px-3 py-1.5 text-xs font-bold text-amber-300">
-                  <VideoOff className="h-4 w-4" />
-                  <span>{ur ? "کیمرہ بند ہے — تصویر پوشیدہ ہے" : "Camera is off — Your video is hidden"}</span>
+              {callType === "video" && !cameraOn && (
+                <div className="flex items-center justify-center gap-1.5 rounded-lg bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 text-xs font-bold text-amber-300">
+                  <VideoOff className="h-3.5 w-3.5" />
+                  <span>{ur ? "کیمرہ بند ہے — ویڈیو بند ہے" : "Camera is off — Your video is hidden"}</span>
                 </div>
               )}
             </div>
           )}
 
-          {/* Bottom Floating Control Dock with Dual Icon + Text Labels */}
-          <div className="z-10 flex w-full items-center justify-center gap-2 sm:gap-3 rounded-2xl bg-slate-900/85 p-2.5 backdrop-blur-md border border-white/10">
+          {/* WhatsApp Signature Floating Calling Dock */}
+          <div className="z-10 flex w-full items-center justify-center gap-2 sm:gap-3 rounded-3xl bg-[#1f2c34]/95 p-2.5 backdrop-blur-md border border-[#2a3942] shadow-2xl">
             {screen === "incall" && (
               <>
-                {/* 1. Mute Button */}
+                {/* 1. WhatsApp Mute Button */}
                 <div className="flex flex-col items-center gap-1">
                   <SimButton
                     action={muted ? "unmute" : "mute"}
@@ -496,20 +499,20 @@ export function CallSimulator() {
                     aria-label={muted ? "Unmute" : "Mute"}
                     aria-pressed={muted}
                     className={cn(
-                      round,
+                      waRoundBtn,
                       muted
-                        ? "bg-amber-500 text-slate-950 ring-4 ring-amber-400/40"
-                        : "bg-slate-700 text-white hover:bg-slate-600",
+                        ? "bg-white text-slate-950 ring-2 ring-white/50"
+                        : "bg-[#2a3942] text-white hover:bg-[#374248]",
                     )}
                   >
-                    {muted ? <MicOff className="h-5 w-5 sm:h-6 sm:w-6" /> : <Mic className="h-5 w-5 sm:h-6 sm:w-6" />}
+                    {muted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
                   </SimButton>
-                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-200 text-center">
-                    {muted ? (ur ? "مائیک کھولیں" : "Unmute") : ur ? "مائیک بند کریں" : "Mute"}
+                  <span className="text-[10px] sm:text-[11px] font-bold text-slate-300 text-center">
+                    {muted ? (ur ? "کھولیں" : "Unmute") : ur ? "مائیک بند" : "Mute"}
                   </span>
                 </div>
 
-                {/* Video Call Specific Controls: Camera On/Off & Flip Camera */}
+                {/* 2. Video Call Controls: Camera On/Off & Flip Camera */}
                 {callType === "video" ? (
                   <>
                     {/* Camera Button */}
@@ -521,20 +524,20 @@ export function CallSimulator() {
                         aria-label={cameraOn ? "Turn camera off" : "Turn camera on"}
                         aria-pressed={!cameraOn}
                         className={cn(
-                          round,
+                          waRoundBtn,
                           !cameraOn
-                            ? "bg-amber-500 text-slate-950 ring-4 ring-amber-400/40"
-                            : "bg-slate-700 text-white hover:bg-slate-600",
+                            ? "bg-white text-slate-950 ring-2 ring-white/50"
+                            : "bg-[#2a3942] text-white hover:bg-[#374248]",
                         )}
                       >
                         {cameraOn ? (
-                          <Video className="h-5 w-5 sm:h-6 sm:w-6" />
+                          <Video className="h-5 w-5" />
                         ) : (
-                          <VideoOff className="h-5 w-5 sm:h-6 sm:w-6" />
+                          <VideoOff className="h-5 w-5" />
                         )}
                       </SimButton>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-200 text-center">
-                        {cameraOn ? (ur ? "کیمرہ بند کریں" : "Camera Off") : ur ? "کیمرہ کھولیں" : "Camera On"}
+                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-300 text-center">
+                        {cameraOn ? (ur ? "کیمرہ بند" : "Video Off") : ur ? "کیمرہ آن" : "Video On"}
                       </span>
                     </div>
 
@@ -546,11 +549,11 @@ export function CallSimulator() {
                           callSounds.playTap();
                           setFacingMode((m) => (m === "user" ? "environment" : "user"));
                         }}
-                        className={cn(round, "bg-slate-700 text-white hover:bg-slate-600")}
+                        className={cn(waRoundBtn, "bg-[#2a3942] text-white hover:bg-[#374248]")}
                       >
-                        <SwitchCamera className="h-5 w-5 sm:h-6 sm:w-6" />
+                        <SwitchCamera className="h-5 w-5" />
                       </button>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-200 text-center">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-300 text-center">
                         {ur ? "کیمرہ بدلیں" : "Flip"}
                       </span>
                     </div>
@@ -566,19 +569,19 @@ export function CallSimulator() {
                           setSpeakerOn((s) => !s);
                         }}
                         className={cn(
-                          round,
+                          waRoundBtn,
                           speakerOn
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-slate-700 text-white hover:bg-slate-600",
+                            ? "bg-[#25d366] text-slate-950"
+                            : "bg-[#2a3942] text-white hover:bg-[#374248]",
                         )}
                       >
                         {speakerOn ? (
-                          <Volume2 className="h-5 w-5 sm:h-6 sm:w-6" />
+                          <Volume2 className="h-5 w-5" />
                         ) : (
-                          <VolumeX className="h-5 w-5 sm:h-6 sm:w-6" />
+                          <VolumeX className="h-5 w-5" />
                         )}
                       </button>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-200 text-center">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-300 text-center">
                         {speakerOn ? (ur ? "اسپیکر آن" : "Speaker On") : ur ? "اسپیکر بند" : "Speaker Off"}
                       </span>
                     </div>
@@ -591,11 +594,11 @@ export function CallSimulator() {
                           callSounds.playTap();
                           setShowKeypad(true);
                         }}
-                        className={cn(round, "bg-slate-700 text-white hover:bg-slate-600")}
+                        className={cn(waRoundBtn, "bg-[#2a3942] text-white hover:bg-[#374248]")}
                       >
-                        <Grid3X3 className="h-5 w-5 sm:h-6 sm:w-6" />
+                        <Grid3X3 className="h-5 w-5" />
                       </button>
-                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-200 text-center">
+                      <span className="text-[10px] sm:text-[11px] font-bold text-slate-300 text-center">
                         {ur ? "کی پیڈ" : "Keypad"}
                       </span>
                     </div>
@@ -604,20 +607,20 @@ export function CallSimulator() {
               </>
             )}
 
-            {/* 4. End Call Button */}
+            {/* 3. Signature WhatsApp Red End Call Button */}
             <div className="flex flex-col items-center gap-1">
               <SimButton
                 action="end"
                 onPress={handleEndCall}
                 aria-label="End call"
                 className={cn(
-                  round,
-                  "bg-destructive text-destructive-foreground hover:bg-destructive/90 ring-4 ring-destructive/30",
+                  waRoundBtn,
+                  "bg-[#ea0038] hover:bg-[#d00032] text-white ring-4 ring-rose-900/30",
                 )}
               >
-                <PhoneOff className="h-5 w-5 sm:h-6 sm:w-6" />
+                <PhoneOff className="h-5 w-5" />
               </SimButton>
-              <span className="text-[10px] sm:text-[11px] font-bold text-destructive-foreground text-center">
+              <span className="text-[10px] sm:text-[11px] font-bold text-rose-300 text-center">
                 {ur ? "کال کاٹیں" : "End Call"}
               </span>
             </div>
@@ -625,24 +628,25 @@ export function CallSimulator() {
         </div>
       )}
 
+      {/* Screen 5: Call Completed Screen */}
       {screen === "done" && (
-        <div className="space-y-5 rounded-2xl bg-card p-6 text-center shadow-md">
-          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-success/15 text-success ring-4 ring-success/20">
-            <CheckCircle2 className="h-12 w-12" />
+        <div className="space-y-4 rounded-2xl bg-card p-5 text-center shadow-md border border-border">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#25d366]/20 text-[#25d366] ring-4 ring-[#25d366]/30">
+            <CheckCircle2 className="h-10 w-10" />
           </div>
 
           <div>
-            <h3 className="text-2xl font-extrabold text-heading">
-              {ur ? "شاباش! کال کامیابی سے ختم ہوئی" : "Well Done! Call Successfully Ended"}
+            <h3 className="text-xl font-extrabold text-heading">
+              {ur ? "شاباش! واٹس ایپ کال کی مشق مکمل ہوئی" : "Well Done! WhatsApp Practice Complete"}
             </h3>
-            <p className="mt-2 text-base font-medium text-muted-foreground">
+            <p className="mt-1 text-sm font-medium text-muted-foreground">
               {ur
-                ? "آپ نے ویڈیو کال ملانا، مائیک بند کرنا اور کال کاٹنا سیکھ لیا ہے۔"
-                : "You learned how to start a call, manage microphone, and hang up safely."}
+                ? "آپ نے واٹس ایپ کال ملانا، مائیک بند کرنا اور کال کاٹنا سیکھ لیا ہے۔"
+                : "You learned how to start a WhatsApp call, manage your mic, and safely hang up."}
             </p>
           </div>
 
-          {/* Accidental Hangup Recovery / Practice Again */}
+          {/* Quick Repeat Call Action */}
           <div className="flex justify-center">
             <button
               type="button"
@@ -650,20 +654,20 @@ export function CallSimulator() {
                 callSounds.playTap();
                 engine.reset();
               }}
-              className="inline-flex items-center gap-2 rounded-xl border border-primary bg-mint px-4 py-2.5 text-sm font-bold text-primary-strong hover:bg-mint/80 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-600/30 bg-emerald-50 dark:bg-emerald-950/40 px-3.5 py-2 text-xs font-bold text-emerald-800 dark:text-emerald-200 hover:bg-emerald-100 transition-colors"
             >
-              <RotateCcw className="h-4 w-4" />
-              <span>{ur ? "دوبارہ کال ملائیں (ایک اور مشق)" : "Call Again (Practise Once More)"}</span>
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span>{ur ? "دوبارہ کال ملائیں (ایک اور مشق)" : "Call Again (Practice Once More)"}</span>
             </button>
           </div>
 
-          <div className="rounded-xl border border-border bg-mint/50 p-3 text-xs font-semibold text-primary-strong">
+          <div className="rounded-xl border border-border bg-muted/40 p-2.5 text-xs font-semibold text-muted-foreground">
             {ur
-              ? "یاد رکھیں: یہ صرف ایک مشق تھی۔ کسی بھی فون کال پر کوئی چارجز نہیں کٹے۔"
-              : "Remember: This was only practice. No phone credit or charges were used."}
+              ? "یاد رکھیں: یہ صرف ایک محفوظ تعلیمی مشق تھی۔ اصلی فون بیلنس یا ڈیٹا استعمال نہیں ہوا۔"
+              : "Remember: This was a safe practice session. No actual phone balance or data was consumed."}
           </div>
 
-          <div className="pt-2">
+          <div className="pt-1">
             <CompletionActions />
           </div>
         </div>
