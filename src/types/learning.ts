@@ -20,6 +20,12 @@ export interface LessonStep {
   hint: LocalText;
   /** Feedback for specific wrong actions on this step. */
   wrong?: Record<ExpectedAction, LocalText>;
+  /** Real-world financial literacy context */
+  whyItMatters?: LocalText;
+  /** Checklist items to verify */
+  checklist?: LocalText[];
+  /** Concrete real-world mistake to avoid */
+  commonMistake?: LocalText;
 }
 
 export interface LearningModule {

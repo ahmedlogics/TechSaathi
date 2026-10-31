@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { initialEngineState, lessonReducer } from "@/hooks/useLessonEngine";
-import { getModule } from "@/data/modules";
+import { getModule, sendMoneyBankSteps } from "@/data/modules";
 
 const steps = getModule("send-money")!.steps;
 const reduce = lessonReducer(steps);
@@ -27,9 +27,24 @@ describe("lesson engine", () => {
 
   it("lets the learner go back to edit without a penalty", () => {
     let s = initialEngineState;
-    for (const a of ["send-money", "wallet-to-wallet", "recipient-continue", "amount-continue"]) s = reduce(s, { type: "ACT", action: a });
+    for (const a of ["send-money", "wallet-to-wallet", "recipient-continue", "amount-continue"])
+      s = reduce(s, { type: "ACT", action: a });
     s = reduce(s, { type: "GOTO", stepId: "recipient" });
     expect(steps[s.stepIndex]?.id).toBe("recipient");
     expect(s.mistakes).toBe(0);
+  });
+
+  it("branches dynamically to bank transfer steps when selected", () => {
+    let s = reduce(initialEngineState, { type: "ACT", action: "send-money" });
+    expect(s.stepIndex).toBe(1);
+
+    // Branch to bank steps
+    s = reduce(s, { type: "BRANCH", steps: sendMoneyBankSteps, targetStepId: "bank-select" });
+    expect(s.steps?.[s.stepIndex]?.id).toBe("bank-select");
+    expect(s.steps?.[s.stepIndex]?.expected).toBe("bank-select-continue");
+
+    // Advance through bank select
+    s = reduce(s, { type: "ACT", action: "bank-select-continue" });
+    expect(s.steps?.[s.stepIndex]?.id).toBe("bank-account");
   });
 });

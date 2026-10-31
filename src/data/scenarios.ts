@@ -8,8 +8,84 @@ export const paymentContacts = [
   { id: "bilal", name: "Bilal Khan", phone: "0311 7654321" },
 ];
 export const TARGET_RECIPIENT = "ahmed";
+export const TARGET_BANK_BENEFICIARY = "fatima";
 export const digitsOnly = (s: string) => s.replace(/\D/g, "");
 export const formatRs = (n: number) => `Rs. ${n.toLocaleString("en-US")}`;
+
+export interface PracticeBank {
+  id: string;
+  name: LocalText;
+  code: string;
+  tagline: LocalText;
+  color: string;
+}
+
+export interface BankBeneficiary {
+  id: string;
+  bankId: string;
+  accountTitle: string;
+  accountNumber: string;
+  iban: string;
+  branch: LocalText;
+}
+
+export const practiceBanks: PracticeBank[] = [
+  {
+    id: "meezan",
+    name: { en: "Meezan Bank", ur: "میزان بینک" },
+    code: "MEZN",
+    tagline: { en: "Premier Islamic Bank", ur: "پریمیئر اسلامی بینک" },
+    color: "#4A154B",
+  },
+  {
+    id: "hbl",
+    name: { en: "Habib Bank Limited (HBL)", ur: "حبیب بینک لمیٹڈ (HBL)" },
+    code: "HABB",
+    tagline: { en: "Largest Banking Network", ur: "سب سے بڑا بینکنگ نیٹ ورک" },
+    color: "#006837",
+  },
+  {
+    id: "ubl",
+    name: { en: "United Bank Limited (UBL)", ur: "یونائیٹڈ بینک لمیٹڈ (UBL)" },
+    code: "UNIL",
+    tagline: { en: "Digital Banking Services", ur: "ڈیجیٹل بینکنگ سروسز" },
+    color: "#00539F",
+  },
+  {
+    id: "alfalah",
+    name: { en: "Bank Alfalah", ur: "بینک الفلاح" },
+    code: "BAFL",
+    tagline: { en: "Fast Account Transfers", ur: "فوری اکاؤنٹ ٹرانسفر" },
+    color: "#D9251D",
+  },
+];
+
+export const bankBeneficiaries: BankBeneficiary[] = [
+  {
+    id: "fatima",
+    bankId: "meezan",
+    accountTitle: "Fatima Bibi",
+    accountNumber: "02010100123456",
+    iban: "PK36MEZN0002010100123456",
+    branch: { en: "Clifton Branch, Karachi", ur: "کلفٹن برانچ، کراچی" },
+  },
+  {
+    id: "tariq",
+    bankId: "hbl",
+    accountTitle: "Tariq Mehmood",
+    accountNumber: "00427901234567",
+    iban: "PK89HABB0000427901234567",
+    branch: { en: "Saddar Branch, Karachi", ur: "صدر برانچ، کراچی" },
+  },
+  {
+    id: "kamran",
+    bankId: "ubl",
+    accountTitle: "Kamran Akram",
+    accountNumber: "112233445566",
+    iban: "PK45UNIL0000112233445566",
+    branch: { en: "Gulshan Branch, Karachi", ur: "گلشن برانچ، کراچی" },
+  },
+];
 
 /* ---------- Book a Ride (fictional Karachi practice locations) ---------- */
 export const rideLocations: { id: string; label: LocalText; pos: number }[] = [

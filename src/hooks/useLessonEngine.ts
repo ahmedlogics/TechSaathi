@@ -3,6 +3,7 @@ import { ui } from "@/data/translations";
 import type { ExpectedAction, LearningModule, LessonStep, LocalText } from "@/types/learning";
 
 export interface EngineState {
+  steps?: LessonStep[];
   stepIndex: number;
   mistakes: number;
   hints: number;
@@ -16,13 +17,15 @@ export type EngineEvent =
   | { type: "HINT" }
   | { type: "GOTO"; stepId: string }
   | { type: "BACK" }
-  | { type: "RESET" };
+  | { type: "RESET" }
+  | { type: "BRANCH"; steps: LessonStep[]; targetStepId?: string | undefined };
 
 export const initialEngineState: EngineState = { stepIndex: 0, mistakes: 0, hints: 0, hintVisible: false, feedback: null };
 
-export function lessonReducer(steps: LessonStep[]) {
+export function lessonReducer(initialSteps: LessonStep[]) {
   return (state: EngineState, ev: EngineEvent): EngineState => {
-    const step = steps[state.stepIndex]!;
+    const steps = state.steps ?? initialSteps;
+    const step = steps[state.stepIndex] ?? steps[0]!;
     const isLast = state.stepIndex >= steps.length - 1;
     switch (ev.type) {
       case "ACT": {
@@ -48,19 +51,31 @@ export function lessonReducer(steps: LessonStep[]) {
         return { ...state, stepIndex: state.stepIndex - 1, hintVisible: false, feedback: null };
       case "RESET":
         return initialEngineState;
+      case "BRANCH": {
+        const targetIdx = ev.targetStepId ? ev.steps.findIndex((s) => s.id === ev.targetStepId) : state.stepIndex;
+        return {
+          ...state,
+          steps: ev.steps,
+          stepIndex: targetIdx >= 0 ? targetIdx : 0,
+          hintVisible: false,
+          feedback: null,
+        };
+      }
     }
   };
 }
 
 export function useLessonEngine(module: LearningModule) {
   const [state, dispatch] = useReducer(lessonReducer(module.steps), initialEngineState);
-  const step = module.steps[state.stepIndex]!;
-  const totalSteps = module.steps.length - 1;
+  const activeSteps = state.steps ?? module.steps;
+  const step = activeSteps[state.stepIndex] ?? activeSteps[0]!;
+  const totalSteps = activeSteps.length - 1;
   const completed = state.stepIndex >= totalSteps;
 
   return {
     state,
     step,
+    activeSteps,
     totalSteps,
     completed,
     act: useCallback((action: ExpectedAction) => dispatch({ type: "ACT", action }), []),
@@ -69,6 +84,10 @@ export function useLessonEngine(module: LearningModule) {
     goTo: useCallback((stepId: string) => dispatch({ type: "GOTO", stepId }), []),
     back: useCallback(() => dispatch({ type: "BACK" }), []),
     reset: useCallback(() => dispatch({ type: "RESET" }), []),
+    branch: useCallback(
+      (steps: LessonStep[], targetStepId?: string) => dispatch({ type: "BRANCH", steps, targetStepId }),
+      [],
+    ),
   };
 }
 

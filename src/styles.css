@@ -180,4 +180,78 @@
   outline: 3px solid var(--color-primary);
   outline-offset: 3px;
   box-shadow: 0 0 0 7px color-mix(in oklab, var(--color-primary) 18%, transparent);
+  background-color: color-mix(in oklab, var(--color-primary) 6%, transparent);
 }
+
+@keyframes subtle-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.sim-pointer-badge {
+  animation: subtle-bounce 1.5s ease-in-out infinite;
+}
+
+@keyframes ripple-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes target-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(8, 127, 114, 0.18), 0 0 12px rgba(8, 127, 114, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(8, 127, 114, 0.3), 0 0 18px rgba(8, 127, 114, 0.35);
+  }
+}
+
+.guided-ripple-ring {
+  animation: ripple-pulse 1.9s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+.guided-target-active {
+  outline: 2.5px solid #087F72 !important;
+  outline-offset: 2px !important;
+  animation: target-glow 1.9s ease-in-out infinite;
+  background-color: rgba(8, 127, 114, 0.04) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sim-pointer-badge,
+  .guided-ripple-ring,
+  .guided-target-active {
+    animation: none !important;
+  }
+}
+
+/* Accessible, lightweight phone scroll area */
+.phone-scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(8, 127, 114, 0.25) transparent;
+}
+.phone-scroll-area::-webkit-scrollbar {
+  width: 5px;
+}
+.phone-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.phone-scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(8, 127, 114, 0.25);
+  border-radius: 9999px;
+}
+

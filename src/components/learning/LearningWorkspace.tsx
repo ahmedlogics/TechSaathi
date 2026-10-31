@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useLessonEngine } from "@/hooks/useLessonEngine";
 import { useLearningProgress } from "@/hooks/useLearningProgress";
+import { saveProgress, saveAttempt } from "@/services/progressService";
 import type { LearningMode, LearningModule } from "@/types/learning";
 import { LessonProvider, type LessonContextValue } from "./LessonContext";
 import { GuidePanel } from "./GuidePanel";
@@ -30,7 +31,7 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
 
   useEffect(() => markVisited(module.id, mode), [module.id, mode, markVisited]);
 
-  const record = (completed: boolean) =>
+  const record = (completed: boolean) => {
     saveRecord({
       moduleId: module.id,
       mode,
@@ -41,6 +42,25 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
       completed,
       finishedAt: new Date().toISOString(),
     });
+
+    // Supabase cloud persistence (non-blocking, keeps simulation functional offline)
+    saveProgress({
+      moduleId: module.id,
+      lastStep: engine.state.stepIndex,
+      mode,
+      completed,
+    }).catch((err) => console.warn("[TechSaathi] Cloud progress sync deferred:", err));
+
+    if (completed) {
+      saveAttempt({
+        moduleId: module.id,
+        mode,
+        completed: true,
+        mistakesCount: engine.state.mistakes,
+        hintsUsed: engine.state.hints,
+      }).catch((err) => console.warn("[TechSaathi] Cloud attempt sync deferred:", err));
+    }
+  };
 
   useEffect(() => {
     if (engine.completed && !saved.current) {
