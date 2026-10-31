@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { PageContainer } from "@/components/layout/AppHeader";
 import { LearningWorkspace } from "@/components/learning/LearningWorkspace";
 import { getModule } from "@/data/modules";
+import { PakIDLanding } from "@/features/pakid/PakIDLanding";
 import type { LearningMode } from "@/types/learning";
 
 export const Route = createFileRoute("/practice/$moduleId")({
@@ -25,6 +26,9 @@ export const Route = createFileRoute("/practice/$moduleId")({
 function PracticePage() {
   const { moduleId } = Route.useParams();
   const { mode } = Route.useSearch();
+  if (moduleId === "proof-of-life") {
+    return <PakIDLanding initialView={mode === "practice" ? "practice-independent" : "practice-guide"} />;
+  }
   const m = getModule(moduleId)!;
   return (
     <div className="h-full w-full overflow-hidden flex flex-col">

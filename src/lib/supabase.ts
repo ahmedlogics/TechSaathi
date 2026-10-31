@@ -101,6 +101,6 @@ export async function getOrCreateGuestSession(): Promise<string | null> {
 }
 
 /**
- * Backward-compatible alias for getOrCreateGuestSession used by other developers.
+ * Shared guest authentication helper alias for getOrCreateGuestSession.
  */
 export const getOrCreateGuestUser = getOrCreateGuestSession;

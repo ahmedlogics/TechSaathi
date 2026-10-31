@@ -4,6 +4,7 @@ import { PageContainer } from "@/components/layout/AppHeader";
 import { moduleVisual } from "@/components/home/moduleIcons";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getModule } from "@/data/modules";
+import { PakIDLanding } from "@/features/pakid/PakIDLanding";
 
 export const Route = createFileRoute("/learn/$moduleId")({
   loader: ({ params }) => {
@@ -24,6 +25,9 @@ export const Route = createFileRoute("/learn/$moduleId")({
 
 function LearnPage() {
   const { moduleId } = Route.useParams();
+  if (moduleId === "proof-of-life") {
+    return <PakIDLanding />;
+  }
   const m = getModule(moduleId)!;
   const { t, tr } = useLanguage();
   const { icon: Icon, tone } = moduleVisual[m.id];

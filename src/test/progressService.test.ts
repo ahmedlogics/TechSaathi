@@ -2,6 +2,8 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import {
   modeToDb,
   dbToMode,
+  toDbMode,
+  toAppMode,
   saveProgress,
   getModuleProgress,
   saveAttempt,
@@ -15,6 +17,17 @@ describe("progressService mode conversions", () => {
     expect(modeToDb("practice")).toBe("independent");
     expect(dbToMode("guided")).toBe("guide");
     expect(dbToMode("independent")).toBe("practice");
+  });
+
+  it("supports aliases toDbMode and toAppMode", () => {
+    expect(toDbMode("guide")).toBe("guided");
+    expect(toDbMode("guided")).toBe("guided");
+    expect(toDbMode("practice")).toBe("independent");
+    expect(toDbMode("independent")).toBe("independent");
+
+    expect(toAppMode("guided")).toBe("guide");
+    expect(toAppMode("guide")).toBe("guide");
+    expect(toAppMode("independent")).toBe("practice");
   });
 });
 
