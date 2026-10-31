@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const navLink =
-  "inline-flex min-h-12 items-center gap-2 rounded-lg px-3 text-base font-semibold text-heading hover:bg-mint [&.active]:bg-mint [&.active]:text-primary-strong";
+  "inline-flex min-h-12 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-[0.9rem] sm:px-3 sm:text-base font-semibold text-heading hover:bg-mint [&.active]:bg-mint [&.active]:text-primary-strong";
 
 export function AppHeader() {
   const { t, toggle, lang } = useLanguage();
