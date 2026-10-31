@@ -15,6 +15,7 @@ import {
   Banknote,
   Menu,
   Clock,
+  Pointer,
 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { CompletionActions, SimButton, useLesson } from "@/components/learning/LessonContext";
@@ -404,7 +405,7 @@ function RouteMap({
 }
 
 export function RideSimulator() {
-  const { engine, goSummary, retry } = useLesson();
+  const { engine, goSummary, retry, isTarget } = useLesson();
   const { tr, lang } = useLanguage();
   const ur = lang === "ur";
 
@@ -451,6 +452,7 @@ export function RideSimulator() {
           }
           initialAddress={mapPickerMode === "pickup" ? pickupLoc.name : destLoc?.name}
           ur={ur}
+          isConfirmTarget={mapPickerMode === "pickup" ? isTarget("pickup-continue") : isTarget("dest-continue")}
           onBack={() => setMapPickerMode(null)}
           onConfirm={(loc) => {
             if (mapPickerMode === "pickup") {
@@ -483,7 +485,11 @@ export function RideSimulator() {
                 {/* Main Destination Search Bar (Interactive Target for Step 1) */}
                 <SimButton
                   action="where-to"
-                  className="flex w-full items-center gap-2.5 rounded-xl bg-white px-3 py-2 text-start shadow-sm hover:bg-zinc-100 transition-all cursor-pointer group"
+                  className={cn(
+                    "flex w-full items-center gap-2.5 rounded-xl bg-white px-3 py-2 text-start shadow-sm hover:bg-zinc-100 transition-all cursor-pointer group",
+                    isTarget("where-to") &&
+                      "ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_16px_rgba(52,211,153,0.5)] animate-pulse",
+                  )}
                 >
                   <Search className="h-4 w-4 text-emerald-600 shrink-0" />
                   <span className="flex-1 text-xs sm:text-[13px] font-bold text-zinc-900 truncate">
@@ -612,48 +618,64 @@ export function RideSimulator() {
             <div className="shrink-0 space-y-1.5">
               <h3 className="text-[11px] font-bold text-heading">{ur ? "گاڑی کا انتخاب کریں" : "Choose Ride Type"}</h3>
               <div className="space-y-1" role="radiogroup">
-                {rideTypes.map((r) => {
+                {rideTypes.map((r, idx) => {
                   const itemFare = practiceFare(pickupLoc.id, destLoc?.id || "hospital", r.id);
                   const isSelected = rideType === r.id;
+                  const isTargetVehicle = isTarget("ride-continue") && !rideType && idx === 0;
                   return (
-                    <button
-                      key={r.id}
-                      type="button"
-                      role="radio"
-                      aria-checked={isSelected}
-                      onClick={() => setRideType(r.id)}
-                      className={cn(
-                        "flex w-full items-center justify-between rounded-xl border-2 bg-card px-2 py-1 text-start transition-colors shrink-0 cursor-pointer",
-                        isSelected ? "border-primary bg-mint" : "border-border hover:border-primary"
-                      )}
-                    >
-                      <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-1">
-                        <div className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
-                          <Car className="h-3.5 w-3.5" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="text-[11px] font-bold text-heading leading-tight whitespace-nowrap">
-                            {tr(r.label)}
+                    <div key={r.id} className="relative">
+                      <button
+                        type="button"
+                        role="radio"
+                        aria-checked={isSelected}
+                        onClick={() => setRideType(r.id)}
+                        className={cn(
+                          "flex w-full items-center justify-between rounded-xl border-2 bg-card px-2 py-1 text-start transition-all shrink-0 cursor-pointer",
+                          isSelected
+                            ? "border-primary bg-mint"
+                            : isTargetVehicle
+                              ? "border-primary ring-2 ring-primary ring-offset-2 ring-offset-card shadow-[0_0_14px_rgba(0,92,75,0.35)] animate-pulse"
+                              : "border-border hover:border-primary",
+                        )}
+                      >
+                        <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-1">
+                          <div className="flex h-6.5 w-6.5 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
+                            <Car className="h-3.5 w-3.5" />
                           </div>
-                          <div className="text-[8.5px] text-muted-foreground leading-tight truncate">
-                            {r.id === "rickshaw"
-                              ? ur
-                                ? "کم کرایہ · 2 منٹ"
-                                : "Economical · 2 min"
-                              : ur
-                                ? "آرام دہ · 3 منٹ"
-                                : "Comfortable · 3 min"}
+                          <div className="min-w-0 flex-1">
+                            <div className="text-[11px] font-bold text-heading leading-tight whitespace-nowrap">
+                              {tr(r.label)}
+                            </div>
+                            <div className="text-[8.5px] text-muted-foreground leading-tight truncate">
+                              {r.id === "rickshaw"
+                                ? ur
+                                  ? "کم کرایہ · 2 منٹ"
+                                  : "Economical · 2 min"
+                                : ur
+                                  ? "آرام دہ · 3 منٹ"
+                                  : "Comfortable · 3 min"}
+                            </div>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-1 shrink-0 text-end">
-                        <span className="font-bold text-[11px] text-heading whitespace-nowrap" dir="ltr">
-                          {formatRs(itemFare)}
+                        <div className="flex items-center gap-1 shrink-0 text-end">
+                          <span className="font-bold text-[11px] text-heading whitespace-nowrap" dir="ltr">
+                            {formatRs(itemFare)}
+                          </span>
+                          {isSelected && <Check className="h-3.5 w-3.5 shrink-0 text-primary" />}
+                        </div>
+                      </button>
+
+                      {/* Floating prompt to select vehicle first */}
+                      {isTargetVehicle && (
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute -top-2.5 end-3 z-20 inline-flex items-center gap-1 rounded-full bg-primary px-2 py-0.5 text-[8.5px] font-bold text-primary-foreground shadow animate-pulse"
+                        >
+                          <Pointer className="h-2.5 w-2.5" /> {ur ? "پہلے سواری منتخب کریں" : "Tap to choose ride"}
                         </span>
-                        {isSelected && <Check className="h-3.5 w-3.5 shrink-0 text-primary" />}
-                      </div>
-                    </button>
+                      )}
+                    </div>
                   );
                 })}
               </div>
@@ -670,6 +692,7 @@ export function RideSimulator() {
             <div className="shrink-0 pt-0.5">
               <SimButton
                 action="ride-continue"
+                highlightFor={rideType ? "ride-continue" : ("__never" as any)}
                 onPress={() =>
                   rideType
                     ? engine.act("ride-continue")
@@ -678,7 +701,12 @@ export function RideSimulator() {
                         ur: "پہلے گاڑی یا رکشہ دبائیں۔",
                       })
                 }
-                className="btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer"
+                className={cn(
+                  "btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer",
+                  isTarget("ride-continue") &&
+                    rideType &&
+                    "shadow-[0_0_16px_rgba(0,92,75,0.4)] ring-2 ring-primary ring-offset-2 ring-offset-card animate-pulse",
+                )}
               >
                 {ur ? "آگے بڑھیں" : "Continue"}
               </SimButton>
@@ -714,7 +742,14 @@ export function RideSimulator() {
               </dl>
             </div>
             <div className="shrink-0 pt-0.5">
-              <SimButton action="confirm-booking" className="btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer">
+              <SimButton
+                action="confirm-booking"
+                className={cn(
+                  "btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer",
+                  isTarget("confirm-booking") &&
+                    "shadow-[0_0_16px_rgba(0,92,75,0.4)] ring-2 ring-primary ring-offset-2 ring-offset-card animate-pulse",
+                )}
+              >
                 {ur ? "مشق بکنگ کی تصدیق" : "Confirm Practice Booking"}
               </SimButton>
             </div>
@@ -751,7 +786,11 @@ export function RideSimulator() {
                     {ur ? "نمبر پلیٹ (یاد رکھیں)" : "Number Plate (Remember this)"}
                   </p>
                   <p
-                    className="mt-0.5 inline-block rounded-lg border-2 border-heading bg-card px-2.5 py-0.5 font-mono text-sm sm:text-base font-black tracking-widest text-heading shadow-xs"
+                    className={cn(
+                      "mt-0.5 inline-block rounded-lg border-2 border-heading bg-card px-2.5 py-0.5 font-mono text-sm sm:text-base font-black tracking-widest text-heading shadow-xs transition-all",
+                      isTarget("see-vehicle") &&
+                        "ring-2 ring-amber-500 ring-offset-2 ring-offset-card shadow-[0_0_12px_rgba(245,158,11,0.35)]",
+                    )}
                     dir="ltr"
                   >
                     {rideDriver.bookedPlate}
@@ -760,7 +799,14 @@ export function RideSimulator() {
               </div>
             </div>
             <div className="shrink-0 pt-0.5">
-              <SimButton action="see-vehicle" className="btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer">
+              <SimButton
+                action="see-vehicle"
+                className={cn(
+                  "btn btn-primary w-full min-h-[34px] py-1 text-xs font-bold rounded-xl cursor-pointer",
+                  isTarget("see-vehicle") &&
+                    "shadow-[0_0_16px_rgba(0,92,75,0.4)] ring-2 ring-primary ring-offset-2 ring-offset-card animate-pulse",
+                )}
+              >
                 {ur ? "گاڑی پہنچ گئی" : "Vehicle has arrived"}
               </SimButton>
             </div>
@@ -806,7 +852,14 @@ export function RideSimulator() {
               <SimButton action="plate-match" highlightFor="__never" className="btn btn-outline w-full min-h-[32px] py-1 text-[11px] font-bold rounded-xl cursor-pointer">
                 {ur ? "ہاں، ملتی ہے" : "Yes, it matches"}
               </SimButton>
-              <SimButton action="plate-different" className="btn btn-primary w-full min-h-[32px] py-1 text-[11px] font-bold rounded-xl cursor-pointer">
+              <SimButton
+                action="plate-different"
+                className={cn(
+                  "btn btn-primary w-full min-h-[32px] py-1 text-[11px] font-bold rounded-xl cursor-pointer",
+                  isTarget("plate-different") &&
+                    "shadow-[0_0_16px_rgba(0,92,75,0.4)] ring-2 ring-primary ring-offset-2 ring-offset-card animate-pulse",
+                )}
+              >
                 {ur ? "نہیں، مختلف ہے" : "No, it is different"}
               </SimButton>
             </div>

@@ -11,6 +11,7 @@ import {
   Loader2,
   CheckCircle2,
   Navigation,
+  Pointer,
 } from "lucide-react";
 import {
   type LocationResult,
@@ -166,8 +167,9 @@ export function RideRouteEntry({
           <div
             onClick={() => setShowFromMenu((v) => !v)}
             className={cn(
-              "flex items-center justify-between rounded-xl bg-[#252525] hover:bg-[#2a2a2a] border border-white/5 p-2 transition-colors cursor-pointer select-none",
-              isPickupTarget && "sim-target",
+              "flex items-center justify-between rounded-xl bg-[#252525] hover:bg-[#2a2a2a] border border-white/5 p-2 transition-all cursor-pointer select-none",
+              isPickupTarget &&
+                "sim-target ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_16px_rgba(52,211,153,0.4)] border-emerald-500/60",
             )}
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -196,7 +198,12 @@ export function RideRouteEntry({
               aria-label={ur ? "میرا مقام" : "Use my location"}
               className="flex flex-col items-center gap-0.5 shrink-0 ml-1 cursor-pointer group"
             >
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors">
+              <span
+                className={cn(
+                  "flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25 transition-colors",
+                  isPickupTarget && "ring-1 ring-emerald-400/70 bg-emerald-500/25 text-emerald-300 animate-pulse",
+                )}
+              >
                 {locating ? (
                   <Loader2 className="h-3 w-3 animate-spin text-emerald-400" />
                 ) : (
@@ -208,6 +215,16 @@ export function RideRouteEntry({
               </span>
             </button>
           </div>
+
+          {/* Floating Tap here Badge for Step 2 */}
+          {isPickupTarget && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-2.5 end-3 z-30 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[8.5px] font-bold text-zinc-950 shadow-md animate-pulse"
+            >
+              <Pointer className="h-2.5 w-2.5" /> {ur ? "یہاں دبائیں" : "Tap here"}
+            </span>
+          )}
 
           {/* Popup Menu when FROM is tapped */}
           {showFromMenu && (
@@ -288,8 +305,10 @@ export function RideRouteEntry({
         <div ref={searchBoxRef} className="relative">
           <div
             className={cn(
-              "flex items-center justify-between rounded-xl bg-[#252525] border border-white/5 p-2 transition-colors",
-              isDestTarget && "sim-target",
+              "flex items-center justify-between rounded-xl bg-[#252525] border border-white/5 p-2 transition-all relative",
+              isDestTarget &&
+                !dest &&
+                "sim-target ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_16px_rgba(52,211,153,0.4)] border-emerald-500/60",
             )}
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -317,11 +336,24 @@ export function RideRouteEntry({
               type="button"
               onClick={() => onOpenMapPicker("destination")}
               aria-label={ur ? "نقشے پر منتخب کریں" : "Select destination on map"}
-              className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#2a303c] border border-blue-500/25 hover:bg-[#323946] text-blue-400 transition-colors shrink-0 ml-1 shadow-xs cursor-pointer"
+              className={cn(
+                "flex h-7 w-7 items-center justify-center rounded-lg bg-[#2a303c] border border-blue-500/25 hover:bg-[#323946] text-blue-400 transition-all shrink-0 ml-1 shadow-xs cursor-pointer",
+                isDestTarget && !dest && "border-blue-400 shadow-[0_0_10px_rgba(59,130,246,0.35)]",
+              )}
             >
               <MapPin className="h-3.5 w-3.5 fill-blue-400 text-blue-400" />
             </button>
           </div>
+
+          {/* Floating Tap here Badge for Destination step */}
+          {isDestTarget && !dest && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-2.5 end-3 z-30 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[8.5px] font-bold text-zinc-950 shadow-md animate-pulse"
+            >
+              <Pointer className="h-2.5 w-2.5" /> {ur ? "یہاں دبائیں" : "Tap here"}
+            </span>
+          )}
 
           {/* Autocomplete Results for TO field */}
           {showResults && searchResults.length > 0 && (
@@ -357,55 +389,100 @@ export function RideRouteEntry({
 
           <div className="divide-y divide-zinc-800/80 rounded-xl bg-[#242424]/50 border border-white/5">
             {/* 1. NED Visitor Gate */}
-            {CURATED_LOCATIONS.slice(0, 3).map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleSelectRecent(item)}
-                className={cn(
-                  "w-full flex items-center justify-between p-2 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group",
-                  dest?.id === item.id && "bg-emerald-500/10",
-                )}
-              >
-                <div className="flex items-center gap-2 flex-1 min-w-0 pr-1">
-                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors">
-                    <Clock className="h-3 w-3" />
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10.5px] font-bold text-white leading-tight truncate">
-                      {item.name}
-                    </p>
-                    <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">
-                      {item.address}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1 shrink-0 ml-1">
-                  {item.distance && (
-                    <span className="text-[9px] font-medium text-zinc-400 whitespace-nowrap">
-                      {item.distance}
+            {CURATED_LOCATIONS.slice(0, 3).map((item, index) => {
+              const isSuggested = isDestTarget && !dest && index === 0;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleSelectRecent(item)}
+                  className={cn(
+                    "w-full flex items-center justify-between p-2 text-start hover:bg-zinc-800/60 transition-all cursor-pointer group relative rounded-lg",
+                    dest?.id === item.id && "bg-emerald-500/10",
+                    isSuggested &&
+                      "ring-1.5 ring-emerald-400/90 bg-emerald-500/15 shadow-[0_0_12px_rgba(52,211,153,0.3)]",
+                  )}
+                >
+                  <div className="flex items-center gap-2 flex-1 min-w-0 pr-1">
+                    <span
+                      className={cn(
+                        "flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors",
+                        isSuggested && "bg-emerald-500/25 text-emerald-400",
+                      )}
+                    >
+                      <Clock className="h-3 w-3" />
                     </span>
-                  )}
-                  {dest?.id === item.id && (
-                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
-                  )}
-                </div>
-              </button>
-            ))}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-[10.5px] font-bold text-white leading-tight truncate">
+                          {item.name}
+                        </p>
+                        {isSuggested && (
+                          <span className="text-[7.5px] font-bold text-emerald-300 bg-emerald-500/25 px-1 py-0.2 rounded shrink-0">
+                            {ur ? "تجویز کردہ" : "Suggested"}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[8.5px] text-zinc-400 leading-tight mt-0.5 truncate">
+                        {item.address}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1 shrink-0 ml-1">
+                    {item.distance && (
+                      <span className="text-[9px] font-medium text-zinc-400 whitespace-nowrap">
+                        {item.distance}
+                      </span>
+                    )}
+                    {dest?.id === item.id && (
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                    )}
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Continue Button (active when both FROM and TO are set) */}
+        {/* Continue Button (active for pickup step or when destination is set) */}
         <div className="pt-1 pb-0.5">
-          {dest ? (
-            <button
-              type="button"
-              onClick={onContinue}
-              className="w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer"
-            >
-              {ur ? "آگے بڑھیں" : "Continue"}
-            </button>
+          {screen === "pickup" ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => engine.act("pickup-continue")}
+                className={cn(
+                  "w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer",
+                  isPickupTarget &&
+                    "ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_15px_rgba(52,211,153,0.4)]",
+                )}
+              >
+                {ur ? "سواری کا مقام تصدیق کریں" : "Confirm Pickup & Continue"}
+              </button>
+            </div>
+          ) : dest ? (
+            <div className="relative">
+              <button
+                type="button"
+                onClick={onContinue}
+                className={cn(
+                  "w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer",
+                  isDestTarget &&
+                    "ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-pulse",
+                )}
+              >
+                {ur ? "آگے بڑھیں" : "Continue"}
+              </button>
+              {isDestTarget && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -top-2.5 end-3 z-30 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[8.5px] font-bold text-zinc-950 shadow-md animate-pulse"
+                >
+                  <Pointer className="h-2.5 w-2.5" /> {ur ? "یہاں دبائیں" : "Tap here"}
+                </span>
+              )}
+            </div>
           ) : (
             <button
               type="button"

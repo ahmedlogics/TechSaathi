@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, Search, Crosshair, MapPin, X, Loader2 } from "lucide-react";
+import { ArrowLeft, Search, Crosshair, MapPin, X, Loader2, Pointer } from "lucide-react";
 import { loadLeaflet } from "@/lib/leafletLoader";
 import {
   type LocationResult,
@@ -8,12 +8,14 @@ import {
   getBrowserCurrentLocation,
   hasLiveGeoapifyKey,
 } from "@/lib/rideGeocoding";
+import { cn } from "@/lib/utils";
 
 interface RideMapPickerProps {
   mode: "pickup" | "destination";
-  initialCoords?: { lat: number; lng: number };
-  initialAddress?: string;
+  initialCoords?: { lat: number; lng: number } | undefined;
+  initialAddress?: string | undefined;
   ur: boolean;
+  isConfirmTarget?: boolean | undefined;
   onConfirm: (loc: LocationResult) => void;
   onBack: () => void;
 }
@@ -23,6 +25,7 @@ export function RideMapPicker({
   initialCoords = { lat: 24.9328, lng: 67.113 },
   initialAddress,
   ur,
+  isConfirmTarget = false,
   onConfirm,
   onBack,
 }: RideMapPickerProps) {
@@ -372,13 +375,27 @@ export function RideMapPicker({
         </div>
 
         {/* Confirm Location Button */}
-        <button
-          type="button"
-          onClick={() => onConfirm(selectedLoc)}
-          className="w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer"
-        >
-          {ur ? "مقام کی تصدیق کریں" : "Confirm location"}
-        </button>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => onConfirm(selectedLoc)}
+            className={cn(
+              "w-full flex items-center justify-center rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs py-2 shadow-md active:scale-98 transition-all cursor-pointer",
+              isConfirmTarget &&
+                "ring-2 ring-white ring-offset-2 ring-offset-[#18181b] shadow-[0_0_16px_rgba(16,185,129,0.5)] animate-pulse",
+            )}
+          >
+            {ur ? "مقام کی تصدیق کریں" : "Confirm location"}
+          </button>
+          {isConfirmTarget && (
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-2.5 end-3 z-30 inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[8.5px] font-bold text-zinc-950 shadow-md animate-pulse"
+            >
+              <Pointer className="h-2.5 w-2.5 text-zinc-950" /> {ur ? "یہاں دبائیں" : "Tap here"}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

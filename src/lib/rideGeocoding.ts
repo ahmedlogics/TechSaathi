@@ -14,7 +14,7 @@ export interface LocationResult {
 
 /** Check if Geoapify API key is present in environment */
 export function hasLiveGeoapifyKey(): boolean {
-  return Boolean(import.meta.env.VITE_GEOAPIFY_API_KEY);
+  return Boolean(import.meta.env["VITE_GEOAPIFY_API_KEY"]);
 }
 
 export const CURATED_LOCATIONS: LocationResult[] = [
@@ -127,7 +127,7 @@ export async function searchPlaces(
   const q = query.trim();
   if (q.length < 3) return [];
 
-  const apiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
+  const apiKey = import.meta.env["VITE_GEOAPIFY_API_KEY"];
 
   if (apiKey) {
     try {
@@ -138,7 +138,7 @@ export async function searchPlaces(
         q,
       )}&apiKey=${apiKey}&limit=5${bias}`;
 
-      const res = await fetch(url, { signal });
+      const res = await fetch(url, ...(signal ? [{ signal }] : []));
       if (res.ok) {
         const data = await res.json();
         if (data.features && data.features.length > 0) {
@@ -169,7 +169,7 @@ export async function searchPlaces(
 
 /** Reverse geocode coordinates to readable address */
 export async function reverseGeocode(lat: number, lng: number): Promise<{ name: string; address: string }> {
-  const apiKey = import.meta.env.VITE_GEOAPIFY_API_KEY;
+  const apiKey = import.meta.env["VITE_GEOAPIFY_API_KEY"];
 
   if (apiKey) {
     try {
@@ -202,7 +202,7 @@ export async function reverseGeocode(lat: number, lng: number): Promise<{ name: 
     }
   }
 
-  if (minDistance < 0.015) {
+  if (closest && minDistance < 0.015) {
     return {
       name: closest.name,
       address: closest.address,
