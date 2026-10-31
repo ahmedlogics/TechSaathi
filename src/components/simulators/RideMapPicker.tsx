@@ -6,6 +6,7 @@ import {
   reverseGeocode,
   searchPlaces,
   getBrowserCurrentLocation,
+  hasLiveGeoapifyKey,
 } from "@/lib/rideGeocoding";
 
 interface RideMapPickerProps {
@@ -274,6 +275,11 @@ export function RideMapPicker({
         {/* Autocomplete Results Dropdown */}
         {showResults && searchResults.length > 0 && (
           <div className="max-h-48 overflow-y-auto rounded-xl bg-[#18181b] border border-zinc-700 shadow-2xl divide-y divide-zinc-800">
+            {!hasLiveGeoapifyKey() && (
+              <div className="px-3 py-1 bg-zinc-900/90 text-[9px] font-semibold text-emerald-400 border-b border-zinc-800">
+                {ur ? "مشق مقامات (ڈیمو موڈ)" : "Practice locations (Demo mode)"}
+              </div>
+            )}
             {searchResults.map((item) => (
               <button
                 key={item.id}
@@ -283,8 +289,8 @@ export function RideMapPicker({
               >
                 <MapPin className="h-3.5 w-3.5 text-emerald-400 mt-0.5 shrink-0" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-white truncate">{item.name}</p>
-                  <p className="text-[10px] text-zinc-400 truncate">{item.address}</p>
+                  <p className="text-xs font-bold text-white leading-tight break-words">{item.name}</p>
+                  <p className="text-[10px] text-zinc-400 leading-tight mt-0.5 break-words">{item.address}</p>
                 </div>
               </button>
             ))}
@@ -345,13 +351,13 @@ export function RideMapPicker({
       </div>
 
       {/* Bottom Sheet: Location Confirmation */}
-      <div className="shrink-0 bg-[#18181b] border-t border-zinc-800 rounded-t-3xl px-4 pt-3.5 pb-4 shadow-2xl z-40 space-y-3">
-        <div className="flex items-start gap-3">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 mt-0.5">
+      <div className="shrink-0 bg-[#18181b] border-t border-zinc-800 rounded-t-3xl px-3.5 pt-3 pb-3.5 shadow-2xl z-40 space-y-2.5">
+        <div className="flex items-start gap-2.5">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-400 mt-0.5">
             <MapPin className="h-4 w-4" />
           </span>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+            <p className="text-[9.5px] font-semibold text-zinc-400 uppercase tracking-wider">
               {mode === "pickup"
                 ? ur
                   ? "منتخب سواری کی جگہ"
@@ -360,8 +366,8 @@ export function RideMapPicker({
                   ? "منتخب منزل"
                   : "Selected destination"}
             </p>
-            <p className="text-sm font-bold text-white truncate">{selectedLoc.name}</p>
-            <p className="text-[11px] text-zinc-400 truncate">{selectedLoc.address}</p>
+            <p className="text-xs sm:text-sm font-bold text-white break-words line-clamp-1">{selectedLoc.name}</p>
+            <p className="text-[10px] text-zinc-400 break-words line-clamp-1">{selectedLoc.address}</p>
           </div>
         </div>
 
@@ -369,7 +375,7 @@ export function RideMapPicker({
         <button
           type="button"
           onClick={() => onConfirm(selectedLoc)}
-          className="w-full flex items-center justify-center rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm sm:text-base py-3 shadow-lg active:scale-98 transition-all cursor-pointer"
+          className="w-full flex items-center justify-center rounded-xl sm:rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs sm:text-sm py-2.5 sm:py-3 shadow-lg active:scale-98 transition-all cursor-pointer"
         >
           {ur ? "مقام کی تصدیق کریں" : "Confirm location"}
         </button>

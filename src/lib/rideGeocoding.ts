@@ -12,6 +12,11 @@ export interface LocationResult {
   distance?: string;
 }
 
+/** Check if Geoapify API key is present in environment */
+export function hasLiveGeoapifyKey(): boolean {
+  return Boolean(import.meta.env.VITE_GEOAPIFY_API_KEY);
+}
+
 export const CURATED_LOCATIONS: LocationResult[] = [
   {
     id: "ned-gate",

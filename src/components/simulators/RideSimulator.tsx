@@ -405,7 +405,7 @@ export function RideSimulator() {
 
   return (
     <PhoneFrame
-      appName="Practice Ride"
+      appName={ur ? "سواری" : "Ride"}
       hideHeader={isDarkAppScreen}
       noPadding={isDarkAppScreen}
       darkTheme={isDarkAppScreen}
@@ -578,44 +578,58 @@ export function RideSimulator() {
           <div className="shrink-0 space-y-2">
             <h3 className="text-xs sm:text-sm font-bold text-heading">{ur ? "گاڑی کا انتخاب کریں" : "Choose Ride Type"}</h3>
             <div className="space-y-1.5" role="radiogroup">
-              {rideTypes.map((r) => (
-                <button
-                  key={r.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={rideType === r.id}
-                  onClick={() => setRideType(r.id)}
-                  className={cn(option(rideType === r.id), "cursor-pointer")}
-                >
-                  <span className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
-                    <Car className="h-5 w-5" />
-                  </span>
-                  <span className="flex-1 truncate">
-                    <span className="block text-xs sm:text-sm font-bold truncate">{tr(r.label)}</span>
-                    <span className="block text-[10px] text-muted-foreground truncate">
-                      {r.id === "rickshaw"
-                        ? ur
-                          ? "کم کرایہ · 2 منٹ"
-                          : "Economical · 2 min"
-                        : ur
-                          ? "آرام دہ · 3 منٹ"
-                          : "Comfortable · 3 min"}
-                    </span>
-                  </span>
-                  <span className="font-bold text-xs sm:text-sm text-heading" dir="ltr">
-                    {formatRs(fare)}
-                  </span>
-                  {rideType === r.id && <Check className="h-4 w-4 shrink-0 text-primary" />}
-                </button>
-              ))}
+              {rideTypes.map((r) => {
+                const itemFare = practiceFare(pickupLoc.id, destLoc?.id || "hospital", r.id);
+                const isSelected = rideType === r.id;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    onClick={() => setRideType(r.id)}
+                    className={cn(
+                      "flex w-full items-center justify-between rounded-xl border-2 bg-card px-2.5 py-1.5 sm:p-2.5 text-start transition-colors shrink-0 cursor-pointer",
+                      isSelected ? "border-primary bg-mint" : "border-border hover:border-primary"
+                    )}
+                  >
+                    <div className="flex items-center gap-2 min-w-0 flex-1 mr-1.5">
+                      <div className="flex h-7.5 w-7.5 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-mint text-primary">
+                        <Car className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs sm:text-sm font-bold text-heading leading-tight whitespace-nowrap">
+                          {tr(r.label)}
+                        </div>
+                        <div className="text-[9.5px] sm:text-[10px] text-muted-foreground leading-tight truncate">
+                          {r.id === "rickshaw"
+                            ? ur
+                              ? "کم کرایہ · 2 منٹ"
+                              : "Economical · 2 min"
+                            : ur
+                              ? "آرام دہ · 3 منٹ"
+                              : "Comfortable · 3 min"}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 shrink-0 text-end">
+                      <span className="font-bold text-xs sm:text-sm text-heading whitespace-nowrap" dir="ltr">
+                        {formatRs(itemFare)}
+                      </span>
+                      {isSelected && <Check className="h-4 w-4 shrink-0 text-primary" />}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
             {/* Payment Method pill */}
-            <div className="flex items-center justify-between rounded-xl border border-border bg-card p-2 text-xs">
-              <span className="flex items-center gap-1.5 font-semibold text-muted-foreground">
+            <div className="flex items-center justify-between rounded-xl border border-border bg-card px-2.5 py-1.5 text-xs">
+              <span className="flex items-center gap-1.5 font-semibold text-muted-foreground shrink-0">
                 <Banknote className="h-3.5 w-3.5 text-primary" /> {ur ? "ادائیگی" : "Payment"}
               </span>
-              <span className="font-bold text-heading">{ur ? "نقد (Cash)" : "Cash on arrival"}</span>
+              <span className="font-bold text-heading text-end truncate">{ur ? "نقد (Cash)" : "Cash on arrival"}</span>
             </div>
           </div>
 
@@ -630,7 +644,7 @@ export function RideSimulator() {
                       ur: "پہلے گاڑی یا رکشہ دبائیں۔",
                     })
               }
-              className="btn btn-primary w-full min-h-[42px] py-1.5 text-xs sm:text-sm cursor-pointer"
+              className="btn btn-primary w-full min-h-[38px] sm:min-h-[42px] py-1.5 text-xs sm:text-sm cursor-pointer"
             >
               {ur ? "آگے بڑھیں" : "Continue"}
             </SimButton>
@@ -648,18 +662,18 @@ export function RideSimulator() {
               {[
                 [ur ? "سوار ہونا" : "Pickup", pickupLoc.name],
                 [ur ? "منزل" : "Destination", destLoc?.name || "NED Visitor Gate"],
-                [ur ? "سواری" : "Ride", tr(rideTypes.find((r) => r.id === rideType)?.label)],
-                [ur ? "اندازاً کرایہ" : "Est. fare", formatRs(fare)],
+                [ur ? "سواری" : "Ride", tr(rideTypes.find((r) => r.id === (rideType || "car"))?.label)],
+                [ur ? "اندازاً کرایہ" : "Est. fare", formatRs(fare || practiceFare(pickupLoc.id, destLoc?.id || "hospital", "car"))],
               ].map(([k, v]) => (
-                <div key={k} className="flex justify-between gap-2 p-2">
-                  <dt className="text-muted-foreground truncate">{k}</dt>
-                  <dd className="text-end font-bold text-heading truncate">{v}</dd>
+                <div key={k} className="flex justify-between items-start gap-2 p-2">
+                  <dt className="text-muted-foreground font-medium shrink-0">{k}</dt>
+                  <dd className="text-end font-bold text-heading leading-tight break-words max-w-[65%]">{v}</dd>
                 </div>
               ))}
             </dl>
           </div>
           <div className="shrink-0 pt-1">
-            <SimButton action="confirm-booking" className="btn btn-primary w-full min-h-[42px] py-1.5 text-xs sm:text-sm cursor-pointer">
+            <SimButton action="confirm-booking" className="btn btn-primary w-full min-h-[38px] sm:min-h-[42px] py-1.5 text-xs sm:text-sm cursor-pointer">
               {ur ? "مشق بکنگ کی تصدیق" : "Confirm Practice Booking"}
             </SimButton>
           </div>

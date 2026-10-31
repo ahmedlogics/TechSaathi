@@ -18,6 +18,7 @@ import {
   searchPlaces,
   getBrowserCurrentLocation,
   reverseGeocode,
+  hasLiveGeoapifyKey,
 } from "@/lib/rideGeocoding";
 import { SimButton, useLesson } from "@/components/learning/LessonContext";
 import { cn } from "@/lib/utils";
@@ -153,7 +154,7 @@ export function RideRouteEntry({
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h2 className="text-sm sm:text-base font-bold text-white text-center flex-1">
+        <h2 className="text-xs sm:text-sm font-bold text-white text-center flex-1 whitespace-nowrap truncate px-1">
           {ur ? "اپنا راستہ درج کریں" : "Enter your route"}
         </h2>
         <span className="w-8" />
@@ -177,14 +178,14 @@ export function RideRouteEntry({
                 <span className="block text-[10px] sm:text-[11px] font-medium text-zinc-400 leading-tight">
                   {ur ? "کہاں سے" : "From"}
                 </span>
-                <p className="text-xs sm:text-sm font-bold text-white truncate leading-tight mt-0.5">
+                <p className="text-xs sm:text-[13px] font-bold text-white leading-tight mt-0.5 break-words line-clamp-1">
                   {pickup.name}
                 </p>
-                <p className="text-[10px] text-zinc-400 truncate leading-tight">{pickup.address}</p>
+                <p className="text-[10px] text-zinc-400 leading-tight mt-0.5 break-words line-clamp-1">{pickup.address}</p>
               </div>
             </div>
 
-            {/* Quick "Use my location" button */}
+            {/* Quick "My location" button */}
             <button
               type="button"
               onClick={(e) => {
@@ -192,14 +193,17 @@ export function RideRouteEntry({
                 handleUseCurrentLocation();
               }}
               disabled={locating}
-              className="flex flex-col items-center gap-0.5 px-1.5 py-1 rounded-xl hover:bg-zinc-800 text-emerald-400 transition-colors shrink-0 ml-1.5"
+              aria-label={ur ? "میرا مقام" : "Use my location"}
+              className="flex flex-col items-center gap-1 shrink-0 ml-1.5 cursor-pointer group"
             >
-              {locating ? (
-                <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
-              ) : (
-                <Crosshair className="h-4 w-4 text-emerald-400" />
-              )}
-              <span className="text-[9px] font-bold text-emerald-400 whitespace-nowrap">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 group-hover:bg-emerald-500/25 group-hover:border-emerald-500/50 transition-colors">
+                {locating ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-emerald-400" />
+                ) : (
+                  <Crosshair className="h-4 w-4 text-emerald-400" />
+                )}
+              </span>
+              <span className="text-[8px] sm:text-[8.5px] font-medium text-emerald-400 whitespace-nowrap leading-none">
                 {ur ? "میرا مقام" : "Use my location"}
               </span>
             </button>
@@ -313,15 +317,20 @@ export function RideRouteEntry({
               type="button"
               onClick={() => onOpenMapPicker("destination")}
               aria-label={ur ? "نقشے پر منتخب کریں" : "Select destination on map"}
-              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-zinc-800 hover:bg-zinc-700 text-blue-400 transition-colors shrink-0 ml-1.5 shadow-xs cursor-pointer"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-[#2a303c] border border-blue-500/25 hover:bg-[#323946] text-blue-400 transition-colors shrink-0 ml-1.5 shadow-xs cursor-pointer"
             >
-              <MapPin className="h-4 w-4 fill-blue-400/20 text-blue-400" />
+              <MapPin className="h-4 w-4 fill-blue-400 text-blue-400" />
             </button>
           </div>
 
           {/* Autocomplete Results for TO field */}
           {showResults && searchResults.length > 0 && (
             <div className="absolute top-full left-0 right-0 mt-1.5 z-40 max-h-48 overflow-y-auto rounded-2xl bg-[#18181b] border border-zinc-700 shadow-2xl divide-y divide-zinc-800">
+              {!hasLiveGeoapifyKey() && (
+                <div className="px-3 py-1 bg-zinc-900/90 text-[9px] font-semibold text-emerald-400 border-b border-zinc-800 flex items-center justify-between">
+                  <span>{ur ? "مشق مقامات (ڈیمو موڈ)" : "Practice locations (Demo mode)"}</span>
+                </div>
+              )}
               {searchResults.map((loc) => (
                 <button
                   key={loc.id}
@@ -331,8 +340,8 @@ export function RideRouteEntry({
                 >
                   <MapPin className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-white truncate">{loc.name}</p>
-                    <p className="text-[10px] text-zinc-400 truncate">{loc.address}</p>
+                    <p className="text-xs font-bold text-white leading-tight break-words">{loc.name}</p>
+                    <p className="text-[10px] text-zinc-400 leading-tight mt-0.5 break-words">{loc.address}</p>
                   </div>
                 </button>
               ))}
@@ -341,7 +350,7 @@ export function RideRouteEntry({
         </div>
 
         {/* Recent Destinations List (Exact from reference) */}
-        <div className="space-y-1 pt-1 flex-1">
+        <div className="space-y-1 pt-0.5 flex-1">
           <p className="text-xs font-semibold text-zinc-400 px-1 mb-1">
             {ur ? "حالیہ منزلیں" : "Recent destinations"}
           </p>
@@ -354,27 +363,27 @@ export function RideRouteEntry({
                 type="button"
                 onClick={() => handleSelectRecent(item)}
                 className={cn(
-                  "w-full flex items-center justify-between p-3 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group",
+                  "w-full flex items-center justify-between p-2.5 text-start hover:bg-zinc-800/60 transition-colors cursor-pointer group",
                   dest?.id === item.id && "bg-emerald-500/10",
                 )}
               >
-                <div className="flex items-start gap-3 flex-1 min-w-0 pr-2">
+                <div className="flex items-start gap-2.5 flex-1 min-w-0 pr-1.5">
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-zinc-800 text-zinc-400 group-hover:bg-zinc-700 transition-colors mt-0.5">
                     <Clock className="h-3.5 w-3.5" />
                   </span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs sm:text-[13px] font-bold text-white truncate">
+                    <p className="text-xs sm:text-[13px] font-bold text-white leading-snug break-words">
                       {item.name}
                     </p>
-                    <p className="text-[10px] sm:text-[11px] text-zinc-400 line-clamp-1">
+                    <p className="text-[10px] sm:text-[11px] text-zinc-400 leading-tight mt-0.5 break-words line-clamp-2">
                       {item.address}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1 shrink-0 pt-0.5">
                   {item.distance && (
-                    <span className="text-[11px] font-semibold text-zinc-400">
+                    <span className="text-[10.5px] font-semibold text-zinc-400 whitespace-nowrap">
                       {item.distance}
                     </span>
                   )}
@@ -388,12 +397,12 @@ export function RideRouteEntry({
         </div>
 
         {/* Continue Button (active when both FROM and TO are set) */}
-        <div className="pt-2 pb-1">
+        <div className="pt-1.5 pb-1">
           {dest ? (
             <button
               type="button"
               onClick={onContinue}
-              className="w-full flex items-center justify-center rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-sm sm:text-base py-3 shadow-lg active:scale-98 transition-all cursor-pointer"
+              className="w-full flex items-center justify-center rounded-xl sm:rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs sm:text-sm py-2.5 sm:py-3 shadow-lg active:scale-98 transition-all cursor-pointer"
             >
               {ur ? "آگے بڑھیں" : "Continue"}
             </button>
@@ -401,7 +410,7 @@ export function RideRouteEntry({
             <button
               type="button"
               disabled
-              className="w-full flex items-center justify-center rounded-2xl bg-zinc-800 text-zinc-500 font-semibold text-sm py-3 cursor-not-allowed"
+              className="w-full flex items-center justify-center rounded-xl sm:rounded-2xl bg-zinc-800 text-zinc-500 font-semibold text-xs sm:text-sm py-2.5 sm:py-3 cursor-not-allowed"
             >
               {ur ? "منزل منتخب کریں" : "Select a destination to continue"}
             </button>
