@@ -29,7 +29,7 @@ describe("lesson engine", () => {
     let s = initialEngineState;
     for (const a of ["send-money", "wallet-to-wallet", "recipient-continue", "amount-continue"]) s = reduce(s, { type: "ACT", action: a });
     s = reduce(s, { type: "GOTO", stepId: "recipient" });
-    expect(steps[s.stepIndex].id).toBe("recipient");
+    expect(steps[s.stepIndex]?.id).toBe("recipient");
     expect(s.mistakes).toBe(0);
   });
 });
