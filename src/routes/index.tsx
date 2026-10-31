@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useLearningProgress } from "@/hooks/useLearningProgress";
 import { getModule, modules } from "@/data/modules";
 import { NadraLogo } from "@/components/icons/NadraLogo";
+import { PaymentWatermark, RideWatermark, CallWatermark } from "@/components/home/ModuleWatermarks";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,6 +52,10 @@ function HomePage() {
         {modules.map((m) => {
           const { icon: Icon, tone } = moduleVisual[m.id];
           const isPakID = m.id === "proof-of-life";
+          const isMoney = m.id === "send-money";
+          const isRide = m.id === "book-ride";
+          const isCalls = m.id === "video-call";
+
           return (
             <Link
               key={m.id}
@@ -59,12 +64,19 @@ function HomePage() {
               className={`card-surface group relative flex flex-col gap-4 overflow-hidden p-6 transition-all hover:border-primary sm:p-7 ${
                 isPakID
                   ? "border-emerald-300/80 bg-gradient-to-br from-emerald-50/60 via-white to-emerald-50/40 shadow-sm"
+                  : isMoney
+                  ? "border-teal-300/80 bg-gradient-to-br from-teal-50/50 via-white to-mint/30 shadow-sm"
+                  : isRide
+                  ? "border-sky-300/80 bg-gradient-to-br from-sky-50/50 via-white to-blue-50/30 shadow-sm"
+                  : isCalls
+                  ? "border-emerald-300/80 bg-gradient-to-br from-emerald-50/50 via-white to-teal-50/30 shadow-sm"
                   : ""
               }`}
             >
+              {/* PakID Watermark & Badge */}
               {isPakID && (
                 <>
-                  <div className="pointer-events-none absolute -bottom-10 -right-10 opacity-[0.08] select-none text-emerald-950 transition group-hover:opacity-[0.12]">
+                  <div className="pointer-events-none absolute -bottom-10 -right-10 opacity-[0.08] select-none text-emerald-950 transition group-hover:opacity-[0.13]">
                     <NadraLogo className="h-60 w-60" />
                   </div>
                   <div className="pointer-events-none absolute top-4 right-4">
@@ -75,6 +87,52 @@ function HomePage() {
                   </div>
                 </>
               )}
+
+              {/* Send Money Watermark & Badge */}
+              {isMoney && (
+                <>
+                  <div className="pointer-events-none absolute -bottom-10 -right-10 opacity-[0.08] select-none text-teal-950 transition group-hover:opacity-[0.13]">
+                    <PaymentWatermark className="h-60 w-60" />
+                  </div>
+                  <div className="pointer-events-none absolute top-4 right-4">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-teal-200 bg-mint/80 px-2.5 py-0.5 text-[11px] font-bold text-primary-strong shadow-xs">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse"></span>
+                      1LINK • WALLET
+                    </span>
+                  </div>
+                </>
+              )}
+
+              {/* Book a Ride Watermark & Badge */}
+              {isRide && (
+                <>
+                  <div className="pointer-events-none absolute -bottom-10 -right-10 opacity-[0.08] select-none text-sky-950 transition group-hover:opacity-[0.13]">
+                    <RideWatermark className="h-60 w-60" />
+                  </div>
+                  <div className="pointer-events-none absolute top-4 right-4">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky/80 px-2.5 py-0.5 text-[11px] font-bold text-heading shadow-xs">
+                      <span className="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                      GPS • ROUTE
+                    </span>
+                  </div>
+                </>
+              )}
+
+              {/* Audio & Video Calls Watermark & Badge */}
+              {isCalls && (
+                <>
+                  <div className="pointer-events-none absolute -bottom-10 -right-10 opacity-[0.08] select-none text-emerald-950 transition group-hover:opacity-[0.13]">
+                    <CallWatermark className="h-60 w-60" />
+                  </div>
+                  <div className="pointer-events-none absolute top-4 right-4">
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50/80 px-2.5 py-0.5 text-[11px] font-bold text-emerald-900 shadow-xs">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      WHATSAPP • CALL
+                    </span>
+                  </div>
+                </>
+              )}
+
               <span className={`flex h-16 w-16 items-center justify-center rounded-2xl ${tone}`}>
                 <Icon className="h-9 w-9" />
               </span>
