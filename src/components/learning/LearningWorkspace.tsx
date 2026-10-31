@@ -73,13 +73,16 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
 
   return (
     <LessonProvider value={value}>
-      <div className="grid items-start gap-6 lg:grid-cols-[auto_minmax(0,1fr)] lg:gap-10">
-        <div className="lg:sticky lg:top-24 lg:order-2">
-          <GuidePanel onExit={onExit} onRestart={restart} />
-        </div>
-        <div className="lg:order-1">
+      <div className="h-full w-full max-w-7xl mx-auto flex items-center justify-center gap-6 lg:gap-10 xl:gap-16 px-4 py-2 sm:py-3 overflow-hidden">
+        {/* Left: Phone Simulator (occupies 96% of remaining viewport height) */}
+        <div className="h-[96%] max-h-full flex items-center justify-center shrink-0">
           {/* key resets simulator-local state (inputs, selections) when the lesson restarts */}
           <Simulator key={`${module.id}-${runId}`} />
+        </div>
+
+        {/* Right: Instruction Panel (vertically centered alongside the phone) */}
+        <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl shrink self-center">
+          <GuidePanel onExit={onExit} onRestart={restart} />
         </div>
       </div>
     </LessonProvider>
