@@ -121,18 +121,21 @@ export function PakIDLanding({ initialView = "landing" }: PakIDLandingProps) {
 
       {/* Main Header */}
       <div className="max-w-4xl">
-        <div className="inline-flex items-center gap-2.5 rounded-2xl bg-emerald-100 px-4 py-1.5 text-xs font-extrabold text-emerald-900 shadow-sm">
-          <NadraLogo className="h-5 w-5 shrink-0" />
-          <span>NADRA PakID • Pension Verification (پنشنرز کے لیے)</span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <NadraLogo className="h-16 w-16 shrink-0 drop-shadow-md" />
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-xl bg-emerald-100 px-3.5 py-1 text-xs font-black text-emerald-900 shadow-sm">
+              <span>NADRA PakID • Pension Verification (پنشنرز کے لیے)</span>
+            </div>
+            <h1 className="mt-2 text-3xl font-black text-slate-950 sm:text-4xl lg:text-[2.6rem] leading-tight">
+              {ur
+                ? "زندگی کا ثبوت (سرٹیفیکیٹ برائے حیات) حاصل کرنا سیکھیں"
+                : "Learn to Get Your Proof-of-Life Certificate"}
+            </h1>
+          </div>
         </div>
 
-        <h1 className="mt-4 text-3xl font-black text-slate-950 sm:text-4xl lg:text-[2.6rem] leading-tight">
-          {ur
-            ? "زندگی کا ثبوت (سرٹیفیکیٹ برائے حیات) حاصل کرنا سیکھیں"
-            : "Learn to Get Your Proof-of-Life Certificate"}
-        </h1>
-
-        <p className="mt-3 text-lg sm:text-xl font-medium leading-relaxed text-slate-700">
+        <p className="mt-4 text-lg sm:text-xl font-medium leading-relaxed text-slate-700">
           {ur
             ? "تصاویر اور محفوظ مشق کے ذریعے پنشن کی تصدیق کے لیے پاک آئی ڈی ایپ استعمال کرنا سیکھیں۔"
             : "Learn how to use the PakID application for pension verification through pictures and safe practice."}
