@@ -21,6 +21,7 @@ import { PhoneFrame } from "@/components/learning/PhoneFrame";
 import { callContacts } from "@/data/scenarios";
 import { cn } from "@/lib/utils";
 import { callSounds } from "@/lib/callSounds";
+import { saveProgress, saveAttempt } from "@/lib/progressService";
 
 const round =
   "flex h-12 w-12 sm:h-13 sm:w-13 items-center justify-center rounded-full transition-transform active:scale-95 shadow-sm";
@@ -28,7 +29,7 @@ const round =
 type CallType = "video" | "audio";
 
 export function CallSimulator() {
-  const { engine } = useLesson();
+  const { engine, mode } = useLesson();
   const { lang } = useLanguage();
   const ur = lang === "ur";
 
@@ -131,6 +132,26 @@ export function CallSimulator() {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [screen]);
+
+  // Sync completion with shared Supabase progress service when call finishes
+  useEffect(() => {
+    if (screen === "done") {
+      saveProgress({
+        moduleId: "video-call",
+        lastStep: "done",
+        mode,
+        completed: true,
+      }).catch(() => {});
+
+      saveAttempt({
+        moduleId: "video-call",
+        mode,
+        completed: true,
+        mistakesCount: engine.state.mistakes,
+        hintsUsed: engine.state.hints,
+      }).catch(() => {});
+    }
+  }, [screen, mode, engine.state.mistakes, engine.state.hints]);
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
