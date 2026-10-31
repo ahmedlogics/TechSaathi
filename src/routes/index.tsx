@@ -28,27 +28,27 @@ function HomePage() {
   return (
     <PageContainer>
       <section className="max-w-3xl">
-        <h1 className="text-[2rem] font-extrabold sm:text-[2.6rem]">{t("heroTitle")}</h1>
-        <p className="mt-3 text-xl">{t("heroBody")}</p>
-        <p className="mt-5 inline-flex items-start gap-2 rounded-xl bg-mint px-4 py-3 text-base font-semibold text-primary-strong">
-          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0" /> {t("reassurance")}
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-heading leading-tight">{t("heroTitle")}</h1>
+        <p className="mt-2 text-base sm:text-lg text-foreground/80 leading-relaxed max-w-2xl">{t("heroBody")}</p>
+        <p className="mt-3.5 inline-flex items-center gap-2 rounded-full border border-teal-200/80 bg-mint px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-primary-strong shadow-2xs">
+          <ShieldCheck className="h-4 w-4 shrink-0 text-primary" /> {t("reassurance")}
         </p>
       </section>
 
       {last && store.lastVisited && (
-        <section className="card-surface mt-8 flex flex-wrap items-center gap-4 p-5" aria-labelledby="continue-h">
-          <PlayCircle className="h-10 w-10 text-primary" />
-          <div className="flex-1">
-            <h2 id="continue-h" className="text-xl font-bold">{t("continueLearning")}</h2>
-            <p>{t("continueBody")} <strong className="text-heading">{tr(last.title)}</strong></p>
+        <section className="card-surface mt-5 sm:mt-6 flex flex-wrap items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-2xl" aria-labelledby="continue-h">
+          <PlayCircle className="h-9 w-9 text-primary shrink-0" />
+          <div className="flex-1 min-w-[200px]">
+            <h2 id="continue-h" className="text-lg sm:text-xl font-bold text-heading">{t("continueLearning")}</h2>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{t("continueBody")} <strong className="text-heading font-semibold">{tr(last.title)}</strong></p>
           </div>
-          <Link to="/practice/$moduleId" params={{ moduleId: last.id }} search={{ mode: store.lastVisited.mode }} className="btn btn-primary">
-            {t("continue")} <ArrowRight className="h-5 w-5 rtl:rotate-180" />
+          <Link to="/practice/$moduleId" params={{ moduleId: last.id }} search={{ mode: store.lastVisited.mode }} className="btn btn-primary h-10 min-h-0 py-2 px-4 text-sm font-bold rounded-xl">
+            {t("continue")} <ArrowRight className="h-4 w-4 rtl:rotate-180" />
           </Link>
         </section>
       )}
 
-      <section className="mt-10 grid gap-5 md:grid-cols-2" aria-label="Lessons">
+      <section className="mt-6 sm:mt-8 grid gap-4 sm:gap-5 md:grid-cols-2" aria-label="Lessons">
         {modules.map((m) => {
           const { icon: Icon, tone } = moduleVisual[m.id];
           const isPakID = m.id === "proof-of-life";
