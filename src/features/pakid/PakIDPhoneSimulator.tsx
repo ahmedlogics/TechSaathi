@@ -6,6 +6,8 @@ import {
   Check,
   CheckCircle2,
   ChevronRight,
+  Eye,
+  EyeOff,
   FileCheck2,
   FileText,
   Fingerprint,
@@ -33,6 +35,68 @@ interface PakIDPhoneSimulatorProps {
   ur: boolean;
 }
 
+function PoseGraphic({ poseId }: { poseId: string }) {
+  if (poseId === "correct") {
+    return (
+      <svg viewBox="0 0 48 48" className="h-10 w-10" fill="none">
+        <circle cx="24" cy="20" r="12" fill="#D1FAE5" stroke="#059669" strokeWidth="2" />
+        <circle cx="20" cy="19" r="1.5" fill="#065F46" />
+        <circle cx="28" cy="19" r="1.5" fill="#065F46" />
+        <path d="M21 24C22.5 26 25.5 26 27 24" stroke="#065F46" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M12 42C12 34 16 32 24 32C32 32 36 34 36 42" stroke="#059669" strokeWidth="2" fill="#ECFDF5" />
+        <circle cx="36" cy="14" r="7" fill="#059669" />
+        <path d="M33 14L35 16L39 12" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    );
+  }
+  if (poseId === "cap-glasses") {
+    return (
+      <svg viewBox="0 0 48 48" className="h-10 w-10" fill="none">
+        <circle cx="24" cy="21" r="12" fill="#FFE4E6" stroke="#E11D48" strokeWidth="1.8" />
+        <path d="M12 19C12 13 17 8 24 8C31 8 36 13 36 19H12Z" fill="#BE123C" />
+        <path d="M10 19C14 17 28 17 38 18C41 18.5 41 21 38 21H12" fill="#9F1239" />
+        <rect x="15" y="19" width="8" height="5" rx="1.5" fill="#1E293B" />
+        <rect x="25" y="19" width="8" height="5" rx="1.5" fill="#1E293B" />
+        <line x1="23" y1="21" x2="25" y2="21" stroke="#1E293B" strokeWidth="1.5" />
+        <line x1="21" y1="27" x2="27" y2="27" stroke="#9F1239" strokeWidth="1.5" strokeLinecap="round" />
+        <circle cx="37" cy="12" r="6" fill="#E11D48" />
+        <path d="M34 9L40 15M40 9L34 15" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  if (poseId === "mask") {
+    return (
+      <svg viewBox="0 0 48 48" className="h-10 w-10" fill="none">
+        <circle cx="24" cy="20" r="12" fill="#FFE4E6" stroke="#E11D48" strokeWidth="1.8" />
+        <circle cx="20" cy="17" r="1.5" fill="#881337" />
+        <circle cx="28" cy="17" r="1.5" fill="#881337" />
+        <rect x="15" y="21" width="18" height="11" rx="3" fill="#38BDF8" stroke="#0284C7" strokeWidth="1.2" />
+        <line x1="15" y1="24" x2="11" y2="21" stroke="#0284C7" strokeWidth="1.2" />
+        <line x1="15" y1="29" x2="11" y2="26" stroke="#0284C7" strokeWidth="1.2" />
+        <line x1="33" y1="24" x2="37" y2="21" stroke="#0284C7" strokeWidth="1.2" />
+        <line x1="33" y1="29" x2="37" y2="26" stroke="#0284C7" strokeWidth="1.2" />
+        <circle cx="37" cy="12" r="6" fill="#E11D48" />
+        <path d="M34 9L40 15M40 9L34 15" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    );
+  }
+  // side-profile
+  return (
+    <svg viewBox="0 0 48 48" className="h-10 w-10" fill="none">
+      <path
+        d="M26 10C21 10 17 14 17 19C17 21 17.5 22.5 16 23L13 24.5L16 26C16.5 28 18 31 23 31C28 31 32 27 32 20C32 14.5 29.5 10 26 10Z"
+        fill="#FFE4E6"
+        stroke="#E11D48"
+        strokeWidth="1.8"
+      />
+      <circle cx="19" cy="18" r="1.5" fill="#881337" />
+      <path d="M33 24L38 24M38 24L35 21M38 24L35 27" stroke="#BE123C" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="37" cy="12" r="6" fill="#E11D48" />
+      <path d="M34 9L40 15M40 9L34 15" stroke="#FFFFFF" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function PakIDPhoneSimulator({
   screen,
   isGuided,
@@ -52,6 +116,9 @@ export function PakIDPhoneSimulator({
   const [fingerDistance, setFingerDistance] = useState(50); // 50 is sweet spot
   const [fingerprintDone, setFingerprintDone] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [loginIdentifier, setLoginIdentifier] = useState("35201-1234567-1 (Aamir Nazir)");
+  const [loginPassword, setLoginPassword] = useState("PakID@2026");
+  const [showPassword, setShowPassword] = useState(false);
 
   // Helper for wrong action feedback
   const handleWrong = (itemLabel: string, expectedItem: string) => {
@@ -107,22 +174,44 @@ export function PakIDPhoneSimulator({
 
             <div className="my-auto space-y-3 pt-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-600">
-                  {ur ? "ای میل یا شناختی کارڈ نمبر" : "Email or CNIC Number"}
+                <label htmlFor="pakid-login-id" className="block text-xs font-semibold text-slate-700">
+                  {ur ? "شناختی کارڈ نمبر، نام یا ای میل" : "Email, CNIC Number, or Name"}
                 </label>
-                <div className="mt-1 flex items-center rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm">
-                  <User className="mr-2 h-4 w-4 text-emerald-700" />
-                  <span className="font-mono text-slate-800 font-semibold">35201-1234567-1 (Aamir Nazir)</span>
+                <div className="mt-1 flex items-center rounded-xl border-2 border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-200">
+                  <User className="mr-2 h-4 w-4 shrink-0 text-emerald-700" />
+                  <input
+                    id="pakid-login-id"
+                    type="text"
+                    value={loginIdentifier}
+                    onChange={(e) => setLoginIdentifier(e.target.value)}
+                    placeholder={ur ? "شناختی کارڈ یا نام لکھیں..." : "Enter CNIC or email..."}
+                    className="w-full bg-transparent font-mono text-xs sm:text-sm font-semibold text-slate-900 outline-none placeholder:font-sans placeholder:text-slate-400"
+                  />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600">
+                <label htmlFor="pakid-login-pwd" className="block text-xs font-semibold text-slate-700">
                   {ur ? "پاس ورڈ" : "Password"}
                 </label>
-                <div className="mt-1 flex items-center rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm shadow-sm">
-                  <Lock className="mr-2 h-4 w-4 text-slate-400" />
-                  <span className="font-mono text-slate-500">••••••••••••</span>
+                <div className="mt-1 flex items-center rounded-xl border-2 border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus-within:border-emerald-600 focus-within:ring-2 focus-within:ring-emerald-200">
+                  <Lock className="mr-2 h-4 w-4 shrink-0 text-slate-400" />
+                  <input
+                    id="pakid-login-pwd"
+                    type={showPassword ? "text" : "password"}
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    placeholder={ur ? "پاس ورڈ درج کریں..." : "Enter password..."}
+                    className="w-full bg-transparent font-mono text-xs sm:text-sm font-medium text-slate-900 outline-none placeholder:font-sans placeholder:text-slate-400"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="ml-1 text-slate-400 hover:text-slate-700"
+                    title={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
 
@@ -724,13 +813,13 @@ export function PakIDPhoneSimulator({
                         }`}
                       >
                         <div
-                          className={`flex h-12 w-12 items-center justify-center rounded-xl ${
+                          className={`flex h-14 w-14 items-center justify-center rounded-xl p-1 shadow-inner ${
                             s.isCorrect
-                              ? "bg-emerald-100 text-emerald-800"
-                              : "bg-rose-100 text-rose-800"
+                              ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
+                              : "bg-rose-50 text-rose-800 border border-rose-200"
                           }`}
                         >
-                          <User className="h-7 w-7" />
+                          <PoseGraphic poseId={s.id} />
                         </div>
                         <span
                           className={`mt-1 text-[11px] font-black ${

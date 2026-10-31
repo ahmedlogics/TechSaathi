@@ -99,7 +99,7 @@ export function PakIDPictureTutorial({
                 <img
                   src={step.imagePath}
                   alt={ur ? step.title.ur : step.title.en}
-                  className="block max-h-[630px] w-auto max-w-full rounded-xl object-contain shadow"
+                  className="block max-h-[630px] w-auto max-w-full min-w-[280px] rounded-xl object-contain shadow"
                 />
 
                 {/* Dynamic Highlight Box placed directly over image coordinates */}
