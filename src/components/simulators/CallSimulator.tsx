@@ -186,10 +186,10 @@ export function CallSimulator() {
   const sara = callContacts[0]!;
 
   return (
-    <PhoneFrame appName={ur ? "واٹس ایپ (WhatsApp)" : "WhatsApp"}>
+    <PhoneFrame appName={ur ? "واٹس ایپ" : "WhatsApp"}>
       {/* Persistent Senior Safety Reassurance Banner */}
-      <div className="mb-2.5 flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-2 text-xs font-semibold text-emerald-800 dark:text-emerald-200">
-        <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+      <div className="mb-2 flex items-center gap-2 rounded-xl border border-emerald-500/20 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-800 dark:text-emerald-200">
+        <ShieldCheck className="h-3.5 w-3.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
         <span className="leading-tight">
           {ur
             ? "محفوظ مشق: یہ اصلی واٹس ایپ کال نہیں ہے۔ کیمرہ اور موبائل بیلنس محفوظ ہے۔"
@@ -199,59 +199,59 @@ export function CallSimulator() {
 
       {/* WhatsApp Contacts Screen (Opens directly without 2-button screen) */}
       {(screen === "start" || screen === "contacts") && (
-        <div className="space-y-3">
+        <div className="flex flex-col gap-2">
           {/* WhatsApp Style Top Bar */}
-          <div className="flex items-center justify-between rounded-2xl bg-[#008069] px-4 py-3 text-white shadow-sm">
+          <div className="flex items-center justify-between rounded-xl bg-[#008069] px-3.5 py-2 text-white shadow-xs">
             <div>
-              <p className="text-base font-bold">
+              <p className="text-sm font-bold leading-tight">
                 {ur ? "رابطہ منتخب کریں" : "Select contact"}
               </p>
-              <p className="text-xs text-emerald-100">
+              <p className="text-[11px] text-emerald-100 leading-tight mt-0.5">
                 {ur
                   ? "سارہ کو کال کرنے کے لیے دائیں طرف کیمرہ یا فون کا بٹن دبائیں"
                   : "Tap the video or phone icon on the right to call Sara"}
               </p>
             </div>
-            <Search className="h-5 w-5 text-emerald-100" />
+            <Search className="h-4 w-4 text-emerald-100 shrink-0" />
           </div>
 
           {/* Contacts List Header */}
-          <div className="flex items-center justify-between px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <div className="flex items-center justify-between px-1 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
             <span>{ur ? "تمام رابطے" : "All Contacts"}</span>
             <span className="text-[11px] text-emerald-600 font-semibold">{callContacts.length} {ur ? "رابطے" : "contacts"}</span>
           </div>
 
           {/* Generic Contacts List */}
-          <ul className="space-y-2.5">
+          <ul className="space-y-1.5 sm:space-y-2">
             {callContacts.map((c, i) => (
               <li
                 key={c.id}
                 className={cn(
-                  "flex items-center justify-between gap-3 rounded-2xl border bg-card p-3 shadow-xs transition-all",
+                  "flex items-center justify-between gap-2 rounded-xl border bg-card p-2 sm:p-2.5 shadow-xs transition-all",
                   i === 0
-                    ? "border-emerald-500/40 bg-emerald-50/40 dark:bg-emerald-950/20"
+                    ? "border-emerald-500/50 bg-emerald-50/50 dark:bg-emerald-950/25 ring-1 ring-emerald-500/30"
                     : "border-border hover:bg-muted/40",
                 )}
               >
                 {/* Contact Avatar & Info */}
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1">
                   <div className="relative shrink-0">
                     <span
                       className={cn(
-                        "flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold text-white shadow-xs",
+                        "flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full text-sm font-bold text-white shadow-xs",
                         (c as { color?: string }).color || "bg-emerald-600",
                       )}
                     >
                       {c.initials}
                     </span>
-                    <span className="absolute bottom-0 end-0 h-3.5 w-3.5 rounded-full bg-[#25d366] ring-2 ring-card" />
+                    <span className="absolute bottom-0 end-0 h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-full bg-[#25d366] ring-2 ring-card" />
                   </div>
 
-                  <div className="min-w-0">
-                    <span className="block truncate text-base font-bold text-heading">
+                  <div className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-bold text-heading leading-tight">
                       {ur && (c as { urName?: string }).urName ? (c as { urName?: string }).urName : c.name}
                     </span>
-                    <span className="block text-xs font-medium text-muted-foreground truncate">
+                    <span className="block text-[11px] font-medium text-muted-foreground truncate leading-tight mt-0.5">
                       {(c as { phone?: string }).phone || "0300 1234567"} •{" "}
                       {ur && (c as { urRole?: string }).urRole
                         ? (c as { urRole?: string }).urRole
@@ -261,7 +261,7 @@ export function CallSimulator() {
                 </div>
 
                 {/* Direct Call Action Icons on the Right */}
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center gap-1.5 shrink-0">
                   {/* 1. Video Call Icon Button (Primary Target for Sara with animated arrow) */}
                   <SimButton
                     action={i === 0 ? "call-sara" : "call-other"}
@@ -274,11 +274,11 @@ export function CallSimulator() {
                     aria-label={`${ur ? "ویڈیو کال" : "Video call"} ${c.name}`}
                     title={ur ? "ویڈیو کال کریں" : "Video Call"}
                     className={cn(
-                      waRoundBtn,
-                      "h-11 w-11 bg-[#25d366] text-slate-950 hover:bg-[#20ba59] shadow-xs active:scale-95",
+                      "flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-transform active:scale-95 shadow-xs cursor-pointer",
+                      "bg-[#25d366] text-slate-950 hover:bg-[#20ba59]",
                     )}
                   >
-                    <Video className="h-5 w-5" />
+                    <Video className="h-4.5 w-4.5" />
                   </SimButton>
 
                   {/* 2. Voice Call Icon Button */}
@@ -292,11 +292,11 @@ export function CallSimulator() {
                     aria-label={`${ur ? "آڈیو کال" : "Voice call"} ${c.name}`}
                     title={ur ? "وائس کال کریں" : "Voice Call"}
                     className={cn(
-                      waRoundBtn,
-                      "h-11 w-11 border-2 border-emerald-600/40 bg-card text-[#25d366] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 shadow-xs active:scale-95",
+                      "flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full transition-transform active:scale-95 shadow-xs cursor-pointer",
+                      "border border-emerald-600/40 bg-card text-[#25d366] hover:bg-emerald-50 dark:hover:bg-emerald-950/40",
                     )}
                   >
-                    <Phone className="h-5 w-5" />
+                    <Phone className="h-4 w-4" />
                   </button>
                 </div>
               </li>
@@ -307,7 +307,7 @@ export function CallSimulator() {
 
       {/* Screen 3 & 4: In-Call / Calling Screen (WhatsApp Calling Theme) */}
       {(screen === "calling" || screen === "incall") && (
-        <div className="relative flex min-h-[510px] flex-col items-center justify-between rounded-3xl bg-[#0b141a] p-5 text-white shadow-2xl overflow-hidden border border-[#1f2c34]">
+        <div className="relative flex min-h-[480px] flex-1 flex-col items-center justify-between rounded-2xl bg-[#0b141a] p-4 text-white shadow-2xl overflow-hidden border border-[#1f2c34]">
           {/* WhatsApp Top Header: End-to-End Encryption Banner */}
           <div className="z-10 flex w-full flex-col items-center gap-1 text-center">
             <span className="inline-flex items-center gap-1 text-[11px] text-slate-400 font-medium tracking-tight">

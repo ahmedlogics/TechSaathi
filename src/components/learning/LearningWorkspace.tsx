@@ -93,9 +93,9 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
 
   return (
     <LessonProvider value={value}>
-      <div className="h-full w-full max-w-7xl mx-auto flex items-center justify-center gap-6 lg:gap-10 xl:gap-16 px-4 py-2 sm:py-3 overflow-hidden">
-        {/* Left: Phone Simulator (occupies 96% of remaining viewport height) */}
-        <div className="h-[96%] max-h-full flex items-center justify-center shrink-0">
+      <div className="h-full w-full max-w-7xl mx-auto flex items-center justify-center gap-6 lg:gap-10 xl:gap-14 px-4 py-2 sm:py-3 overflow-hidden">
+        {/* Left: Phone Simulator */}
+        <div className="h-full max-h-[660px] flex items-center justify-center shrink-0">
           {/* key resets simulator-local state (inputs, selections) when the lesson restarts */}
           <Simulator key={`${module.id}-${runId}`} />
         </div>

@@ -138,7 +138,7 @@ export function PhoneFrame({
   return (
     <div
       className={cn(
-        "h-full w-auto aspect-[9/19.5] flex flex-col rounded-[2.5rem] sm:rounded-[2.8rem] border-[7px] sm:border-[8px] border-zinc-950 shadow-2xl overflow-hidden shrink-0 select-none",
+        "h-full max-h-[660px] min-h-[520px] w-[340px] sm:w-[365px] md:w-[375px] lg:w-[385px] flex flex-col rounded-[2.5rem] sm:rounded-[2.8rem] border-[7px] sm:border-[8px] border-zinc-950 shadow-2xl overflow-hidden shrink-0 select-none",
         darkTheme ? "bg-[#1C1C1C]" : "bg-card"
       )}
       dir="ltr"
@@ -161,8 +161,8 @@ export function PhoneFrame({
 
       {/* Simulator app top bar (stationary) - hidden if screen has custom top bar */}
       {!hideHeader && (
-        <div className="shrink-0 flex items-center justify-between gap-1.5 border-b border-border bg-primary px-3 py-1.5 text-primary-foreground min-h-[36px]">
-          <div className="flex items-center gap-1 min-w-0 flex-1">
+        <div className="shrink-0 flex items-center justify-between gap-2 border-b border-border bg-primary px-3.5 py-2 text-primary-foreground min-h-[38px]">
+          <div className="flex items-center gap-1.5 min-w-0 flex-1">
             {canGoBack && (
               <button
                 type="button"
@@ -170,12 +170,12 @@ export function PhoneFrame({
                 aria-label={t("back")}
                 className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full hover:bg-primary-strong transition-colors cursor-pointer"
               >
-                <ChevronLeft className="h-3.5 w-3.5" />
+                <ChevronLeft className="h-4 w-4" />
               </button>
             )}
-            <span className="text-xs sm:text-[13px] font-bold truncate leading-none">{appName}</span>
+            <span className="text-sm font-bold truncate leading-none">{appName}</span>
           </div>
-          <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-warning shrink-0 tracking-tight leading-none">
+          <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-2 py-0.5 text-[10px] font-bold text-warning shrink-0 tracking-tight leading-none">
             <ShieldCheck className="h-3 w-3" /> {t("practiceOnly")}
           </span>
         </div>
