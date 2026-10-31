@@ -4,7 +4,7 @@ import type { DbModuleProgress, DbLessonAttempt, DbLearningMode } from "@/types/
 
 export interface SaveProgressParams {
   moduleId: ModuleId;
-  lastStep: number;
+  lastStep: number | string;
   mode: LearningMode;
   completed?: boolean;
 }

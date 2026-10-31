@@ -1,21 +1,36 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = (import.meta.env["VITE_SUPABASE_URL"] as string | undefined) || "";
-const supabaseAnonKey = (import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string | undefined) || "";
+// Read from Vite environment variables (supports .env and .env.local)
+const supabaseUrl =
+  (import.meta.env["VITE_SUPABASE_URL"] as string | undefined)?.trim() ||
+  "https://buzfopmfnuluemxbsvxj.supabase.co";
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  if (typeof window !== "undefined") {
-    console.warn(
-      "[TechSaathi] Missing Supabase environment variables (VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY)."
-    );
-  }
-}
+const supabasePublishableKey =
+  (import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"] as string | undefined)?.trim() ||
+  (import.meta.env["VITE_SUPABASE_ANON_KEY"] as string | undefined)?.trim() ||
+  "";
 
 /**
- * Shared singleton Supabase client.
- * Uses publishable/anon key only. No service role or secret keys.
+ * Returns true if both the Supabase URL and a valid Publishable/Anon key are present.
  */
-export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+export function isSupabaseConfigured(): boolean {
+  return (
+    Boolean(supabaseUrl) &&
+    Boolean(supabasePublishableKey) &&
+    !supabasePublishableKey.includes("placeholder")
+  );
+}
+
+// Fallback placeholder key prevents module initialization crashes when the local key has not been populated
+const safeKey =
+  supabasePublishableKey ||
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ1emZvcG1mbnVsdWVteGJzdnhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAsImV4cCI6MjAwMH0.placeholder";
+
+/**
+ * Shared Supabase Client singleton.
+ * Avoid creating multiple instances across components or modules.
+ */
+export const supabase: SupabaseClient = createClient(supabaseUrl, safeKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -47,8 +62,7 @@ export async function getOrCreateGuestSession(): Promise<string | null> {
 
   activeAuthPromise = (async () => {
     try {
-      if (!supabaseUrl || !supabaseAnonKey) {
-        console.warn("[TechSaathi] Cannot authenticate guest: Supabase environment variables are missing.");
+      if (!isSupabaseConfigured()) {
         return null;
       }
 
@@ -70,13 +84,13 @@ export async function getOrCreateGuestSession(): Promise<string | null> {
       const { data, error } = await supabase.auth.signInAnonymously();
 
       if (error) {
-        console.error("[TechSaathi] Anonymous sign-in failed:", error.message);
+        console.warn("[TechSaathi] Anonymous sign-in failed:", error.message);
         return null;
       }
 
       return data.user?.id ?? null;
     } catch (err) {
-      console.error("[TechSaathi] Unexpected error in guest authentication:", err);
+      console.warn("[TechSaathi] Unexpected error in guest authentication:", err);
       return null;
     } finally {
       activeAuthPromise = null;
@@ -85,3 +99,8 @@ export async function getOrCreateGuestSession(): Promise<string | null> {
 
   return activeAuthPromise;
 }
+
+/**
+ * Backward-compatible alias for getOrCreateGuestSession used by other developers.
+ */
+export const getOrCreateGuestUser = getOrCreateGuestSession;

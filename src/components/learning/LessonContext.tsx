@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { ArrowDown, Pointer } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import type { LessonEngine } from "@/hooks/useLessonEngine";
 import type { ExpectedAction, LearningMode, LearningModule, LocalText } from "@/types/learning";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -34,11 +34,23 @@ type SimButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick"> &
   highlightFor?: ExpectedAction;
   /** Custom guidance label to display in the indicator badge */
   hintLabel?: LocalText | string;
+  /** Direction of the animated arrow pointing at the button (optional) */
+  arrowPosition?: "top" | "bottom" | "left" | "right";
 };
 
-/** A control inside the simulated phone. Highlights itself when it is the current target using a non-blocking pulsing ripple. */
-export function SimButton({ action, onPress, highlightFor, className, children, ...rest }: SimButtonProps) {
+/** A control inside the simulated phone. Highlights itself when it is the current target using a non-blocking pulsing ripple or directional arrow. */
+export function SimButton({
+  action,
+  onPress,
+  highlightFor,
+  className,
+  children,
+  hintLabel,
+  arrowPosition,
+  ...rest
+}: SimButtonProps) {
   const { engine, isTarget } = useLesson();
+  const { t } = useLanguage();
   const target = isTarget(highlightFor ?? action);
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -49,7 +61,7 @@ export function SimButton({ action, onPress, highlightFor, className, children, 
   }, [target]);
 
   return (
-    <span className="relative block">
+    <span className="relative inline-flex items-center justify-center">
       <button
         ref={btnRef}
         type="button"
@@ -58,22 +70,64 @@ export function SimButton({ action, onPress, highlightFor, className, children, 
         onClick={() => (onPress ? onPress() : engine.act(action))}
         className={cn(
           "transition-all duration-200",
-          target && "guided-target-active",
+          target && (arrowPosition ? "sim-target ring-4 ring-amber-400 dark:ring-amber-300 ring-offset-2 ring-offset-background" : "guided-target-active"),
           className,
         )}
       >
         {children}
       </button>
       {target && (
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-2 -end-2 z-30 flex h-7 w-7 items-center justify-center"
-        >
-          <span className="guided-ripple-ring absolute h-7 w-7 rounded-full bg-[#087F72]/25" />
-          <span className="relative flex h-5 w-5 items-center justify-center rounded-full bg-[#087F72] text-white shadow-md">
-            <ArrowDown className="h-3 w-3 stroke-[3]" />
+        arrowPosition ? (
+          <span
+            aria-hidden="true"
+            className={cn(
+              "pointer-events-none absolute z-50 flex select-none items-center drop-shadow-xl",
+              arrowPosition === "top" && "-top-12 left-1/2 -translate-x-1/2 flex-col animate-bounce",
+              arrowPosition === "bottom" && "-bottom-12 left-1/2 -translate-x-1/2 flex-col-reverse animate-bounce",
+              arrowPosition === "left" && "-left-28 top-1/2 -translate-y-1/2 flex-row animate-bounce",
+              arrowPosition === "right" && "-right-28 top-1/2 -translate-y-1/2 flex-row-reverse animate-bounce",
+            )}
+          >
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-amber-400 dark:bg-amber-300 px-2.5 py-1 text-xs font-black text-slate-950 shadow-lg ring-2 ring-white dark:ring-slate-900">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-600 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-700" />
+              </span>
+              <span>{t("tapHere")}</span>
+            </span>
+
+            {arrowPosition === "top" && (
+              <svg viewBox="0 0 24 24" className="-mt-1 h-5 w-5 fill-amber-400 dark:fill-amber-300 drop-shadow" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21l-7-8h4.5V3h5v10H19l-7 8z" />
+              </svg>
+            )}
+            {arrowPosition === "bottom" && (
+              <svg viewBox="0 0 24 24" className="-mb-1 h-5 w-5 fill-amber-400 dark:fill-amber-300 drop-shadow rotate-180" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21l-7-8h4.5V3h5v10H19l-7 8z" />
+              </svg>
+            )}
+            {arrowPosition === "left" && (
+              <svg viewBox="0 0 24 24" className="-mr-1 h-5 w-5 fill-amber-400 dark:fill-amber-300 drop-shadow -rotate-90" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21l-7-8h4.5V3h5v10H19l-7 8z" />
+              </svg>
+            )}
+            {arrowPosition === "right" && (
+              <svg viewBox="0 0 24 24" className="-ml-1 h-5 w-5 fill-amber-400 dark:fill-amber-300 drop-shadow rotate-90" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21l-7-8h4.5V3h5v10H19l-7 8z" />
+              </svg>
+            )}
           </span>
-        </span>
+        ) : (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-2 -end-2 z-30 flex h-7 w-7 items-center justify-center"
+          >
+            <span className="guided-ripple-ring absolute h-7 w-7 rounded-full bg-[#087F72]/25" />
+            <span className="relative flex h-5 w-5 items-center justify-center rounded-full bg-[#087F72] text-white shadow-md">
+              <ArrowDown className="h-3 w-3 stroke-[3]" />
+            </span>
+          </span>
+        )
       )}
     </span>
   );
