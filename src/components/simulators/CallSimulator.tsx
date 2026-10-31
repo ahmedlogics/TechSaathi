@@ -32,7 +32,7 @@ export function CallSimulator() {
     engine.act(action);
   };
 
-  const sara = callContacts[0];
+  const sara = callContacts[0]!;
 
   return (
     <PhoneFrame appName="Practice Call">

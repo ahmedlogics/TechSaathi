@@ -33,7 +33,7 @@ export function RideSimulator() {
   const option = (selected: boolean) =>
     cn("flex w-full items-center gap-3 rounded-xl border-2 bg-card p-3 text-start text-lg font-semibold text-heading", selected ? "border-primary bg-mint" : "border-border hover:border-primary");
 
-  const LocationList = ({ value, onPick, disabled }: { value?: string; onPick: (id: string) => void; disabled?: string }) => (
+  const LocationList = ({ value, onPick, disabled }: { value?: string | undefined; onPick: (id: string) => void; disabled?: string | undefined }) => (
     <div className="space-y-2" role="radiogroup">
       {rideLocations.map((l) => (
         <button key={l.id} type="button" role="radio" aria-checked={value === l.id} onClick={() => onPick(l.id)} className={option(value === l.id)}>

@@ -54,7 +54,7 @@ export function lessonReducer(steps: LessonStep[]) {
 
 export function useLessonEngine(module: LearningModule) {
   const [state, dispatch] = useReducer(lessonReducer(module.steps), initialEngineState);
-  const step = module.steps[state.stepIndex];
+  const step = module.steps[state.stepIndex]!;
   const totalSteps = module.steps.length - 1;
   const completed = state.stepIndex >= totalSteps;
 
