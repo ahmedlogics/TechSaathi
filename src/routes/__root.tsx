@@ -108,11 +108,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="h-[100dvh] overflow-hidden">
+    <html lang="en" className="h-full">
       <head>
         <HeadContent />
       </head>
-      <body className="h-[100dvh] max-h-[100dvh] overflow-hidden m-0 p-0 bg-background text-foreground">
+      <body className="h-full m-0 p-0 bg-background text-foreground">
         {children}
         <Scripts />
       </body>
@@ -127,14 +127,14 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <LanguageProvider>
-        <div className="h-[100dvh] max-h-[100dvh] w-full flex flex-col overflow-hidden bg-background">
+        <div className="min-h-full h-full w-full flex flex-col bg-background">
           <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:start-2 focus:top-2 focus:z-50 focus:rounded focus:bg-card focus:p-3">
             Skip to content
           </a>
           <AppHeader />
-          <div id="main" className="flex-1 min-h-0 w-full overflow-hidden flex flex-col">
+          <main id="main" className="flex-1 w-full flex flex-col overflow-y-auto">
             <Outlet />
-          </div>
+          </main>
         </div>
       </LanguageProvider>
     </QueryClientProvider>

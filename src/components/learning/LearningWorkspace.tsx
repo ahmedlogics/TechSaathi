@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { useLessonEngine } from "@/hooks/useLessonEngine";
 import { useLearningProgress } from "@/hooks/useLearningProgress";
 import { saveProgress, saveAttempt } from "@/services/progressService";
@@ -21,6 +23,7 @@ const simulators = {
 export function LearningWorkspace({ module, mode }: { module: LearningModule; mode: LearningMode }) {
   const engine = useLessonEngine(module);
   const navigate = useNavigate();
+  const { t, tr } = useLanguage();
   const { markVisited, saveRecord } = useLearningProgress();
   const saved = useRef(false);
   const [runId, setRunId] = useState(0);
@@ -93,16 +96,33 @@ export function LearningWorkspace({ module, mode }: { module: LearningModule; mo
 
   return (
     <LessonProvider value={value}>
-      <div className="h-full w-full max-w-7xl mx-auto flex items-center justify-center gap-6 lg:gap-10 xl:gap-14 px-4 py-2 sm:py-3 overflow-hidden">
-        {/* Left: Phone Simulator */}
-        <div className="h-full max-h-[660px] flex items-center justify-center shrink-0">
-          {/* key resets simulator-local state (inputs, selections) when the lesson restarts */}
-          <Simulator key={`${module.id}-${runId}`} />
+      <div className="w-full max-w-7xl mx-auto flex-1 flex flex-col px-4 py-2 sm:py-3">
+        {/* Top Navigation: Back to Home button */}
+        <div className="mb-2 shrink-0 flex items-center justify-between">
+          <Link
+            to="/"
+            className="btn btn-ghost -ms-2 inline-flex items-center gap-2 text-sm sm:text-base font-bold text-heading hover:text-primary-strong transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 rtl:rotate-180" />
+            <span>{t("backHome")}</span>
+          </Link>
+          <span className="text-xs font-semibold text-muted-foreground hidden sm:inline-block">
+            {tr(module.title)} • {mode === "guide" ? t("modeGuide") : t("modePractice")}
+          </span>
         </div>
 
-        {/* Right: Instruction Panel (vertically centered alongside the phone) */}
-        <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl shrink self-center">
-          <GuidePanel onExit={onExit} onRestart={restart} />
+        {/* Workspace: Phone Simulator & Guide Panel */}
+        <div className="flex-1 flex flex-col lg:flex-row items-center justify-center gap-6 lg:gap-10 xl:gap-14 my-auto pb-4">
+          {/* Left: Phone Simulator */}
+          <div className="flex items-center justify-center shrink-0">
+            {/* key resets simulator-local state (inputs, selections) when the lesson restarts */}
+            <Simulator key={`${module.id}-${runId}`} />
+          </div>
+
+          {/* Right: Instruction Panel (vertically centered alongside the phone) */}
+          <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl shrink self-center">
+            <GuidePanel onExit={onExit} onRestart={restart} />
+          </div>
         </div>
       </div>
     </LessonProvider>

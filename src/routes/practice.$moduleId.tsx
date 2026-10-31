@@ -31,7 +31,7 @@ function PracticePage() {
   }
   const m = getModule(moduleId)!;
   return (
-    <div className="h-full w-full overflow-hidden flex flex-col">
+    <div className="flex-1 w-full flex flex-col">
       <LearningWorkspace key={`${moduleId}-${mode}`} module={m} mode={mode} />
     </div>
   );
