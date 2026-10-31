@@ -11,16 +11,12 @@ export function AppHeader() {
   return (
     <header className="h-14 sm:h-16 shrink-0 z-30 border-b border-border bg-card flex items-center px-4 sm:px-6">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4">
-        <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group" aria-label={t("brand")}>
+        <Link to="/" className="flex items-center gap-2 group" aria-label={t("brand")}>
           <img
             src="/logo.png"
             alt="TechSaathi Logo"
-            className="h-10 w-10 sm:h-11 sm:w-11 rounded-xl object-cover shadow-xs border border-border/50 group-hover:scale-105 transition-transform"
+            className="h-9 sm:h-11 w-auto max-w-[200px] sm:max-w-[260px] object-contain transition-transform group-hover:scale-[1.02]"
           />
-          <span>
-            <span className="block text-lg sm:text-xl font-extrabold leading-tight text-heading">TechSaathi</span>
-            <span className="hidden text-xs text-muted-foreground sm:block">{t("tagline")}</span>
-          </span>
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
           <nav aria-label="Main" className="hidden sm:flex items-center gap-1">
