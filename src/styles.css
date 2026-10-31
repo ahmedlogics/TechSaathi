@@ -152,7 +152,7 @@
 
 @utility btn-primary {
   background: var(--color-primary);
-  color: var(--color-primary-foreground);
+  color: #ffffff;
   &:hover:not(:disabled) {
     background: var(--color-primary-strong);
   }
@@ -194,7 +194,6 @@
   outline: 3px solid var(--color-primary);
   outline-offset: 3px;
   box-shadow: 0 0 0 7px color-mix(in oklab, var(--color-primary) 18%, transparent);
-  background-color: color-mix(in oklab, var(--color-primary) 6%, transparent);
 }
 
 @keyframes subtle-bounce {
@@ -242,7 +241,6 @@
   outline: 2.5px solid #087F72 !important;
   outline-offset: 2px !important;
   animation: target-glow 1.9s ease-in-out infinite;
-  background-color: rgba(8, 127, 114, 0.04) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

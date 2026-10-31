@@ -486,13 +486,13 @@ export function RideSimulator() {
                 <SimButton
                   action="where-to"
                   className={cn(
-                    "flex w-full items-center gap-2.5 rounded-xl bg-white px-3 py-2 text-start shadow-sm hover:bg-zinc-100 transition-all cursor-pointer group",
+                    "flex w-full items-center gap-2.5 rounded-xl !bg-white px-3 py-2 text-start shadow-sm hover:!bg-zinc-100 transition-all cursor-pointer group",
                     isTarget("where-to") &&
                       "ring-2 ring-emerald-400 ring-offset-2 ring-offset-[#1C1C1C] shadow-[0_0_16px_rgba(52,211,153,0.5)] animate-pulse",
                   )}
                 >
                   <Search className="h-4 w-4 text-emerald-600 shrink-0" />
-                  <span className="flex-1 text-xs sm:text-[13px] font-bold text-zinc-900 truncate">
+                  <span className="flex-1 text-xs sm:text-[13px] font-bold !text-zinc-950 truncate">
                     {ur ? "آپ کہاں جا رہے ہیں؟" : "Where are you going?"}
                   </span>
                 </SimButton>

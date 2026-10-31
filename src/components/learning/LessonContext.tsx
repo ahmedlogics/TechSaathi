@@ -61,7 +61,7 @@ export function SimButton({
   }, [target]);
 
   return (
-    <span className="relative inline-flex items-center justify-center">
+    <span className={cn("relative inline-flex items-center justify-center", className?.includes("w-full") && "w-full")}>
       <button
         ref={btnRef}
         type="button"
