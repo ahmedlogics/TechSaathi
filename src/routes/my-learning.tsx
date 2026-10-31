@@ -28,7 +28,7 @@ function MyLearningPage() {
       <ul className="mt-6 grid gap-4 md:grid-cols-2">
         {practised.map((m) => {
           const recs = store.records.filter((r) => r.moduleId === m.id);
-          const last = recs[recs.length - 1];
+          const last = recs[recs.length - 1]!;
           return (
             <li key={m.id} className="card-surface p-5">
               <h2 className="text-xl font-bold">{tr(m.title)}</h2>

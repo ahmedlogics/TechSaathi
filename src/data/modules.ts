@@ -170,8 +170,8 @@ const bookRide: LearningModule = {
 };
 
 const pakIdStep = (id: string, title: string, titleUr: string, body: string, bodyUr: string): LessonStep => {
-  const q = pakIdQuestions[id];
-  const correct = q.options[0].id;
+  const q = pakIdQuestions[id]!;
+  const correct = q.options[0]!.id;
   return {
     id,
     screen: "question",

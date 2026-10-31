@@ -5,7 +5,7 @@ import { getModule } from "@/data/modules";
 import type { LearningMode } from "@/types/learning";
 
 export const Route = createFileRoute("/practice/$moduleId")({
-  validateSearch: (s: Record<string, unknown>): { mode: LearningMode } => ({ mode: s.mode === "practice" ? "practice" : "guide" }),
+  validateSearch: (s: Record<string, unknown>): { mode: LearningMode } => ({ mode: s["mode"] === "practice" ? "practice" : "guide" }),
   loader: ({ params }) => {
     const m = getModule(params.moduleId);
     if (!m) throw notFound();

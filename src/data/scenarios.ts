@@ -25,7 +25,7 @@ export const rideTypes = [
 export function practiceFare(pickup: string, dest: string, type: string) {
   const a = rideLocations.find((l) => l.id === pickup)?.pos ?? 0;
   const b = rideLocations.find((l) => l.id === dest)?.pos ?? 0;
-  const r = rideTypes.find((t) => t.id === type) ?? rideTypes[0];
+  const r = rideTypes.find((t) => t.id === type) ?? rideTypes[0]!;
   return r.base + Math.max(1, Math.abs(a - b)) * 2 * r.perKm;
 }
 export const rideDriver = { name: "Imran Saeed", bookedPlate: "KHI-4821", arrivedPlate: "KHI-4281" };

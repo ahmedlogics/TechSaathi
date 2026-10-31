@@ -6,7 +6,7 @@ import { PhoneFrame } from "@/components/learning/PhoneFrame";
 import { formatRs, practiceFare, rideDriver, rideLocations, rideTypes } from "@/data/scenarios";
 import { cn } from "@/lib/utils";
 
-function RouteMap({ pickup, dest }: { pickup?: string; dest?: string }) {
+function RouteMap({ pickup, dest }: { pickup?: string | undefined; dest?: string | undefined }) {
   return (
     <div className="relative h-40 overflow-hidden rounded-2xl border border-border bg-sky" aria-hidden>
       <svg viewBox="0 0 300 160" className="h-full w-full">

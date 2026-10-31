@@ -22,7 +22,7 @@ export const initialEngineState: EngineState = { stepIndex: 0, mistakes: 0, hint
 
 export function lessonReducer(steps: LessonStep[]) {
   return (state: EngineState, ev: EngineEvent): EngineState => {
-    const step = steps[state.stepIndex];
+    const step = steps[state.stepIndex]!;
     const isLast = state.stepIndex >= steps.length - 1;
     switch (ev.type) {
       case "ACT": {
